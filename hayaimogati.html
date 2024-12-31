@@ -83,7 +83,12 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 			}
 			{
 				const th = document.createElement("th");
-				th.textContent = "獲得ep";
+				th.textContent = "獲得基礎ep";
+				tr.append(th);
+			}
+			{
+				const th = document.createElement("th");
+				th.textContent = "ep/⚡️";
 				tr.append(th);
 			}
 		}
@@ -92,18 +97,19 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 		datas.forEach((data) => {
 			const tr = document.createElement("tr");
 			tbody.append(tr);
+			let level = data["L"].replace("L", "");
+			if(level.includes("E")){
+				level = level.replace("E", "");
+				level = Number(level) * 3;
+			}else{
+				level = Number(level);
+			}
+			th_levels += level;
+			th_eps += Number(data["P"]);
 			{
 				const td = document.createElement("td");
 				td.textContent = data["L"];
 				tr.append(td);
-				let level = data["L"].replace("L", "");
-				if(level.includes("E")){
-					level = level.replace("E", "");
-					level = Number(level) * 3;
-				}else{
-					level = Number(level);
-				}
-				th_levels += level;
 			}
 			{
 				const td = document.createElement("td");
@@ -119,7 +125,11 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 				const td = document.createElement("td");
 				td.textContent = data["P"];
 				tr.append(td);
-				th_eps += Number(data["P"]);
+			}
+			{
+				const td = document.createElement("td");
+				td.textContent = Number.parseFloat(Number(data["P"]) / level).toFixed(2);
+				tr.append(td);
 			}
 		});
 	}
@@ -140,7 +150,12 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 			}
 			{
 				const th = document.createElement("th");
-				th.textContent = "獲得ep";
+				th.textContent = "獲得基礎ep";
+				tr.append(th);
+			}
+			{
+				const th = document.createElement("th");
+				th.textContent = "ep/⚡️";
 				tr.append(th);
 			}
 		}
@@ -157,6 +172,11 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 			{
 				const td = document.createElement("td");
 				td.textContent = th_eps;
+				tr.append(td);
+			}
+			{
+				const td = document.createElement("td");
+				td.textContent = Number.parseFloat(th_eps / th_levels).toFixed(2);
 				tr.append(td);
 			}
 		}
