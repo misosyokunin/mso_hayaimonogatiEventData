@@ -13,6 +13,7 @@
 body{
 	width: 300px;
 	max-width: 300px;
+	font-family: Open Sans,sans-serif;
 }
 @media (prefers-color-scheme: dark) {
 	*{
@@ -26,7 +27,7 @@ table {
 	width: 100%;
 }
 td, th {
-	border: solid 1px #888;
+	border: solid 1px #444;
 }
 img {
 	width: 1.5ch;
@@ -316,7 +317,7 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 		const table = data_table;
 		table.addEventListener("click", sortTable);
 		const caption = document.createElement("caption");
-		caption.textContent = `${player_name}さんのクエストデータ`;
+		caption.innerHTML = `<b>${player_name}</b>さんのクエストデータ`;
 		table.append(caption);
 		const thead = document.createElement("thead");
 		table.append(thead);
@@ -413,7 +414,7 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 		const table = sum_table;
 		table.addEventListener("click", sortTable);
 		const caption = document.createElement("caption");
-		caption.textContent = `${player_name}さんのデータまとめ`;
+		caption.innerHTML = `<b>${player_name}</b>さんのデータまとめ`;
 		table.append(caption);
 		const thead = document.createElement("thead");
 		table.append(thead);
