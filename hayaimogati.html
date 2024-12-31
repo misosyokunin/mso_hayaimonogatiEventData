@@ -9,8 +9,14 @@
 	color: light-dark(#333, #fff);
 	background-color: light-dark(#fff, #333);
 }		
+@media (prefers-color-scheme: dark) {
+	*{
+		background-color: #000;
+		color: #fff;
+	}
+}
 body{
-	width: 270px;
+	width: max(100vw, 270px);
 }
 table {
 	border-collapse: collapse;
