@@ -229,7 +229,7 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 		const putDatas = [];
 		putDatas.push(["合計", sum_levels, sum_eps]);
 		for(const [key, value] of Object.entries(kind_sums)){
-			putDatas.push([key, value["level"], value["eps"]);
+			putDatas.push([key, value["level"], value["eps"]]);
 		}
 		const table = sum_table;
 		const caption = document.createElement("caption");
