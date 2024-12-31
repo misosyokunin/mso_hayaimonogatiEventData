@@ -12,6 +12,7 @@
       </label>
       <button type="submit" id="FormPlayerDataSubmit">探す</button>
     </form>
+		<div id="DivResult"></div>
   </body>
   <script>
 (async()=> {
@@ -39,23 +40,122 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 			const windata = mission_data["Ws"][i];
 			if(windata[0] === player_id){
 				const o = {};
+				o["L"] = mission_data["L"];
 				o["D"] = mission_data["D"];
+				o["I"] = mission_data["I"];
 				o["R"] = i + 1;
 				o["P"] = windata[1];
 				datas.push(o);
 			}
-    }
-  }
-	const fieldset = document.createElement("fieldset");
-	const legend = document.createElement("legend");
-	legend.textContent = `${player_name}さんのデータ`;
-	fieldset.append(legend);
-	datas.forEach((data) => {
-		const p = document.createElement("p");
-		p.textContent = `『${data["D"]}』で${data["R"]}位を取り${data["P"]}epを獲得した。`;
-		fieldset.append(p);
-	});
-	document.body.append(fieldset);
+		}
+	}
+
+	const result_div = document.getElementById("DivResult");
+	result_div.innerHTML = "";
+	const sum_table = document.createElement("table");
+	const data_table = document.createElement("table");
+	let th_levels = 0;
+	let th_eps = 0;
+	{
+		const table = sum_table;
+		const caption = document.createElement("caption");
+		caption.textContent = `${player_name}さんのクエストデータ`;
+		table.append(caption);
+		const thead = document.createElement("thead");
+		table.append(thead);
+		{
+			const tr = document.createElement("tr");
+			thead.append(tr);
+			{
+				const th = document.createElement("th");
+				th.textContent = "レベル";
+				tr.append(th);
+			}
+			{
+				const th = document.createElement("th");
+				th.textContent = "内容";
+				tr.append(th);
+			}
+			{
+				const th = document.createElement("th");
+				th.textContent = "順位";
+				tr.append(th);
+			}
+			{
+				const th = document.createElement("th");
+				th.textContent = "獲得ep";
+				tr.append(th);
+			}
+		}
+		const tbody = document.createElement("tbody");
+		table.append(tbody);
+		datas.forEach((data) => {
+			const tr = document.createElement("tr");
+			tbody.append(tr);
+			{
+				const td = document.createElement("td");
+				td.textContent = data["L"];
+				tr.append(td);
+				th_levels += Number(data["L"]);
+			}
+			{
+				const td = document.createElement("td");
+				td.textContent = data["D"];
+				tr.append(td);
+			}
+			{
+				const td = document.createElement("td");
+				td.textContent = data["R"];
+				tr.append(td);
+			}
+			{
+				const td = document.createElement("td");
+				td.textContent = data["P"];
+				tr.append(td);
+				th_eps += Number(data["P"]);
+			}
+		});
+	}
+	{
+		const table = sum_table;
+		const caption = document.createElement("caption");
+		caption.textContent = `${player_name}さんのデータまとめ`;
+		table.append(caption);
+		const thead = document.createElement("thead");
+		table.append(thead);
+		{
+			const tr = document.createElement("tr");
+			thead.append(tr);
+			{
+				const th = document.createElement("th");
+				th.textContent = "レベル";
+				tr.append(th);
+			}
+			{
+				const th = document.createElement("th");
+				th.textContent = "獲得ep";
+				tr.append(th);
+			}
+		}
+		const tbody = document.createElement("tbody");
+		table.append(tbody);
+		{
+			const tr = document.createElement("tr");
+			tbody.append(tr);
+			{
+				const td = document.createElement("td");
+				td.textContent = th_levels;
+				tr.append(td);
+			}
+			{
+				const td = document.createElement("td");
+				td.textContent = th_eps;
+				tr.append(td);
+			}
+		}
+	}
+	result_div.append(sum_table);
+	result_div.append(data_table);
 });
 
 /*
