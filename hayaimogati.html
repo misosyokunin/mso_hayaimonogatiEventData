@@ -306,10 +306,9 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 		kind_sums[kind] = {};
 		kind_sums[kind]["levels"] = 0;
 		kind_sums[kind]["eps"] = 0;
-		const EVENTPOINT_KIND_NAMES = {
-		for(const [key, value] of Object.entries(EVENTPOINT_KIND_IMAGE_HASHS)){
-			if(key.includes(basesrc) && value === kind){
-				kind_sums[kind]["img"] = key;
+		for(const [src, key] of Object.entries(EVENTPOINT_KIND_IMAGE_HASHS)){
+			if(src.includes(basesrc) && key === kind){
+				kind_sums[kind]["img"] = src;
 			}
 		}
 	}
