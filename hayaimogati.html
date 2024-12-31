@@ -38,7 +38,7 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 		for(let i = 0; i < mission_data["Ws"].length; i++){
 			const windata = mission_data["Ws"][i];
 			if(windata[0] === player_id){
-				const o = [];
+				const o = {};
 				o["D"] = mission_data["D"];
 				o["R"] = i + 1;
 				o["P"] = windata[1];
@@ -52,7 +52,7 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 	fieldset.append(legend);
 	datas.forEach((data) => {
 		const p = document.createElement("p");
-		p.textContent = `『${data["D"]}』で${o["R"]}位を取り${o["P"]}epを獲得した。`;
+		p.textContent = `『${data["D"]}』で${data["R"]}位を取り${data["P"]}epを獲得した。`;
 		fieldset.append(p);
 	});
 	document.body.append("fieldset");
