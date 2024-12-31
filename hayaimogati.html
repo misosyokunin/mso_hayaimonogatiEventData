@@ -388,7 +388,12 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 			}
 			{
 				const td = document.createElement("td");
-				td.textContent = Number.parseFloat(Number(data["P"]) / level).toFixed(2) ?? 0;
+				const num = Number.parseFloat(Number(data["P"]) / level).toFixed(2);
+				if(Number.isNaN(num)){
+					td.textContent = 0;
+				}else{
+					td.textContent = num;
+				}
 				tr.append(td);
 			}
 		});
@@ -456,7 +461,12 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 			}
 			{
 				const td = document.createElement("td");
-				td.textContent = Number.parseFloat(arr[3] / arr[2]).toFixed(2) ?? 0;
+				const num = Number.parseFloat(arr[3] / arr[2]).toFixed(2);
+				if(Number.isNaN(num)){
+					td.textContent = 0;
+				}else{
+					td.textContent = num;
+				}
 				tr.append(td);
 			}
 		});
