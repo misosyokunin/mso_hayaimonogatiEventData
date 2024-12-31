@@ -186,7 +186,8 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 				level = Number(level);
 			}
 			sum_levels += level;
-			sum_eps += Number(data["P"]);
+			const eps = Number(data["P"]);
+			sum_eps += eps;
 			if(!kind_sums[data["I"]]){
 				kind_sums[data["I"]] = {};
 				kind_sums[data["I"]]["levels"] = 0;
