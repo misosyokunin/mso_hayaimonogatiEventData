@@ -401,6 +401,7 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 			putDatas.push([EVENTPOINT_KIND_NAMES[value["kind"]], key, value["levels"], value["eps"]]);
 		}
 		const table = sum_table;
+		table.addEventListener("click", sortTable);
 		const caption = document.createElement("caption");
 		caption.textContent = `${player_name}さんのデータまとめ`;
 		table.append(caption);
@@ -456,7 +457,7 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 			}
 			{
 				const td = document.createElement("td");
-				td.textContent = Number.parseFloat(arr[2] / arr[1]).toFixed(2);
+				td.textContent = Number.parseFloat(arr[3] / arr[2]).toFixed(2);
 				tr.append(td);
 			}
 		});
