@@ -50,6 +50,9 @@ function sortTable(){
 	if(event.target.tagName !== "TH"){
 		return;
 	}
+	if(!event.target.textContent){
+		return;
+	}
 	let func;
 	if(event.target.dataset.sorted === "1"){
 		event.target.dataset.sorted = "2";
@@ -130,8 +133,9 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 	result_div.innerHTML = "";
 	const sum_table = document.createElement("table");
 	const data_table = document.createElement("table");
-	let th_levels = 0;
-	let th_eps = 0;
+	let sum_levels = 0;
+	let sum_eps = 0;
+	const kind_sums = {};
 	{
 		const table = data_table;
 		table.addEventListener("click", sortTable);
@@ -181,8 +185,15 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 			}else{
 				level = Number(level);
 			}
-			th_levels += level;
-			th_eps += Number(data["P"]);
+			sum_levels += level;
+			sum_eps += Number(data["P"]);
+			if(!kind_sums[data["I"]]){
+				kind_sums[data["I"]] = {};
+				kind_sums[data["I"]]["levels"] = 0;
+				kind_sums[data["I"]]["eps"] = 0;
+			}
+			kind_sums[data["I"]]["levels"] += level;
+			kind_sums[data["I"]]["eps"] += eps;
 			{
 				const td = document.createElement("td");
 				td.textContent = data["L"];
@@ -215,6 +226,11 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 		});
 	}
 	{
+		const putDatas = [];
+		putDatas.push(["合計", sum_levels, sum_eps]);
+		for(const [key, value] of Object.entries(kind_sums)){
+			putDatas.push([key, value["level"], value["eps"]);
+		}
 		const table = sum_table;
 		const caption = document.createElement("caption");
 		caption.textContent = `${player_name}さんのデータまとめ`;
@@ -224,6 +240,10 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 		{
 			const tr = document.createElement("tr");
 			thead.append(tr);
+			{
+				const th = document.createElement("th");
+				tr.append(th);
+			}
 			{
 				const th = document.createElement("th");
 				th.textContent = "レベル";
@@ -242,25 +262,33 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 		}
 		const tbody = document.createElement("tbody");
 		table.append(tbody);
-		{
+		putDatas.forEach((arr) => {
 			const tr = document.createElement("tr");
 			tbody.append(tr);
 			{
 				const td = document.createElement("td");
-				td.textContent = th_levels;
+				td.textContent = "";
+				const img = document.createElement("img");
+				img.src = data["I"];
+				td.append(img);
 				tr.append(td);
 			}
 			{
 				const td = document.createElement("td");
-				td.textContent = th_eps;
+				td.textContent = arr[1];
 				tr.append(td);
 			}
 			{
 				const td = document.createElement("td");
-				td.textContent = Number.parseFloat(th_eps / th_levels).toFixed(2);
+				td.textContent = arr[2];
 				tr.append(td);
 			}
-		}
+			{
+				const td = document.createElement("td");
+				td.textContent = Number.parseFloat(arr[2] / arr[1]).toFixed(2);
+				tr.append(td);
+			}
+		});
 	}
 	result_div.append(sum_table);
 	result_div.append(data_table);
