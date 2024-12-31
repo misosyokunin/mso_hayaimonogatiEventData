@@ -1,3 +1,5 @@
+(async()=> {
+	
 "use strict";
 
 async function getJSON(link){
@@ -7,3 +9,5 @@ async function getJSON(link){
 
 const aho = await getJSON("./test.json");
 console.log(aho);
+
+})();
