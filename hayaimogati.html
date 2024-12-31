@@ -30,15 +30,17 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
   const player_val = document.querySelector("#LabelPlayerID input").value;
   const player = Players[player_val];
   if(!player){
-	alert("プレイヤーがいません。");
-	return;
+		alert("プレイヤーがいません。");
+		return;
 	}
 	console.log(`＊${player}さんのデータ＊`);
-  for(const [mission_id, mission_data] of Object.entries(Missions)){
-    for(const [mission_data_key, mission_data_value] of Object.entries(mission_data)){
-      if(mission_data_value["WINNERS"].includes(player_val)){
-        console.log(mission_data_value["DETAIL"]);
-      }
+	for(const [mission_id, mission_data] of Object.entries(Missions)){
+		console.log(mission_data);
+		for(const [mission_data_key, mission_data_value] of Object.entries(mission_data)){
+			console.log(mission_data_value);
+			if(mission_data_value["WINNERS"].includes(player_val)){
+				console.log(mission_data_value["DETAIL"]);
+			}
     }
   }
 });
