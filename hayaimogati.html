@@ -4,7 +4,7 @@
     <title>早い者勝ち</title>
   </head>
   <body>
-    <h1>あ</h1>
+    <h1>S108挑戦データ</h1>
     <form id="FormPlayerData">
       <label id="LabelPlayerID">
         <span>プレイヤーＩＤ</span>
@@ -57,7 +57,7 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 	let th_levels = 0;
 	let th_eps = 0;
 	{
-		const table = sum_table;
+		const table = data_table;
 		const caption = document.createElement("caption");
 		caption.textContent = `${player_name}さんのクエストデータ`;
 		table.append(caption);
@@ -96,7 +96,14 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 				const td = document.createElement("td");
 				td.textContent = data["L"];
 				tr.append(td);
-				th_levels += Number(data["L"]);
+				let level = data["L"].replace("L", "");
+				if(level.includes("E")){
+					level = level.replace("E", "");
+					level = Number(level) * 3;
+				}else{
+					level = Number(level);
+				}
+				th_levels += level;
 			}
 			{
 				const td = document.createElement("td");
