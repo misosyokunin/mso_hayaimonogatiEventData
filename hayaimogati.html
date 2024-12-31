@@ -30,13 +30,14 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
   const player_val = document.querySelector("#LabelPlayerID input").value;
   const player = Players[player_val];
   if(!player){
-    alert("プレイヤーがいません。");
-    return;
-  }
-  for(const [key, value] of Object.entries(Missions)){
-    for(const [key, value] of Object.entries(value)){
-      if(value["WINNERS"].includes(player_val)){
-        console.log(value["DETAIL"]);
+	alert("プレイヤーがいません。");
+	return;
+	}
+	console.log(`＊${player}さんのデータ＊`);
+  for(const [mission_id, mission_data] of Object.entries(Missions)){
+    for(const [mission_data_key, mission_data_value] of Object.entries(mission_data)){
+      if(mission_data_value["WINNERS"].includes(player_val)){
+        console.log(mission_data_value["DETAIL"]);
       }
     }
   }
