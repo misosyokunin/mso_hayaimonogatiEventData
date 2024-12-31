@@ -15,20 +15,10 @@
 		color: #fff;
 	}
 }
-@media screen and (max-width: 959px) {
-	body{
-		width: 900px;
-	}
-}
-@media screen and (max-width: 480px) {
-	body{
-		width: 400px;
-	}
-}
 table {
 	border-collapse: collapse;
 	margin: 2ch 0ch;
-	width: 100%;
+	width: 100vw;
 }
 td, th {
 	border: solid 1px #888;
@@ -39,7 +29,7 @@ img {
 	</style>
   <body>
     <h1>S108挑戦データ</h1>
-    <form id="FormPlayerData">
+    <form id="FormPlayerData" onSubmit="return false;">
       <label id="LabelPlayerID">
         <span>プレイヤーＩＤ</span>
         <input type="number" min="0" step="1" />
