@@ -24,22 +24,22 @@ async function getJSON(link){
 }
 
 const HayaData = await getJSON("./test.json");
-const Missions = HayaData["MISSIONS"];
-const Players = HayaData["PLAYERS"];
+const Missions = HayaData["Ms"];
+const Players = HayaData["Ps"];
 document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => {
-  event.preventDefault();
-  const player_id = document.querySelector("#LabelPlayerID input").value;
-  const player_name = Players[player_id];
-  if(!player_name){
+	event.preventDefault();
+	const player_id = document.querySelector("#LabelPlayerID input").value;
+	const player_name = Players[player_id];
+	if(!player_name){
 		alert("プレイヤーがいません。");
 		return;
 	}
 	console.log(`＊${player_name}さんのデータ＊`);
 	for(const [mission_id, mission_data] of Object.entries(Missions)){
-		for(let i = 0; i < mission_data["WINNERS"].length; i++){
-			const windata = mission_data["WINNERS"][i];
+		for(let i = 0; i < mission_data["Ws"].length; i++){
+			const windata = mission_data["Ws"][i];
 			if(windata[0] === player_id){
-				console.log(`${mission_data["DETAIL"]}で${i + 1}位を取り${windata[1]}epを獲得した`);
+				console.log(`『${mission_data["D"]}』で${i + 1}位を取り${windata[1]}epを獲得した`);
 			}
     }
   }
