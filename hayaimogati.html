@@ -52,7 +52,7 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 	fieldset.append(legend);
 	datas.forEach((data) => {
 		const p = document.createElement("p");
-		p.textContent = `『${data["D"]}』で${R}位を取り${o["P"]}epを獲得した。`;
+		p.textContent = `『${data["D"]}』で${o["R"]}位を取り${o["P"]}epを獲得した。`;
 		fieldset.append(p);
 	});
 	document.body.append("fieldset");
