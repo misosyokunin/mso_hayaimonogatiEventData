@@ -18,6 +18,54 @@
 (async()=> {
 "use strict";
 
+function sortTable(){
+	if(event.target.tagName !== "TH"){
+		return;
+	}
+	let func;
+	if(event.target.dataset.sorted === "1"){
+		event.target.dataset.sorted = "2";
+		func = function(td1, td2){
+			if(!(isNaN(td1) && isNaN(td2))){
+				td1 = Number(td1);
+				td2 = Number(td2);
+			}
+			return td1 < td2;
+		}
+	}else{
+		event.target.dataset.sorted = "1";
+		func = function(td1, td2){
+			if(!(isNaN(td1) && isNaN(td2))){
+				td1 = Number(td1);
+				td2 = Number(td2);
+			}
+			return td1 > td2;
+		}
+	}
+	
+	const table = event.currentTarget;
+	const ths = table.querySelectorAll("th");
+	const thnum = Array.from(ths).findIndex((th) => th === event.target) + 1;
+	
+	const tbody = table.querySelector("tbody");
+	const trs = tbody.getElementsByTagName("tr");
+	for(let i = 0; i < trs.length; i++){
+		let td1 = trs[i].querySelector(`td:nth-child(${thnum})`);
+		for(let j = i + 1; j < trs.length; j++){
+			const td2 = trs[j].querySelector(`td:nth-child(${thnum})`);
+			const ptd1 = td1.dataset.truenum ?? td1.textContent;
+			const ptd2 = td2.dataset.truenum ?? td1.textContent;
+			if(func(ptd1, ptd2)){
+				td1 = td2;
+			}
+		}
+		const tr = td1.closest("tr");
+		if(tr !== trs[i]){
+			trs[i].insertAdjacentElement("beforebegin", tr);
+		}
+	}
+}
+
 async function getJSON(link){
 	const response = await fetch(link);
 	return response.json();
@@ -58,6 +106,7 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 	let th_eps = 0;
 	{
 		const table = data_table;
+		table.addEventListener("click", sortTable);
 		const caption = document.createElement("caption");
 		caption.textContent = `${player_name}さんのクエストデータ`;
 		table.append(caption);
@@ -109,6 +158,7 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 			{
 				const td = document.createElement("td");
 				td.textContent = data["L"];
+				td.dataset.truenum = level;
 				tr.append(td);
 			}
 			{
