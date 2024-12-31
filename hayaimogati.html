@@ -228,9 +228,9 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 	}
 	{
 		const putDatas = [];
-		putDatas.push(["合計", sum_levels, sum_eps]);
+		putDatas.push(["", sum_levels, sum_eps]);
 		for(const [key, value] of Object.entries(kind_sums)){
-			putDatas.push([key, value["level"], value["eps"]]);
+			putDatas.push([key, value["levels"], value["eps"]]);
 		}
 		const table = sum_table;
 		const caption = document.createElement("caption");
@@ -269,9 +269,11 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 			{
 				const td = document.createElement("td");
 				td.textContent = "";
-				const img = document.createElement("img");
-				img.src = arr[0];
-				td.append(img);
+				if(arr[0]){
+					const img = document.createElement("img");
+					img.src = arr[0];
+					td.append(img);
+				}
 				tr.append(td);
 			}
 			{
