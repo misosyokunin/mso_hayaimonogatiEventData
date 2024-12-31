@@ -393,11 +393,12 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 			}
 			{
 				const td = document.createElement("td");
-				const num = Number.parseFloat(Number(data["P"]) / level).toFixed(2);
+				const num = Number.parseFloat(Number(data["P"]) / level);
 				if(Number.isNaN(num)){
-					td.textContent = 0;
+					td.textContent = "";
+					td.dataset.truenum = 0;
 				}else{
-					td.textContent = num;
+					td.textContent = num.toFixed(2);
 				}
 				tr.append(td);
 			}
@@ -466,11 +467,12 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 			}
 			{
 				const td = document.createElement("td");
-				const num = Number.parseFloat(arr[3] / arr[2]).toFixed(2);
+				const num = Number.parseFloat(arr[3] / arr[2]);
 				if(Number.isNaN(num)){
-					td.textContent = 0;
+					td.textContent = "";
+					td.dataset.truenum = 0;
 				}else{
-					td.textContent = num;
+					td.textContent = num.toFixed(2);
 				}
 				tr.append(td);
 			}
