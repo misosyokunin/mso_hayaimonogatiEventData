@@ -397,7 +397,7 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 			value["kind"] = EVENTPOINT_KIND_IMAGE_HASHS[key];
 		}
 		for(const [key, value] of Object.entries(kind_sums)){
-			putDatas.push([EVENTPOINT_KIND_NAMES[value["kind"], key, value["levels"], value["eps"]]);
+			putDatas.push([EVENTPOINT_KIND_NAMES[value["kind"]], key, value["levels"], value["eps"]]);
 		}
 		const table = sum_table;
 		const caption = document.createElement("caption");
