@@ -12,7 +12,6 @@
       </label>
       <button type="submit" id="FormPlayerDataSubmit">探す</button>
     </form>
-		<textarea id="textarea"></textarea>
   </body>
   <script>
 (async()=> {
@@ -34,24 +33,42 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 		alert("プレイヤーがいません。");
 		return;
 	}
-	console.log(`＊${player_name}さんのデータ＊`);
+	const datas = [];
 	for(const [mission_id, mission_data] of Object.entries(Missions)){
 		for(let i = 0; i < mission_data["Ws"].length; i++){
 			const windata = mission_data["Ws"][i];
 			if(windata[0] === player_id){
-				console.log(`『${mission_data["D"]}』で${i + 1}位を取り${windata[1]}epを獲得した`);
+				const o = [];
+				o["D"] = mission_data["D"];
+				o["R"] = i + 1;
+				o["P"] = windata[1];
+				datas.push(o);
 			}
     }
   }
+	const fieldset = document.createElement("fieldset");
+	const legend = document.createElement("legend");
+	legend.textContent = `${player_name}さんのデータ`;
+	fieldset.append(legend);
+	datas.forEach((data) => {
+		const p = document.createElement("p");
+		p.textContent = `『${data["D"]}』で${R}位を取り${o["P"]}epを獲得した。`;
+		fieldset.append(p);
+	});
+	document.body.append("fieldset");
 });
 
-const textarea = document.getElementById("textarea");
+/*
+const textarea = document.createElement("textarea");
 let putData = [];
 for(const [mission_id, mission_data] of Object.entries(Missions)){
 	putData.push(mission_id);
 }
 putData = putData.sort();
 textarea.value = putData.join("\n");
+document.body.append(textarea);
+*/
+
 })();
   </script>
 </html>
