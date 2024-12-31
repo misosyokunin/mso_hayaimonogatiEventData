@@ -199,6 +199,9 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 				const td = document.createElement("td");
 				td.textContent = data["P"];
 				tr.append(td);
+				const img = document.createElement("img");
+				img.src = data["I"];
+				tr.append(img);
 			}
 			{
 				const td = document.createElement("td");
