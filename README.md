@@ -1,0 +1,2 @@
+# mso_hayaimonogatiEventData
+MSOの早い者勝ちイベントに関するデータです。
