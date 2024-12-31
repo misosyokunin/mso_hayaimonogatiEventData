@@ -29,7 +29,7 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
   event.preventDefault();
   const player_id = document.querySelector("#LabelPlayerID input").value;
   const player_name = Players[player_id];
-  if(!player){
+  if(!player_name){
 		alert("プレイヤーがいません。");
 		return;
 	}
