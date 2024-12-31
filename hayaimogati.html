@@ -15,8 +15,15 @@
 		color: #fff;
 	}
 }
-body{
-	width: min(100vw, 270px);
+@media screen and (max-width: 959px) {
+	body{
+		width: 900px;
+	}
+}
+@media screen and (max-width: 480px) {
+	body{
+		width: 400px;
+	}
 }
 table {
 	border-collapse: collapse;
@@ -25,6 +32,9 @@ table {
 }
 td, th {
 	border: solid 1px #888;
+}
+img {
+	width: 2.0ch;
 }
 	</style>
   <body>
@@ -201,7 +211,7 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 				tr.append(td);
 				const img = document.createElement("img");
 				img.src = data["I"];
-				tr.append(img);
+				td.append(img);
 			}
 			{
 				const td = document.createElement("td");
