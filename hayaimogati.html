@@ -54,7 +54,7 @@ function sortTable(){
 		for(let j = i + 1; j < trs.length; j++){
 			const td2 = trs[j].querySelector(`td:nth-child(${thnum})`);
 			const ptd1 = td1.dataset.truenum ?? td1.textContent;
-			const ptd2 = td2.dataset.truenum ?? td1.textContent;
+			const ptd2 = td2.dataset.truenum ?? td2.textContent;
 			if(func(ptd1, ptd2)){
 				td1 = td2;
 			}
