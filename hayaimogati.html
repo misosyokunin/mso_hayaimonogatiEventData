@@ -5,6 +5,43 @@
   </head>
   <body>
     <h1>あ</h1>
+    <form id="FormPlayerData">
+      <label id="LabelPlayerID">
+        <span>プレイヤーＩＤ</span>
+        <input type="number" min="0" step="1" />
+      </label>
+      <button type="submit" id="FormPlayerDataSubmit">探す</button>
+    </form>
   </body>
-  <script src="./test.js"></script>
+  <script>
+(async()=> {
+"use strict";
+
+async function getJSON(link){
+	const response = await fetch(link);
+	return response.json();
+}
+
+const HayaData = await getJSON("./test.json");
+const Missions = HayaData["MISSIONS"];
+const Players = HayaData["PLAYERS"];
+document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => {
+  event.preventDefault();
+  const player_val = document.querySelector("#LabelPlayerID input").value;
+  const player = Players[player_val];
+  if(!player){
+    alert("プレイヤーがいません。");
+    return;
+  }
+  for(const [key, value] of Object.entries(Missions)){
+    for(const [key, value] of Object.entries(value)){
+      if(value["WINNERS"].includes(player_val)){
+        console.log(value["DETAIL"]);
+      }
+    }
+  }
+});
+
+})();
+  </script>
 </html>
