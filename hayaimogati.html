@@ -102,6 +102,170 @@ async function getJSON(link){
 	return response.json();
 }
 
+const EVENTPOINT_KIND_NAMES = {
+	"A0": "効率",
+	"A1": "速度",
+	"A2": "フラグなし",
+	"A3": "連勝",
+	"A4": "高難易度",
+	"A5": "ＮＧ",
+	"A6": "勝利",
+	"A7": "資源",
+	"A8": "アリーナ",
+	"B0": "経験",
+	"B1": "コイン",
+	"B3": "宝石",
+	"Z0": "トップシークレット",
+};
+const EVENTPOINT_KIND_IMAGE_HASHS = {
+	"https://minesweeper.online/img/candies/cake/507.svg?v4": "A0",
+	"https://minesweeper.online/img/candies/cake/508.svg?v4": "A1",
+	"https://minesweeper.online/img/candies/cake/509.svg?v4": "A2",
+	"https://minesweeper.online/img/candies/cake/510.svg?v4": "A3",
+	"https://minesweeper.online/img/candies/cake/511.svg?v4": "A4",
+	"https://minesweeper.online/img/candies/cake/512.svg?v4": "A5",
+	"https://minesweeper.online/img/candies/cake/513.svg?v4": "A6",
+	"https://minesweeper.online/img/candies/cake/514.svg?v4": "A7",
+	"https://minesweeper.online/img/candies/cake/515.svg?v4": "A8",
+	"https://minesweeper.online/img/candies/cake/516.svg?v4": "B3",
+	"https://minesweeper.online/img/candies/pumpkin/490.svg?v4": "B0",
+	"https://minesweeper.online/img/candies/pumpkin/491.svg?v4": "B1",
+	"https://minesweeper.online/img/candies/pumpkin/492.svg?v4": "A0",
+	"https://minesweeper.online/img/candies/pumpkin/493.svg?v4": "A1",
+	"https://minesweeper.online/img/candies/pumpkin/494.svg?v4": "A2",
+	"https://minesweeper.online/img/candies/pumpkin/495.svg?v4": "A3",
+	"https://minesweeper.online/img/candies/pumpkin/496.svg?v4": "A4",
+	"https://minesweeper.online/img/candies/pumpkin/497.svg?v4": "A5",
+	"https://minesweeper.online/img/candies/pumpkin/498.svg?v4": "A6",
+	"https://minesweeper.online/img/candies/pumpkin/499.svg?v4": "A7",
+	"https://minesweeper.online/img/candies/pumpkin/500.svg?v4": "A8",
+	"https://minesweeper.online/img/candies/pumpkin/501.svg?v4": "B3",
+	"https://minesweeper.online/img/candies/fruit/475.svg?v4": "B0",
+	"https://minesweeper.online/img/candies/fruit/476.svg?v4": "B1",
+	"https://minesweeper.online/img/candies/fruit/477.svg?v4": "A0",
+	"https://minesweeper.online/img/candies/fruit/478.svg?v4": "A1",
+	"https://minesweeper.online/img/candies/fruit/479.svg?v4": "A2",
+	"https://minesweeper.online/img/candies/fruit/480.svg?v4": "A3",
+	"https://minesweeper.online/img/candies/fruit/481.svg?v4": "A4",
+	"https://minesweeper.online/img/candies/fruit/482.svg?v4": "A5",
+	"https://minesweeper.online/img/candies/fruit/483.svg?v4": "A6",
+	"https://minesweeper.online/img/candies/fruit/484.svg?v4": "A7",
+	"https://minesweeper.online/img/candies/fruit/485.svg?v4": "A8",
+	"https://minesweeper.online/img/candies/fruit/486.svg?v4": "B3",
+	"https://minesweeper.online/img/candies/drink/460.svg?v4": "B0",
+	"https://minesweeper.online/img/candies/drink/461.svg?v4": "B1",
+	"https://minesweeper.online/img/candies/drink/462.svg?v4": "A0",
+	"https://minesweeper.online/img/candies/drink/463.svg?v4": "A1",
+	"https://minesweeper.online/img/candies/drink/464.svg?v4": "A2",
+	"https://minesweeper.online/img/candies/drink/465.svg?v4": "A3",
+	"https://minesweeper.online/img/candies/drink/466.svg?v4": "A4",
+	"https://minesweeper.online/img/candies/drink/467.svg?v4": "A5",
+	"https://minesweeper.online/img/candies/drink/468.svg?v4": "A6",
+	"https://minesweeper.online/img/candies/drink/469.svg?v4": "A7",
+	"https://minesweeper.online/img/candies/drink/470.svg?v4": "A8",
+	"https://minesweeper.online/img/candies/drink/471.svg?v4": "B3",
+	"https://minesweeper.online/img/candies/drink/472.svg?v4": "Z0",
+	"https://minesweeper.online/img/candies/icecream/445.svg?v4": "B0",
+	"https://minesweeper.online/img/candies/icecream/446.svg?v4": "B1",
+	"https://minesweeper.online/img/candies/icecream/447.svg?v4": "A0",
+	"https://minesweeper.online/img/candies/icecream/448.svg?v4": "A1",
+	"https://minesweeper.online/img/candies/icecream/449.svg?v4": "A2",
+	"https://minesweeper.online/img/candies/icecream/450.svg?v4": "A3",
+	"https://minesweeper.online/img/candies/icecream/451.svg?v4": "A4",
+	"https://minesweeper.online/img/candies/icecream/452.svg?v4": "A5",
+	"https://minesweeper.online/img/candies/icecream/453.svg?v4": "A6",
+	"https://minesweeper.online/img/candies/icecream/454.svg?v4": "A7",
+	"https://minesweeper.online/img/candies/icecream/455.svg?v4": "A8",
+	"https://minesweeper.online/img/candies/icecream/456.svg?v4": "B3",
+	"https://minesweeper.online/img/candies/like/430.svg?v4": "B0",
+	"https://minesweeper.online/img/candies/like/431.svg?v4": "B1",
+	"https://minesweeper.online/img/candies/like/432.svg?v4": "A0",
+	"https://minesweeper.online/img/candies/like/433.svg?v4": "A1",
+	"https://minesweeper.online/img/candies/like/434.svg?v4": "A2",
+	"https://minesweeper.online/img/candies/like/435.svg?v4": "A3",
+	"https://minesweeper.online/img/candies/like/436.svg?v4": "A4",
+	"https://minesweeper.online/img/candies/like/437.svg?v4": "A5",
+	"https://minesweeper.online/img/candies/like/438.svg?v4": "A6",
+	"https://minesweeper.online/img/candies/like/439.svg?v4": "A7",
+	"https://minesweeper.online/img/candies/like/440.svg?v4": "A8",
+	"https://minesweeper.online/img/candies/like/441.svg?v4": "B3",
+	"https://minesweeper.online/img/candies/flower/415.svg?v4": "B0",
+	"https://minesweeper.online/img/candies/flower/416.svg?v4": "B1",
+	"https://minesweeper.online/img/candies/flower/417.svg?v4": "A0",
+	"https://minesweeper.online/img/candies/flower/418.svg?v4": "A1",
+	"https://minesweeper.online/img/candies/flower/419.svg?v4": "A2",
+	"https://minesweeper.online/img/candies/flower/420.svg?v4": "A3",
+	"https://minesweeper.online/img/candies/flower/421.svg?v4": "A4",
+	"https://minesweeper.online/img/candies/flower/422.svg?v4": "A5",
+	"https://minesweeper.online/img/candies/flower/423.svg?v4": "A6",
+	"https://minesweeper.online/img/candies/flower/424.svg?v4": "A7",
+	"https://minesweeper.online/img/candies/flower/425.svg?v4": "A8",
+	"https://minesweeper.online/img/candies/flower/426.svg?v4": "B3",
+	"https://minesweeper.online/img/candies/egg/400.svg?v4": "B0",
+	"https://minesweeper.online/img/candies/egg/401.svg?v4": "B1",
+	"https://minesweeper.online/img/candies/egg/402.svg?v4": "A0",
+	"https://minesweeper.online/img/candies/egg/403.svg?v4": "A1",
+	"https://minesweeper.online/img/candies/egg/404.svg?v4": "A2",
+	"https://minesweeper.online/img/candies/egg/405.svg?v4": "A3",
+	"https://minesweeper.online/img/candies/egg/406.svg?v4": "A4",
+	"https://minesweeper.online/img/candies/egg/407.svg?v4": "A5",
+	"https://minesweeper.online/img/candies/egg/408.svg?v4": "A6",
+	"https://minesweeper.online/img/candies/egg/409.svg?v4": "A7",
+	"https://minesweeper.online/img/candies/egg/410.svg?v4": "A8",
+	"https://minesweeper.online/img/candies/egg/411.svg?v4": "B3",
+	"https://minesweeper.online/img/candies/egg/412.svg?v4": "Z0",
+	"https://minesweeper.online/img/candies/shard/385.svg?v4": "B0",
+	"https://minesweeper.online/img/candies/shard/386.svg?v4": "B1",
+	"https://minesweeper.online/img/candies/shard/387.svg?v4": "A0",
+	"https://minesweeper.online/img/candies/shard/388.svg?v4": "A1",
+	"https://minesweeper.online/img/candies/shard/389.svg?v4": "A2",
+	"https://minesweeper.online/img/candies/shard/390.svg?v4": "A3",
+	"https://minesweeper.online/img/candies/shard/391.svg?v4": "A4",
+	"https://minesweeper.online/img/candies/shard/392.svg?v4": "A5",
+	"https://minesweeper.online/img/candies/shard/393.svg?v4": "A6",
+	"https://minesweeper.online/img/candies/shard/394.svg?v4": "A7",
+	"https://minesweeper.online/img/candies/shard/395.svg?v4": "A8",
+	"https://minesweeper.online/img/candies/shard/396.svg?v4": "B3",
+	"https://minesweeper.online/img/candies/heart/370.svg?v4": "B0",
+	"https://minesweeper.online/img/candies/heart/371.svg?v4": "B1",
+	"https://minesweeper.online/img/candies/heart/372.svg?v4": "A0",
+	"https://minesweeper.online/img/candies/heart/373.svg?v4": "A1",
+	"https://minesweeper.online/img/candies/heart/374.svg?v4": "A2",
+	"https://minesweeper.online/img/candies/heart/375.svg?v4": "A3",
+	"https://minesweeper.online/img/candies/heart/376.svg?v4": "A4",
+	"https://minesweeper.online/img/candies/heart/377.svg?v4": "A5",
+	"https://minesweeper.online/img/candies/heart/378.svg?v4": "A6",
+	"https://minesweeper.online/img/candies/heart/379.svg?v4": "A7",
+	"https://minesweeper.online/img/candies/heart/380.svg?v4": "A8",
+	"https://minesweeper.online/img/candies/heart/381.svg?v4": "B3",
+	"https://minesweeper.online/img/candies/snowflake/355.svg?v4": "B0",
+	"https://minesweeper.online/img/candies/snowflake/356.svg?v4": "B1",
+	"https://minesweeper.online/img/candies/snowflake/357.svg?v4": "A0",
+	"https://minesweeper.online/img/candies/snowflake/358.svg?v4": "A1",
+	"https://minesweeper.online/img/candies/snowflake/359.svg?v4": "A2",
+	"https://minesweeper.online/img/candies/snowflake/360.svg?v4": "A3",
+	"https://minesweeper.online/img/candies/snowflake/361.svg?v4": "A4",
+	"https://minesweeper.online/img/candies/snowflake/362.svg?v4": "A5",
+	"https://minesweeper.online/img/candies/snowflake/363.svg?v4": "A6",
+	"https://minesweeper.online/img/candies/snowflake/364.svg?v4": "A7",
+	"https://minesweeper.online/img/candies/snowflake/365.svg?v4": "A8",
+	"https://minesweeper.online/img/candies/snowflake/366.svg?v4": "B3",
+	"https://minesweeper.online/img/candies/candy/520.svg?v4": "B0",
+	"https://minesweeper.online/img/candies/candy/521.svg?v4": "B1",
+	"https://minesweeper.online/img/candies/candy/522.svg?v4": "A0",
+	"https://minesweeper.online/img/candies/candy/523.svg?v4": "A1",
+	"https://minesweeper.online/img/candies/candy/524.svg?v4": "A2",
+	"https://minesweeper.online/img/candies/candy/525.svg?v4": "A3",
+	"https://minesweeper.online/img/candies/candy/526.svg?v4": "A4",
+	"https://minesweeper.online/img/candies/candy/527.svg?v4": "A5",
+	"https://minesweeper.online/img/candies/candy/528.svg?v4": "A6",
+	"https://minesweeper.online/img/candies/candy/529.svg?v4": "A7",
+	"https://minesweeper.online/img/candies/candy/530.svg?v4": "A8",
+	"https://minesweeper.online/img/candies/candy/531.svg?v4": "B3",
+	"https://minesweeper.online/img/candies/candy/532.svg?v4": "Z0",
+};
+
+
 const HayaData = await getJSON("./test.json");
 const Missions = HayaData["Ms"];
 const Players = HayaData["Ps"];
@@ -228,9 +392,12 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 	}
 	{
 		const putDatas = [];
-		putDatas.push(["", sum_levels, sum_eps]);
+		putDatas.push(["合計", "", sum_levels, sum_eps]);
 		for(const [key, value] of Object.entries(kind_sums)){
-			putDatas.push([key, value["levels"], value["eps"]]);
+			value["kind"] = EVENTPOINT_KIND_IMAGE_HASHS[key];
+		}
+		for(const [key, value] of Object.entries(kind_sums)){
+			putDatas.push([EVENTPOINT_KIND_NAMES[value["kind"], key, value["levels"], value["eps"]]);
 		}
 		const table = sum_table;
 		const caption = document.createElement("caption");
@@ -268,22 +435,22 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 			tbody.append(tr);
 			{
 				const td = document.createElement("td");
-				td.textContent = "";
-				if(arr[0]){
+				td.textContent = arr[0];
+				if(arr[1]){
 					const img = document.createElement("img");
-					img.src = arr[0];
+					img.src = arr[1];
 					td.append(img);
 				}
 				tr.append(td);
 			}
 			{
 				const td = document.createElement("td");
-				td.textContent = arr[1];
+				td.textContent = arr[2];
 				tr.append(td);
 			}
 			{
 				const td = document.createElement("td");
-				td.textContent = arr[2];
+				td.textContent = arr[3];
 				tr.append(td);
 			}
 			{
