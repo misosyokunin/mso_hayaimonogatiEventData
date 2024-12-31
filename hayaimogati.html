@@ -293,7 +293,7 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 			}
 		}
 	}
-
+	
 	const result_div = document.getElementById("DivResult");
 	result_div.innerHTML = "";
 	const sum_table = document.createElement("table");
@@ -301,10 +301,17 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 	let sum_levels = 0;
 	let sum_eps = 0;
 	const kind_sums = {};
-	for(const key of Object.keys(EVENTPOINT_KIND_NAMES)){
-		kind_sums[key] = {};
-		kind_sums[key]["levels"] = 0;
-		kind_sums[key]["eps"] = 0;
+	const basesrc = datas[0]["I"].replace(/\/\d.+/, "");
+	for(const kind of Object.keys(EVENTPOINT_KIND_NAMES)){
+		kind_sums[kind] = {};
+		kind_sums[kind]["levels"] = 0;
+		kind_sums[kind]["eps"] = 0;
+		const EVENTPOINT_KIND_NAMES = {
+		for(const [src, key] of Object.entries(EVENTPOINT_KIND_IMAGE_HASHS)){
+			if(src.includes(basesrc) && key === kind){
+				kind_sums[kind]["img"] = src;
+			}
+		}
 	}
 	{
 		const table = data_table;
@@ -359,7 +366,6 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 			const eps = Number(data["P"]);
 			sum_eps += eps;
 			const kind = EVENTPOINT_KIND_IMAGE_HASHS[data["I"]];
-			kind_sums[kind]["img"] = data["I"];
 			kind_sums[kind]["levels"] += level;
 			kind_sums[kind]["eps"] += eps;
 			{
