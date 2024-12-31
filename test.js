@@ -1,6 +1,6 @@
 "use strict";
 
-function getJSON(link){
+async function getJSON(link){
 	const response = await fetch(link);
 	return response.json();
 }
