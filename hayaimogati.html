@@ -301,6 +301,12 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 	let sum_levels = 0;
 	let sum_eps = 0;
 	const kind_sums = {};
+	for(const key of Object.keys(EVENTPOINT_KIND_NAMES)){
+		kind_sums[key] = {};
+		kind_sums[kind]["img"] = data["I"];
+		kind_sums[kind]["levels"] = 0;
+		kind_sums[kind]["eps"] = 0;
+	}
 	{
 		const table = data_table;
 		table.addEventListener("click", sortTable);
@@ -354,12 +360,7 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 			const eps = Number(data["P"]);
 			sum_eps += eps;
 			const kind = EVENTPOINT_KIND_IMAGE_HASHS[data["I"]];
-			if(!kind_sums[kind]){
-				kind_sums[kind] = {};
-				kind_sums[kind]["img"] = data["I"];
-				kind_sums[kind]["levels"] = 0;
-				kind_sums[kind]["eps"] = 0;
-			}
+			kind_sums[kind]["img"] = data["I"];
 			kind_sums[kind]["levels"] += level;
 			kind_sums[kind]["eps"] += eps;
 			{
