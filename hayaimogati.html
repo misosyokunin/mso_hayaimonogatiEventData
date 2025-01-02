@@ -1,10 +1,10 @@
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width">
-		<title>早い者勝ち公開</title>
-	</head>
-	<style>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<title>早い者勝ち公開</title>
+</head>
+<style>
 * {
 	font-size: 1.0ch;
 	color: light-dark(#181a1b, #c8c3bc);
@@ -21,6 +21,9 @@ body{
 		color: #c8c3bc;
 	}
 }
+header > * {
+	display: inline-block;
+}
 table {
 	border-collapse: collapse;
 	margin: 2ch 0ch;
@@ -32,18 +35,21 @@ td, th {
 img {
 	width: 1.5ch;
 }
-	</style>
-  <body>
-    <h1>早い者勝ち挑戦データ</h1>
-    <form id="FormPlayerData" onSubmit="return false;">
-      <label id="LabelPlayerID">
-        <span>プレイヤーＩＤ</span>
-        <input type="number" min="0" step="1" />
-      </label>
-      <button type="submit" id="FormPlayerDataSubmit">探す</button>
-    </form>
-		<div id="DivResult"></div>
-  </body>
+</style>
+<body>
+	<header>
+		<h1>早い者勝ち挑戦データ</h1>
+		<button type="button" id="ButtonCation">注意書き</button>
+	</header>
+	<form id="FormPlayerData" onSubmit="return false;">
+		<label id="LabelPlayerID">
+			<span>プレイヤーＩＤ</span>
+			<input type="number" min="0" step="1" value="16842796"/>
+		</label>
+		<button type="submit" id="FormPlayerDataSubmit">探す</button>
+	</form>
+	<div id="DivResult"></div>
+</body>
   <script>
 (async()=> {
 "use strict";
@@ -482,7 +488,24 @@ document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => 
 	result_div.append(sum_table);
 	result_div.append(data_table);
 });
-/*件数チェック用
+document.getElementById("ButtonCation").addEventListener("click", () => {
+	const str1 = `
+●データを取得した最終時刻は08:50辺りなので、それ以降にクリアしたプレイヤーはデータに含まれていません。
+●プレイヤー名は各シーズン最終日当時のものです。
+●獲得epは補正値無しのものです。
+●小数は小数点以下2位を四捨五入しています。
+`;
+	const str2 = `
+●作った人：魚頭男
+●当コンテンツはMSO様より公認を受けていない非公認のものです。
+●当コンテンツについてMSO様にお問い合わせを絶対にしないでください。
+●問題などありましたら直ちに公開を取りやめいたします。
+`;
+	alert(str1);
+	alert(str2);
+});
+
+	/*件数チェック用
 const textarea = document.createElement("textarea");
 let putData = [];
 for(const [mission_id, mission_data] of Object.entries(Missions)){
