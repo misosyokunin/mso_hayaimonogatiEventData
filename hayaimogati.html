@@ -1,19 +1,14 @@
 <html>
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width,initial-scale=0.5">
-	<title>早い者勝ち公開</title>
-</head>
-<style>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width">
+		<title>早い者勝ち</title>
+	</head>
+	<style>
 * {
 	font-size: 1.0ch;
 	color: light-dark(#181a1b, #c8c3bc);
 	background-color: light-dark(#fff, #c8c3bc);
-}
-body{
-	width: 300px;
-	max-width: 300px;
-	font-family: Open Sans,sans-serif;
 }
 @media (prefers-color-scheme: dark) {
 	*{
@@ -21,9 +16,27 @@ body{
 		color: #c8c3bc;
 	}
 }
+body{
+	width: 300px;
+	max-width: 300px;
+	font-family: Open Sans,sans-serif;
+}
 header > * {
 	display: inline-block;
 }
+header > h1 > a{
+	text-decoration: none;
+}
+nav {
+	display: flex;
+	justify-content: space-evenly;
+}
+nav > * {
+	border: solid 1px #444;
+	width: 100%;
+	text-align: center;
+}
+
 table {
 	border-collapse: collapse;
 	margin: 2ch 0ch;
@@ -35,24 +48,63 @@ td, th {
 img {
 	width: 1.5ch;
 }
-</style>
-<body>
-	<header>
-		<h1>早い者勝ち挑戦データ</h1>
-		<button type="button" id="ButtonCation">注意書き</button>
-	</header>
-	<form id="FormPlayerData" onSubmit="return false;">
-		<label id="LabelPlayerID">
-			<span>プレイヤーＩＤ</span>
-			<input type="number" min="0" step="1" value="16842796"/>
-		</label>
-		<button type="submit" id="FormPlayerDataSubmit">探す</button>
-	</form>
-	<div id="DivResult"></div>
-</body>
-  <script>
+button{
+	cursor: pointer;
+}
+main > article:not(.sc){
+	display: none !important;
+}
+#ArticlePlayerData{
+	display: block;
+}
+#ArticleMissionAllData{
+	display: block;
+}
+.DivResults > section:not(.sc2){
+	display: none;
+}
+
+	</style>
+	<body>
+		<header>
+			<h1><a href="./main.htm">早い者勝ち挑戦データ</a></h1>
+			<button type="button" id="ButtonCation">注意書き</button>
+		</header>
+		<nav id="NavMain">
+		</nav>
+		<main id="MainContent">
+		</main>
+	</body>
+	<script>
 (async()=> {
 "use strict";
+
+const IFURL = new class{	//InterFaceURL
+	query = {
+		get: (key) => {
+			const url = new URL(location);
+			return url.searchParams.get(key);
+		},
+		set: (key, value) => {
+			const url = new URL(location);
+			url.searchParams.set(key, value);
+			return url;
+		},
+	}
+	pushHistory = (url) => {
+		history.pushState({}, "", url);
+	}
+	replaceHistory = (url) => {
+		history.replaceState({}, "", url);
+	}
+}
+function uniqueClassName(className, addDOM){
+	const tars = document.querySelectorAll(`.${className}`);
+	for(let i = tars.length - 1; i >= 0; i--){
+		tars[i].classList.remove(className);
+	}
+	addDOM.classList.add(className);
+}
 
 function sortTable(){
 	if(event.target.tagName !== "TH"){
@@ -110,384 +162,456 @@ async function getJSON(link){
 	return response.json();
 }
 
-const EVENTPOINT_KIND_NAMES = {
-	"A0": "効率",
-	"A1": "速度",
-	"A2": "フラグなし",
-	"A3": "連勝",
-	"A4": "高難易度",
-	"A5": "ＮＧ",
-	"A6": "勝利",
-	"A7": "資源",
-	"A8": "アリーナ",
-	"B0": "経験",
-	"B1": "コイン",
-	"B3": "宝石",
-	"Z0": "トップシークレット",
-};
-const EVENTPOINT_KIND_IMAGE_HASHS = {
-	"https://minesweeper.online/img/candies/cake/507.svg?v4": "A0",
-	"https://minesweeper.online/img/candies/cake/508.svg?v4": "A1",
-	"https://minesweeper.online/img/candies/cake/509.svg?v4": "A2",
-	"https://minesweeper.online/img/candies/cake/510.svg?v4": "A3",
-	"https://minesweeper.online/img/candies/cake/511.svg?v4": "A4",
-	"https://minesweeper.online/img/candies/cake/512.svg?v4": "A5",
-	"https://minesweeper.online/img/candies/cake/513.svg?v4": "A6",
-	"https://minesweeper.online/img/candies/cake/514.svg?v4": "A7",
-	"https://minesweeper.online/img/candies/cake/515.svg?v4": "A8",
-	"https://minesweeper.online/img/candies/cake/516.svg?v4": "B3",
-	"https://minesweeper.online/img/candies/pumpkin/490.svg?v4": "B0",
-	"https://minesweeper.online/img/candies/pumpkin/491.svg?v4": "B1",
-	"https://minesweeper.online/img/candies/pumpkin/492.svg?v4": "A0",
-	"https://minesweeper.online/img/candies/pumpkin/493.svg?v4": "A1",
-	"https://minesweeper.online/img/candies/pumpkin/494.svg?v4": "A2",
-	"https://minesweeper.online/img/candies/pumpkin/495.svg?v4": "A3",
-	"https://minesweeper.online/img/candies/pumpkin/496.svg?v4": "A4",
-	"https://minesweeper.online/img/candies/pumpkin/497.svg?v4": "A5",
-	"https://minesweeper.online/img/candies/pumpkin/498.svg?v4": "A6",
-	"https://minesweeper.online/img/candies/pumpkin/499.svg?v4": "A7",
-	"https://minesweeper.online/img/candies/pumpkin/500.svg?v4": "A8",
-	"https://minesweeper.online/img/candies/pumpkin/501.svg?v4": "B3",
-	"https://minesweeper.online/img/candies/fruit/475.svg?v4": "B0",
-	"https://minesweeper.online/img/candies/fruit/476.svg?v4": "B1",
-	"https://minesweeper.online/img/candies/fruit/477.svg?v4": "A0",
-	"https://minesweeper.online/img/candies/fruit/478.svg?v4": "A1",
-	"https://minesweeper.online/img/candies/fruit/479.svg?v4": "A2",
-	"https://minesweeper.online/img/candies/fruit/480.svg?v4": "A3",
-	"https://minesweeper.online/img/candies/fruit/481.svg?v4": "A4",
-	"https://minesweeper.online/img/candies/fruit/482.svg?v4": "A5",
-	"https://minesweeper.online/img/candies/fruit/483.svg?v4": "A6",
-	"https://minesweeper.online/img/candies/fruit/484.svg?v4": "A7",
-	"https://minesweeper.online/img/candies/fruit/485.svg?v4": "A8",
-	"https://minesweeper.online/img/candies/fruit/486.svg?v4": "B3",
-	"https://minesweeper.online/img/candies/drink/460.svg?v4": "B0",
-	"https://minesweeper.online/img/candies/drink/461.svg?v4": "B1",
-	"https://minesweeper.online/img/candies/drink/462.svg?v4": "A0",
-	"https://minesweeper.online/img/candies/drink/463.svg?v4": "A1",
-	"https://minesweeper.online/img/candies/drink/464.svg?v4": "A2",
-	"https://minesweeper.online/img/candies/drink/465.svg?v4": "A3",
-	"https://minesweeper.online/img/candies/drink/466.svg?v4": "A4",
-	"https://minesweeper.online/img/candies/drink/467.svg?v4": "A5",
-	"https://minesweeper.online/img/candies/drink/468.svg?v4": "A6",
-	"https://minesweeper.online/img/candies/drink/469.svg?v4": "A7",
-	"https://minesweeper.online/img/candies/drink/470.svg?v4": "A8",
-	"https://minesweeper.online/img/candies/drink/471.svg?v4": "B3",
-	"https://minesweeper.online/img/candies/drink/472.svg?v4": "Z0",
-	"https://minesweeper.online/img/candies/icecream/445.svg?v4": "B0",
-	"https://minesweeper.online/img/candies/icecream/446.svg?v4": "B1",
-	"https://minesweeper.online/img/candies/icecream/447.svg?v4": "A0",
-	"https://minesweeper.online/img/candies/icecream/448.svg?v4": "A1",
-	"https://minesweeper.online/img/candies/icecream/449.svg?v4": "A2",
-	"https://minesweeper.online/img/candies/icecream/450.svg?v4": "A3",
-	"https://minesweeper.online/img/candies/icecream/451.svg?v4": "A4",
-	"https://minesweeper.online/img/candies/icecream/452.svg?v4": "A5",
-	"https://minesweeper.online/img/candies/icecream/453.svg?v4": "A6",
-	"https://minesweeper.online/img/candies/icecream/454.svg?v4": "A7",
-	"https://minesweeper.online/img/candies/icecream/455.svg?v4": "A8",
-	"https://minesweeper.online/img/candies/icecream/456.svg?v4": "B3",
-	"https://minesweeper.online/img/candies/like/430.svg?v4": "B0",
-	"https://minesweeper.online/img/candies/like/431.svg?v4": "B1",
-	"https://minesweeper.online/img/candies/like/432.svg?v4": "A0",
-	"https://minesweeper.online/img/candies/like/433.svg?v4": "A1",
-	"https://minesweeper.online/img/candies/like/434.svg?v4": "A2",
-	"https://minesweeper.online/img/candies/like/435.svg?v4": "A3",
-	"https://minesweeper.online/img/candies/like/436.svg?v4": "A4",
-	"https://minesweeper.online/img/candies/like/437.svg?v4": "A5",
-	"https://minesweeper.online/img/candies/like/438.svg?v4": "A6",
-	"https://minesweeper.online/img/candies/like/439.svg?v4": "A7",
-	"https://minesweeper.online/img/candies/like/440.svg?v4": "A8",
-	"https://minesweeper.online/img/candies/like/441.svg?v4": "B3",
-	"https://minesweeper.online/img/candies/flower/415.svg?v4": "B0",
-	"https://minesweeper.online/img/candies/flower/416.svg?v4": "B1",
-	"https://minesweeper.online/img/candies/flower/417.svg?v4": "A0",
-	"https://minesweeper.online/img/candies/flower/418.svg?v4": "A1",
-	"https://minesweeper.online/img/candies/flower/419.svg?v4": "A2",
-	"https://minesweeper.online/img/candies/flower/420.svg?v4": "A3",
-	"https://minesweeper.online/img/candies/flower/421.svg?v4": "A4",
-	"https://minesweeper.online/img/candies/flower/422.svg?v4": "A5",
-	"https://minesweeper.online/img/candies/flower/423.svg?v4": "A6",
-	"https://minesweeper.online/img/candies/flower/424.svg?v4": "A7",
-	"https://minesweeper.online/img/candies/flower/425.svg?v4": "A8",
-	"https://minesweeper.online/img/candies/flower/426.svg?v4": "B3",
-	"https://minesweeper.online/img/candies/egg/400.svg?v4": "B0",
-	"https://minesweeper.online/img/candies/egg/401.svg?v4": "B1",
-	"https://minesweeper.online/img/candies/egg/402.svg?v4": "A0",
-	"https://minesweeper.online/img/candies/egg/403.svg?v4": "A1",
-	"https://minesweeper.online/img/candies/egg/404.svg?v4": "A2",
-	"https://minesweeper.online/img/candies/egg/405.svg?v4": "A3",
-	"https://minesweeper.online/img/candies/egg/406.svg?v4": "A4",
-	"https://minesweeper.online/img/candies/egg/407.svg?v4": "A5",
-	"https://minesweeper.online/img/candies/egg/408.svg?v4": "A6",
-	"https://minesweeper.online/img/candies/egg/409.svg?v4": "A7",
-	"https://minesweeper.online/img/candies/egg/410.svg?v4": "A8",
-	"https://minesweeper.online/img/candies/egg/411.svg?v4": "B3",
-	"https://minesweeper.online/img/candies/egg/412.svg?v4": "Z0",
-	"https://minesweeper.online/img/candies/shard/385.svg?v4": "B0",
-	"https://minesweeper.online/img/candies/shard/386.svg?v4": "B1",
-	"https://minesweeper.online/img/candies/shard/387.svg?v4": "A0",
-	"https://minesweeper.online/img/candies/shard/388.svg?v4": "A1",
-	"https://minesweeper.online/img/candies/shard/389.svg?v4": "A2",
-	"https://minesweeper.online/img/candies/shard/390.svg?v4": "A3",
-	"https://minesweeper.online/img/candies/shard/391.svg?v4": "A4",
-	"https://minesweeper.online/img/candies/shard/392.svg?v4": "A5",
-	"https://minesweeper.online/img/candies/shard/393.svg?v4": "A6",
-	"https://minesweeper.online/img/candies/shard/394.svg?v4": "A7",
-	"https://minesweeper.online/img/candies/shard/395.svg?v4": "A8",
-	"https://minesweeper.online/img/candies/shard/396.svg?v4": "B3",
-	"https://minesweeper.online/img/candies/heart/370.svg?v4": "B0",
-	"https://minesweeper.online/img/candies/heart/371.svg?v4": "B1",
-	"https://minesweeper.online/img/candies/heart/372.svg?v4": "A0",
-	"https://minesweeper.online/img/candies/heart/373.svg?v4": "A1",
-	"https://minesweeper.online/img/candies/heart/374.svg?v4": "A2",
-	"https://minesweeper.online/img/candies/heart/375.svg?v4": "A3",
-	"https://minesweeper.online/img/candies/heart/376.svg?v4": "A4",
-	"https://minesweeper.online/img/candies/heart/377.svg?v4": "A5",
-	"https://minesweeper.online/img/candies/heart/378.svg?v4": "A6",
-	"https://minesweeper.online/img/candies/heart/379.svg?v4": "A7",
-	"https://minesweeper.online/img/candies/heart/380.svg?v4": "A8",
-	"https://minesweeper.online/img/candies/heart/381.svg?v4": "B3",
-	"https://minesweeper.online/img/candies/snowflake/355.svg?v4": "B0",
-	"https://minesweeper.online/img/candies/snowflake/356.svg?v4": "B1",
-	"https://minesweeper.online/img/candies/snowflake/357.svg?v4": "A0",
-	"https://minesweeper.online/img/candies/snowflake/358.svg?v4": "A1",
-	"https://minesweeper.online/img/candies/snowflake/359.svg?v4": "A2",
-	"https://minesweeper.online/img/candies/snowflake/360.svg?v4": "A3",
-	"https://minesweeper.online/img/candies/snowflake/361.svg?v4": "A4",
-	"https://minesweeper.online/img/candies/snowflake/362.svg?v4": "A5",
-	"https://minesweeper.online/img/candies/snowflake/363.svg?v4": "A6",
-	"https://minesweeper.online/img/candies/snowflake/364.svg?v4": "A7",
-	"https://minesweeper.online/img/candies/snowflake/365.svg?v4": "A8",
-	"https://minesweeper.online/img/candies/snowflake/366.svg?v4": "B3",
-	"https://minesweeper.online/img/candies/candy/520.svg?v4": "B0",
-	"https://minesweeper.online/img/candies/candy/521.svg?v4": "B1",
-	"https://minesweeper.online/img/candies/candy/522.svg?v4": "A0",
-	"https://minesweeper.online/img/candies/candy/523.svg?v4": "A1",
-	"https://minesweeper.online/img/candies/candy/524.svg?v4": "A2",
-	"https://minesweeper.online/img/candies/candy/525.svg?v4": "A3",
-	"https://minesweeper.online/img/candies/candy/526.svg?v4": "A4",
-	"https://minesweeper.online/img/candies/candy/527.svg?v4": "A5",
-	"https://minesweeper.online/img/candies/candy/528.svg?v4": "A6",
-	"https://minesweeper.online/img/candies/candy/529.svg?v4": "A7",
-	"https://minesweeper.online/img/candies/candy/530.svg?v4": "A8",
-	"https://minesweeper.online/img/candies/candy/531.svg?v4": "B3",
-	"https://minesweeper.online/img/candies/candy/532.svg?v4": "Z0",
-};
+const IMG = await getJSON("./common/img_data.json");
+const EVENTPOINT_KIND_NAMES = IMG["EVENTPOINT_KIND_NAMES"];
+const EVENTPOINT_KIND_IMAGE_HASHS = IMG["EVENTPOINT_KIND_IMAGE_HASHS"];
 
 
-const HayaData = await getJSON("./test.json");
+const HayaData = await getJSON("./S108/data.json");
 const Missions = HayaData["Ms"];
 const Players = HayaData["Ps"];
-document.getElementById("FormPlayerDataSubmit").addEventListener("click", () => {
-	event.preventDefault();
-	const player_id = document.querySelector("#LabelPlayerID input").value;
-	const player_name = Players[player_id];
-	if(!player_name){
-		alert("プレイヤーがいません。");
-		return;
-	}
-	const datas = [];
-	for(const [mission_id, mission_data] of Object.entries(Missions)){
-		for(let i = 0; i < mission_data["Ws"].length; i++){
-			const windata = mission_data["Ws"][i];
-			if(windata[0] === player_id){
-				const o = {};
-				o["L"] = mission_data["L"];
-				o["D"] = mission_data["D"];
-				o["I"] = mission_data["I"];
-				o["R"] = i + 1;
-				o["P"] = windata[1];
-				datas.push(o);
+
+const Control = new class{
+	constructor(){
+		this.before_page = null;
+		window.addEventListener("popstate", this.popstate);
+		document.getElementById("NavMain").addEventListener("click", () => {
+			event.preventDefault();
+			const tar = event.target;
+			if(tar.tagName !== "A"){
+				return;
 			}
+			IFURL.pushHistory(tar.href);
+			this.popstate();
+		});
+	}
+	popstate = () => {
+		const page = IFURL.query.get("page");
+		if(Page[page]){
+			if(this.before_page !== page){
+				Page[page].show();
+			}
+			this.before_page = page;
+			Page[page].show_expansion();
+		}else{
+			document.querySelector(".sc")?.classList.remove("sc");;
+			IFURL.replaceHistory("main.htm");
 		}
 	}
-	
-	const result_div = document.getElementById("DivResult");
-	result_div.innerHTML = "";
-	const sum_table = document.createElement("table");
-	const data_table = document.createElement("table");
-	let sum_levels = 0;
-	let sum_eps = 0;
-	const kind_sums = {};
-	const basesrc = datas[0]["I"].replace(/\/\d.+/, "");
-	for(const kind of Object.keys(EVENTPOINT_KIND_NAMES)){
-		kind_sums[kind] = {};
-		kind_sums[kind]["levels"] = 0;
-		kind_sums[kind]["eps"] = 0;
-		for(const [src, key] of Object.entries(EVENTPOINT_KIND_IMAGE_HASHS)){
-			if(src.includes(basesrc) && key === kind){
-				kind_sums[kind]["img"] = src;
-			}
+}
+
+const Page = {};
+class PageData{
+	constructor(param){
+		this.id = param["id"];
+		this.headerText = param["headerText"];
+		this.addNavMain();
+		this.addMainContent(param["body"]);
+		for(const [key, value] of Object.entries(param["functions"])){
+			this[key] = value;
 		}
+		this.show_expansion = param["show_expansion"];
+		this.init_function = param["init_function"];
+		this.init_function();
+		delete this.init_function;
+		Page[this.id] = this;
 	}
-	{
-		const table = data_table;
-		table.addEventListener("click", sortTable);
-		const caption = document.createElement("caption");
-		caption.innerHTML = `<b>${player_name}</b>さんのクエストデータ`;
-		table.append(caption);
-		const thead = document.createElement("thead");
-		table.append(thead);
+	addNavMain = () => {
+		const a = document.createElement("a");
+		a.href = `./main.htm?page=${this.id}`;
+		a.textContent = this.headerText;
+		document.getElementById("NavMain").append(a);
+	}
+	addMainContent = (body) => {
+		const article = document.createElement("article");
+		article.id = `Article${this.id}`;
+		article.append(body);
+		document.getElementById("MainContent").append(article);
+	}
+	show = () => {
+		uniqueClassName("sc", document.getElementById(`Article${this.id}`));
+	}
+}
+
+new PageData({
+	id: "PlayerData",
+	headerText: "プレイヤー挑戦データ",
+	body: (() => {
+		const fragment = document.createDocumentFragment();
+		const form = document.createElement("form");
+		form.setAttribute("onSubmit", "return false;");
+		fragment.append(form);
 		{
-			const tr = document.createElement("tr");
-			thead.append(tr);
-			{
-				const th = document.createElement("th");
-				th.textContent = "レベル";
-				tr.append(th);
-			}
-			{
-				const th = document.createElement("th");
-				th.textContent = "内容";
-				tr.append(th);
-			}
-			{
-				const th = document.createElement("th");
-				th.textContent = "順位";
-				tr.append(th);
-			}
-			{
-				const th = document.createElement("th");
-				th.textContent = "獲得基礎ep";
-				tr.append(th);
-			}
-			{
-				const th = document.createElement("th");
-				th.textContent = "ep/⚡️";
-				tr.append(th);
-			}
+			const label = document.createElement("label");
+			label.id = "LabelPlayerID";
+			form.append(label);
+			const span = document.createElement("span");
+			span.textContent = "プレイヤーＩＤ";
+			label.append(span);
+			const input = document.createElement("input");
+			input.type = "number";
+			input.min = "0";
+			input.step = "1";
+			input.value = "16842796";
+			label.append(input);
 		}
-		const tbody = document.createElement("tbody");
-		table.append(tbody);
-		datas.forEach((data) => {
-			const tr = document.createElement("tr");
-			tbody.append(tr);
-			let level = data["L"].replace("L", "");
-			if(level.includes("E")){
-				level = level.replace("E", "");
-				level = Number(level) * 3;
+		{
+			const button = document.createElement("button");
+			button.id = "FormPlayerDataSubmit";
+			button.type = "submit";
+			button.textContent = "探す";
+			form.append(button);
+		}
+		{
+			const div = document.createElement("div");
+			div.classList.add("DivResults");
+			fragment.append(div);
+		}
+		return fragment;
+	})(),
+	functions: {
+		"click_search": function(){
+			const player_id = document.querySelector("#LabelPlayerID > input").value;
+			if(this.isExistPlayer(player_id)){
+				const url = IFURL.query.set("player_id", player_id);
+				IFURL.pushHistory(url);
+				this.main_search();
+			}
+		},
+		"isExistPlayer": function(player_id){
+			if(!player_id){
+				return false;
+			}
+			if(!Players[player_id]){
+				alert("プレイヤーがいません。");
+				return false;
+			}
+			return true;
+		},
+		"popstate_search": function(){
+			const player_id = IFURL.query.get("player_id");
+			if(this.isExistPlayer(player_id)){
+				document.querySelector("#LabelPlayerID > input").value = player_id;
+				this.main_search();
 			}else{
-				level = Number(level);
+				document.querySelector("#ArticlePlayerData .sc2")?.classList.remove("sc2");
 			}
-			sum_levels += level;
-			const eps = Number(data["P"]);
-			sum_eps += eps;
-			const kind = EVENTPOINT_KIND_IMAGE_HASHS[data["I"]];
-			kind_sums[kind]["levels"] += level;
-			kind_sums[kind]["eps"] += eps;
-			{
-				const td = document.createElement("td");
-				td.textContent = data["L"];
-				td.dataset.truenum = level;
-				tr.append(td);
-			}
-			{
-				const td = document.createElement("td");
-				td.textContent = data["D"];
-				tr.append(td);
-			}
-			{
-				const td = document.createElement("td");
-				td.textContent = data["R"];
-				tr.append(td);
-			}
-			{
-				const td = document.createElement("td");
-				td.textContent = data["P"];
-				tr.append(td);
-				const img = document.createElement("img");
-				img.src = data["I"];
-				td.append(img);
-			}
-			{
-				const td = document.createElement("td");
-				const num = Number.parseFloat(Number(data["P"]) / level);
-				if(Number.isNaN(num)){
-					td.textContent = "";
-					td.dataset.truenum = 0;
-				}else{
-					td.textContent = num.toFixed(2);
+		},
+		"main_search": function(){
+			const player_id = document.querySelector("#LabelPlayerID > input").value;
+			const player_name = Players[player_id];
+			const datas = [];
+			for(const [mission_id, mission_data] of Object.entries(Missions)){
+				for(let i = 0; i < mission_data["Ws"].length; i++){
+					const windata = mission_data["Ws"][i];
+					if(windata[0] === player_id){
+						const o = {};
+						o["L"] = mission_data["L"];
+						o["D"] = mission_data["D"];
+						o["I"] = mission_data["I"];
+						o["R"] = i + 1;
+						o["P"] = windata[1];
+						datas.push(o);
+					}
 				}
-				tr.append(td);
 			}
-		});
-	}
-	{
-		const putDatas = [];
-		putDatas.push(["合計", "", sum_levels, sum_eps]);
-		for(const [key, value] of Object.entries(kind_sums)){
-			putDatas.push([EVENTPOINT_KIND_NAMES[key], value["img"], value["levels"], value["eps"]]);
-		}
-		const table = sum_table;
-		table.addEventListener("click", sortTable);
-		const caption = document.createElement("caption");
-		caption.innerHTML = `<b>${player_name}</b>さんのデータまとめ`;
-		table.append(caption);
-		const thead = document.createElement("thead");
-		table.append(thead);
-		{
-			const tr = document.createElement("tr");
-			thead.append(tr);
+			
+			const result_div = document.querySelector("#ArticlePlayerData .DivResults");
 			{
-				const th = document.createElement("th");
-				tr.append(th);
-			}
-			{
-				const th = document.createElement("th");
-				th.textContent = "レベル";
-				tr.append(th);
-			}
-			{
-				const th = document.createElement("th");
-				th.textContent = "獲得基礎ep";
-				tr.append(th);
-			}
-			{
-				const th = document.createElement("th");
-				th.textContent = "ep/⚡️";
-				tr.append(th);
-			}
-		}
-		const tbody = document.createElement("tbody");
-		table.append(tbody);
-		putDatas.forEach((arr) => {
-			const tr = document.createElement("tr");
-			tbody.append(tr);
-			{
-				const td = document.createElement("td");
-				td.textContent = arr[0];
-				if(arr[1]){
-					const img = document.createElement("img");
-					img.src = arr[1];
-					td.append(img);
+				const exist_data_section = result_div.querySelector(`.player${player_id}`);
+				if(exist_data_section){
+					uniqueClassName("sc2", exist_data_section);
+					return;
 				}
-				tr.append(td);
 			}
-			{
-				const td = document.createElement("td");
-				td.textContent = arr[2];
-				tr.append(td);
-			}
-			{
-				const td = document.createElement("td");
-				td.textContent = arr[3];
-				tr.append(td);
-			}
-			{
-				const td = document.createElement("td");
-				const num = Number.parseFloat(arr[3] / arr[2]);
-				if(Number.isNaN(num)){
-					td.textContent = "";
-					td.dataset.truenum = 0;
-				}else{
-					td.textContent = num.toFixed(2);
+			const section = document.createElement("section");
+			section.classList.add(`player${player_id}`);
+			uniqueClassName("sc2", section);
+			result_div.append(section);
+			const sum_table = document.createElement("table");
+			const data_table = document.createElement("table");
+			const kind_sums = {};
+			const basesrc = datas[0]["I"].replace(/\/\d.+/, "");
+			for(const kind of Object.keys(EVENTPOINT_KIND_NAMES)){
+				kind_sums[kind] = {};
+				kind_sums[kind]["levels"] = 0;
+				kind_sums[kind]["eps"] = 0;
+				kind_sums[kind]["count"] = 0;
+				for(const [src, key] of Object.entries(EVENTPOINT_KIND_IMAGE_HASHS)){
+					if(src.includes(basesrc) && key === kind){
+						kind_sums[kind]["img"] = src;
+					}
 				}
-				tr.append(td);
 			}
-		});
-	}
-	result_div.append(sum_table);
-	result_div.append(data_table);
+			{
+				const table = data_table;
+				table.addEventListener("click", sortTable);
+				const caption = document.createElement("caption");
+				caption.innerHTML = `<b>${player_name}</b>さんのクエストデータ`;
+				table.append(caption);
+				const thead = document.createElement("thead");
+				table.append(thead);
+				{
+					const tr = document.createElement("tr");
+					thead.append(tr);
+					{
+						const th = document.createElement("th");
+						th.textContent = "レベル";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "内容";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "順位";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "ep";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "分類";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "ep/⚡️";
+						tr.append(th);
+					}
+				}
+				const tbody = document.createElement("tbody");
+				table.append(tbody);
+				datas.forEach((data) => {
+					const tr = document.createElement("tr");
+					tbody.append(tr);
+					let level = data["L"].replace("L", "");
+					if(level.includes("E")){
+						level = level.replace("E", "");
+						level = Number(level) * 3;
+					}else{
+						level = Number(level);
+					}
+					const eps = Number(data["P"]);
+					const kind = EVENTPOINT_KIND_IMAGE_HASHS[data["I"]];
+					kind_sums[kind]["levels"] += level;
+					kind_sums[kind]["eps"] += eps;
+					kind_sums[kind]["count"] += 1;
+					{
+						const td = document.createElement("td");
+						td.textContent = data["L"];
+						td.dataset.truenum = level;
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						td.textContent = data["D"];
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						td.textContent = data["R"];
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						td.textContent = data["P"];
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						td.dataset.truenum = EVENTPOINT_KIND_IMAGE_HASHS[data["I"]];
+						tr.append(td);
+						const img = document.createElement("img");
+						img.src = data["I"];
+						td.append(img);
+					}
+					{
+						const td = document.createElement("td");
+						const num = Number.parseFloat(Number(data["P"]) / level);
+						if(Number.isNaN(num)){
+							td.textContent = "";
+							td.dataset.truenum = 0;
+						}else{
+							td.textContent = num.toFixed(2);
+						}
+						tr.append(td);
+					}
+				});
+			}
+			{
+				const putDatas = [];
+				{
+					for(const [key, value] of Object.entries(kind_sums)){
+						putDatas.push([EVENTPOINT_KIND_NAMES[key], value["img"], key, value["levels"], value["eps"], value["count"]]);
+					}
+					const s_levels = Object.values(kind_sums).reduce((sum, data) => sum + data["levels"], 0);
+					const s_eps = Object.values(kind_sums).reduce((sum, data) => sum + data["eps"], 0);
+					const s_count = Object.values(kind_sums).reduce((sum, data) => sum + data["count"], 0);
+					putDatas.push(["＊合計", "", "ZZ", s_levels, s_eps, s_count]);
+				}
+				const table = sum_table;
+				table.addEventListener("click", sortTable);
+				const caption = document.createElement("caption");
+				caption.innerHTML = `<b>${player_name}</b>さんのデータまとめ`;
+				table.append(caption);
+				const thead = document.createElement("thead");
+				table.append(thead);
+				{
+					const tr = document.createElement("tr");
+					thead.append(tr);
+					{
+						const th = document.createElement("th");
+						th.textContent = "分類";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "mission";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "レベル";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "ep";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "ep/⚡️";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "ep/mission";
+						tr.append(th);
+					}
+				}
+				const tbody = document.createElement("tbody");
+				table.append(tbody);
+				putDatas.forEach((arr) => {
+					const tr = document.createElement("tr");
+					tbody.append(tr);
+					{
+						const td = document.createElement("td");
+						td.textContent = arr[0];
+						if(arr[1]){
+							const img = document.createElement("img");
+							img.src = arr[1];
+							td.append(img);
+						}
+						td.dataset.truenum = arr[2]
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						td.textContent = arr[5];
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						td.textContent = arr[3];
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						td.textContent = arr[4];
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						const num = Number.parseFloat(arr[4] / arr[3]);
+						if(Number.isNaN(num)){
+							td.textContent = "";
+							td.dataset.truenum = 0;
+						}else{
+							td.textContent = num.toFixed(2);
+						}
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						const num = Number.parseFloat(arr[4] / arr[5]);
+						if(Number.isNaN(num)){
+							td.textContent = "";
+							td.dataset.truenum = 0;
+						}else{
+							td.textContent = num.toFixed(2);
+						}
+						tr.append(td);
+					}
+				});
+			}
+			section.append(sum_table);
+			section.append(data_table);
+		},
+		
+	},
+	show_expansion: function(){
+		this.popstate_search();
+	},
+	init_function: function(){
+		document.getElementById("FormPlayerDataSubmit").addEventListener("click", this.click_search.bind(this));
+	},
 });
+new PageData({
+	id: "AllPlayerData",
+	headerText: "全体のデータ",
+	body: (() => {
+		const fragment = document.createDocumentFragment();
+		return fragment;
+	})(),
+	functions: {
+	},
+	show_expansion: function(){
+	
+	},
+	init_function: function(){
+	},
+});
+new PageData({
+	id: "MissionAllData",
+	headerText: "ミッションデータ",
+	body: (() => {
+		const fragment = document.createDocumentFragment();
+		return fragment;
+	})(),
+	functions: {
+	},
+	show_expansion: function(){
+	
+	},
+	init_function: function(){
+	},
+});
+
+
+
+
+
+
+
+/*件数チェック用
+const textarea = document.createElement("textarea");
+let putData = [];
+for(const [mission_id, mission_data] of Object.entries(Missions)){
+	putData.push(mission_id);
+}
+putData = putData.sort();
+textarea.value = putData.join("\n");
+document.body.append(textarea);
+*/
+
+
 document.getElementById("ButtonCation").addEventListener("click", () => {
 	const str1 = `
 ●データを取得した最終時刻は08:50辺りなので、それ以降にクリアしたプレイヤーはデータに含まれていません。
@@ -505,16 +629,7 @@ document.getElementById("ButtonCation").addEventListener("click", () => {
 	alert(str2);
 });
 
-	/*件数チェック用
-const textarea = document.createElement("textarea");
-let putData = [];
-for(const [mission_id, mission_data] of Object.entries(Missions)){
-	putData.push(mission_id);
-}
-putData = putData.sort();
-textarea.value = putData.join("\n");
-document.body.append(textarea);
-*/
+Control.popstate();
 
 })();
   </script>
