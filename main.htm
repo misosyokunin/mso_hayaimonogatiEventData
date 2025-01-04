@@ -15,12 +15,11 @@
 		background-color: #181a1b;
 		color: #c8c3bc;
 	}
+	a{
+		color: #69a6d5;
+	}
 }
 body{
-/*
-	width: 300px;
-	max-width: 300px;
-*/
 	font-family: Open Sans,sans-serif;
 }
 header > * {
@@ -39,6 +38,10 @@ nav > * {
 	text-align: center;
 }
 
+a{
+	color: #337ab7;
+	text-decoration: none;
+}
 table {
 	border-collapse: collapse;
 	margin: 2ch 0ch;
@@ -65,11 +68,14 @@ main > article:not(.sc){
 .DivResults > section:not(.sc2){
 	display: none;
 }
-
+.active {
+	font-weight: bold;
+	filter: invert(1);
+}
 	</style>
 	<body>
 		<header>
-			<h1><a href="./main.htm">早い者勝ち挑戦データ</a></h1>
+			<h1><a href="./main.htm" target>早い者勝ち挑戦データ</a></h1>
 			<button type="button" id="ButtonCation">注意書き</button>
 		</header>
 		<nav id="NavMain">
@@ -106,6 +112,15 @@ function uniqueClassName(className, addDOM){
 		tars[i].classList.remove(className);
 	}
 	addDOM.classList.add(className);
+}
+function getDateString(date){
+	var YYYY = date.getFullYear().toString().padStart(4, '0');
+	var MM = (date.getMonth() + 1).toString().padStart(2, '0');
+	var DD = date.getDate().toString().padStart(2, '0');
+	
+	var HH = date.getHours().toString().padStart(2, '0');
+	var mm = date.getMinutes().toString().padStart(2, '0');
+  return `${YYYY}-${MM}-${DD} ${HH}:${mm}`;
 }
 
 function sortTable(){
@@ -159,10 +174,151 @@ function sortTable(){
 	}
 }
 
+function traceObject(obj){
+	return Object.fromEntries(Object.entries(obj).map(([key, value]) => [value, key]));
+}
+
 async function getJSON(link){
 	const response = await fetch(link);
 	return response.json();
 }
+
+
+const full_reconstructFuncs = {
+	"J0": function(x, y){
+		return `${y}個の${RE_JEMS[x]}を集める`;
+	},
+	"J1": function(x){
+		return `ゲームの報酬で ${x} 個の宝石を集める`;
+	},
+	"J2": function(x){
+		return `${x} 個の宝石を集める`;
+	},
+	"A0": function(x){
+		return `${x} 枚のアリーナチケットを見つける`;
+	},
+	"A1": function(x){
+		return `${x} アリーナコインを稼ぐ`;
+	},
+	"A2": function(x, y){
+		return `L${y} ${RE_ARENAS[x]} のアリーナをクリアする`;
+	},
+	"A3": function(x){
+		return `L${x} 以上のレベルのアリーナをクリアする`;
+	},
+	"K0": function(x, y, z){
+		return `サイズ ${x}x${y}/${z} のカスタムをクリアする`;
+	},
+	"H0": function(x, y){
+		return `レベル  ${RE_MODES[x]} のゲームをヒントなしで ${y} 回クリアする`;
+	},
+	"H1": function(x, y){
+		return `レベル  ${RE_MODES[x]} のゲームを ${y} 秒以内にクリアする`;
+	},
+	"H2": function(x, y){
+		return `レベル  ${RE_MODES[x]} のゲームをフラグなしで ${y} 回クリアする`;
+	},
+	"H3": function(x, y){
+		return `レベル ${RE_MODES[x]} のゲームを ${y} 回連続でクリアする`;
+	},
+	"H4": function(x, y, z){
+		return `レベル ${RE_MODES[x]} のゲームを効率${y}%以上で ${z} 回クリアする`;
+	},
+	"H5": function(x, y){
+		return `レベル ${RE_MODES[x]} のゲームを100回中 ${y} 回クリアする`;
+	},
+	"H6": function(x, y){
+		return `レベル ${RE_MODES[x]} のゲームを24時間以内に ${y} 回クリアする`;
+	},
+	"H7": function(x, y){
+		return `レベル  ${RE_MODES[x]} のゲームを ${y}回クリアする`;
+	},
+	"M0": function(x){
+		return `${x} 名誉ポイントを稼ぐ`;
+	},
+	"M1": function(x){
+		return `ゲームの報酬で ${x} コインを稼ぐ`;
+	},
+	"M2": function(x){
+		return `${x} コインを稼ぐ`;
+	},
+	"M3": function(x){
+		return `イベントポイントを${x}個集める`;
+	},
+}
+const short_reconstructFuncs = {
+	"J0": function(x, y){
+		return `${y}${RE_JEMS[x]}`;
+	},
+	"J1": function(x){
+		return `${x}宝石（ゲーム報酬）`;
+	},
+	"J2": function(x){
+		return `${x}宝石`;
+	},
+	"A0": function(x){
+		return `${x}アリーナチケット`;
+	},
+	"A1": function(x){
+		return `${x}アリーナコイン`;
+	},
+	"A2": function(x, y){
+		return `L${y}以上の${RE_ARENAS[x]}アリーナ`;
+	},
+	"A3": function(x){
+		return `L${x}以上アリーナ`;
+	},
+	"K0": function(x, y, z){
+		return `カスタム${x}x${y}/${z}`;
+	},
+	"H0": function(x, y){
+		return `${RE_MODES[x]}ヒントなし${y}回`;
+	},
+	"H1": function(x, y){
+		return `${RE_MODES[x]}${y}秒以内`;
+	},
+	"H2": function(x, y){
+		return `${RE_MODES[x]}フラグなし${y}回`;
+	},
+	"H3": function(x, y){
+		return `${RE_MODES[x]}${y}連`;
+	},
+	"H4": function(x, y, z){
+		return `${RE_MODES[x]}効率${y}%以上で${z}回`;
+	},
+	"H5": function(x, y){
+		return `${RE_MODES[x]}習熟${y}`;
+	},
+	"H6": function(x, y){
+		return `${RE_MODES[x]}${y}回（24時間以内）`;
+	},
+	"H7": function(x, y){
+		return `${RE_MODES[x]}${y}回`;
+	},
+	"M0": function(x){
+		return `${x}名誉`;
+	},
+	"M1": function(x){
+		return `${x}コイン（ゲーム報酬）`;
+	},
+	"M2": function(x){
+		return `${x}コイン`;
+	},
+	"M3": function(x){
+		return `${x}イベントポイント`;
+	},
+}
+//========================================
+
+
+const MSO_CONSTANT = await getJSON("./common/mso_constant.json");
+const JEMS = MSO_CONSTANT["JEMS"];
+const ARENAS = MSO_CONSTANT["ARENAS"];
+const MODES = MSO_CONSTANT["MODES"];
+const RE_JEMS = traceObject(JEMS);
+const RE_ARENAS = traceObject(ARENAS);
+const RE_MODES = traceObject(MODES);
+
 
 const IMG = await getJSON("./common/img_data.json");
 const EVENTPOINT_KIND_NAMES = IMG["EVENTPOINT_KIND_NAMES"];
@@ -173,16 +329,20 @@ const HayaData = await getJSON("./S108/data.json");
 const Missions = HayaData["Ms"];
 const Players = HayaData["Ps"];
 
+
 const Control = new class{
 	constructor(){
 		this.before_page = null;
 		window.addEventListener("popstate", this.popstate);
-		document.getElementById("NavMain").addEventListener("click", () => {
-			event.preventDefault();
+		document.addEventListener("click", () => {
 			const tar = event.target;
 			if(tar.tagName !== "A"){
 				return;
 			}
+			if(tar.hasAttribute("target")){
+				return;
+			}
+			event.preventDefault();
 			IFURL.pushHistory(tar.href);
 			this.popstate();
 		});
@@ -195,9 +355,9 @@ const Control = new class{
 			}
 			this.before_page = page;
 			Page[page].show_expansion();
-		}else{
-			document.querySelector(".sc")?.classList.remove("sc");;
-			IFURL.replaceHistory("main.htm");
+			if(event?.type === "click"){
+				window.scroll({top: 0});
+			}
 		}
 	}
 }
@@ -220,7 +380,7 @@ class PageData{
 	}
 	addNavMain = () => {
 		const a = document.createElement("a");
-		a.href = `./main.htm?page=${this.id}`;
+		a.href = `?page=${this.id}`;
 		a.textContent = this.headerText;
 		document.getElementById("NavMain").append(a);
 	}
@@ -232,6 +392,7 @@ class PageData{
 	}
 	show = () => {
 		uniqueClassName("sc", document.getElementById(`Article${this.id}`));
+		uniqueClassName("active", document.querySelector(`#NavMain > a[href*="${this.id}"]`));
 	}
 }
 
@@ -274,13 +435,13 @@ new PageData({
 	functions: {
 		"click_search": function(){
 			const player_id = document.querySelector("#LabelPlayerID > input").value;
-			if(this.isExistPlayer(player_id)){
+			if(this.isExist(player_id)){
 				const url = IFURL.query.set("player_id", player_id);
 				IFURL.pushHistory(url);
 				this.main_search();
 			}
 		},
-		"isExistPlayer": function(player_id){
+		"isExist": function(player_id){
 			if(!player_id){
 				return false;
 			}
@@ -292,7 +453,7 @@ new PageData({
 		},
 		"popstate_search": function(){
 			const player_id = IFURL.query.get("player_id");
-			if(this.isExistPlayer(player_id)){
+			if(this.isExist(player_id)){
 				document.querySelector("#LabelPlayerID > input").value = player_id;
 				this.main_search();
 			}else{
@@ -313,6 +474,7 @@ new PageData({
 						o["I"] = mission_data["I"];
 						o["R"] = i + 1;
 						o["P"] = windata[1];
+						o["MissionID"] = mission_id;
 						datas.push(o);
 					}
 				}
@@ -368,7 +530,7 @@ new PageData({
 					}
 					{
 						const th = document.createElement("th");
-						th.textContent = "順位";
+						th.textContent = "順位👑";
 						tr.append(th);
 					}
 					{
@@ -383,7 +545,7 @@ new PageData({
 					}
 					{
 						const th = document.createElement("th");
-						th.textContent = "🎃/⚡️";
+						th.textContent = "ep/⚡️";
 						tr.append(th);
 					}
 				}
@@ -412,12 +574,16 @@ new PageData({
 					}
 					{
 						const td = document.createElement("td");
-						td.textContent = data["D"];
+						const param = data["D"].split("#");
+						td.textContent = short_reconstructFuncs[param["0"]](param["1"], param["2"], param["3"]);
 						tr.append(td);
 					}
 					{
 						const td = document.createElement("td");
-						td.textContent = data["R"];
+						const a = document.createElement("a");
+						a.href = `?page=MissionData&mission_id=${data["MissionID"]}`;
+						a.textContent = data["R"];
+						td.append(a);
 						tr.append(td);
 					}
 					{
@@ -556,7 +722,6 @@ new PageData({
 			section.append(sum_table);
 			section.append(data_table);
 		},
-		
 	},
 	show_expansion: function(){
 		this.popstate_search();
@@ -581,38 +746,482 @@ new PageData({
 	},
 });
 new PageData({
-	id: "MissionAllData",
+	id: "MissionData",
 	headerText: "ミッションデータ",
 	body: (() => {
 		const fragment = document.createDocumentFragment();
+		const form = document.createElement("form");
+		form.setAttribute("onSubmit", "return false;");
+		fragment.append(form);
+		{
+			const label = document.createElement("label");
+			label.id = "LabelMissionID";
+			form.append(label);
+			const span = document.createElement("span");
+			span.textContent = "ミッションＩＤ";
+			label.append(span);
+			const input = document.createElement("input");
+			input.type = "number";
+			input.min = "0";
+			input.step = "1";
+			input.value = "5819";
+			label.append(input);
+		}
+		{
+			const button = document.createElement("button");
+			button.id = "FormMissionDataSubmit";
+			button.type = "submit";
+			button.textContent = "探す";
+			form.append(button);
+		}
+		{
+			const button = document.createElement("button");
+			button.id = "FormAllMissionDataSubmit";
+			button.type = "submit";
+			button.textContent = "全部見る";
+			form.append(button);
+		}
+		{
+			const div = document.createElement("div");
+			div.classList.add("DivResults");
+			fragment.append(div);
+		}
 		return fragment;
 	})(),
 	functions: {
+		"click_target_search": function(){
+			const mission_id = document.querySelector("#LabelMissionID > input").value;
+			if(this.isExist(mission_id)){
+				const url = IFURL.query.set("mission_id", mission_id);
+				IFURL.pushHistory(url);
+				this.search_mission_detail();
+			}
+		},
+		"click_all_search": function(){
+			const url = "?page=MissionData";
+			IFURL.pushHistory(url);
+			this.search_all_mission();
+		},
+		"isExist": function(mission_id){
+			if(!mission_id){
+				return false;
+			}
+			if(!Missions[mission_id]){
+				alert(`ミッションＩＤ「${mission_id}」はありません。`);
+				return false;
+			}
+			return true;
+		},
+		"popstate_search": function(){
+			const mission_id = IFURL.query.get("mission_id");
+			if(!mission_id){
+				this.search_all_mission();
+				return;
+			}
+			if(this.isExist(mission_id)){
+				document.querySelector("#LabelMissionID > input").value = mission_id;
+				this.search_mission_detail();
+				return;
+			}
+			document.querySelector("#ArticleMissionData .sc2")?.classList.remove("sc2");
+		},
+		"search_all_mission": function(){
+			const result_div = document.querySelector("#ArticleMissionData .DivResults");
+			{
+				const exist_data_section = result_div.querySelector(".all_mission");
+				if(exist_data_section){
+					uniqueClassName("sc2", exist_data_section);
+					return;
+				}
+			}
+			
+			const datas = [];
+			for(const [key, value] of Object.entries(Missions)){
+				const o = {};
+				o["ID"] = key;
+				o["L"] = value["L"];
+				o["D"] = value["D"];
+				o["I"] = value["I"];
+				o["S"] = value["S"];
+				o["T"] = value["T"];
+				o["Ws"] = value["Ws"].length;
+				datas.push(o);
+			}
+			
+			const section = document.createElement("section");
+			section.classList.add("all_mission");
+			uniqueClassName("sc2", section);
+			result_div.append(section);
+			
+			const kind_sums = {};
+			const basesrc = datas[0]["I"].replace(/\/\d.+/, "");
+			for(const kind of Object.keys(EVENTPOINT_KIND_NAMES)){
+				kind_sums[kind] = {};
+				kind_sums[kind]["levels"] = 0;
+				kind_sums[kind]["winners"] = 0;
+				kind_sums[kind]["count"] = 0;
+				for(const [src, key] of Object.entries(EVENTPOINT_KIND_IMAGE_HASHS)){
+					if(src.includes(basesrc) && key === kind){
+						kind_sums[kind]["img"] = src;
+					}
+				}
+			}
+			
+			const sum_table = document.createElement("table");
+			const data_table = document.createElement("table");
+			{
+				const table = data_table;
+				table.addEventListener("click", sortTable);
+				const caption = document.createElement("caption");
+				caption.innerHTML = "ミッションデータ一覧";
+				table.append(caption);
+				const thead = document.createElement("thead");
+				table.append(thead);
+				{
+					const tr = document.createElement("tr");
+					thead.append(tr);
+					{
+						const th = document.createElement("th");
+						th.textContent = "レベル⚡️";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "内容";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "分類";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "勝者";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "シーズン";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "開催時刻";
+						tr.append(th);
+					}
+				}
+				const tbody = document.createElement("tbody");
+				table.append(tbody);
+				datas.forEach((data) => {
+					const tr = document.createElement("tr");
+					tbody.append(tr);
+					let level = data["L"].replace("L", "");
+					if(level.includes("E")){
+						level = level.replace("E", "");
+						level = Number(level) * 3;
+					}else{
+						level = Number(level);
+					}
+					const kind = EVENTPOINT_KIND_IMAGE_HASHS[data["I"]];
+					kind_sums[kind]["levels"] += level;
+					kind_sums[kind]["winners"] += data["Ws"];
+					kind_sums[kind]["count"] += 1;
+					{
+						const td = document.createElement("td");
+						td.textContent = data["L"];
+						td.dataset.truenum = level;
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						const param = data["D"].split("#");
+						td.textContent = short_reconstructFuncs[param["0"]](param["1"], param["2"], param["3"]);
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						td.dataset.truenum = EVENTPOINT_KIND_IMAGE_HASHS[data["I"]];
+						tr.append(td);
+						const img = document.createElement("img");
+						img.src = data["I"];
+						td.append(img);
+					}
+					{
+						const td = document.createElement("td");
+						const a = document.createElement("a");
+						a.href = `?page=MissionData&mission_id=${data["ID"]}`;
+						a.textContent = data["Ws"];
+						td.append(a);
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						td.textContent = data["S"];
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						td.textContent = getDateString(new Date(data["T"]));
+						tr.append(td);
+					}
+				});
+			}
+			{
+				const putDatas = [];
+				{
+					for(const [key, value] of Object.entries(kind_sums)){
+						putDatas.push([EVENTPOINT_KIND_NAMES[key], value["img"], key, value["levels"], value["winners"], value["count"]]);
+					}
+					const s_levels = Object.values(kind_sums).reduce((sum, data) => sum + data["levels"], 0);
+					const s_winners = Object.values(kind_sums).reduce((sum, data) => sum + data["winners"], 0);
+					const s_count = Object.values(kind_sums).reduce((sum, data) => sum + data["count"], 0);
+					putDatas.push(["＊合計", "", "ZZ", s_levels, s_winners, s_count]);
+				}
+				const table = sum_table;
+				table.addEventListener("click", sortTable);
+				const caption = document.createElement("caption");
+				caption.innerHTML = "ミッションデータまとめ";
+				table.append(caption);
+				const thead = document.createElement("thead");
+				table.append(thead);
+				{
+					const tr = document.createElement("tr");
+					thead.append(tr);
+					{
+						const th = document.createElement("th");
+						th.textContent = "分類";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "mission🪧";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "レベル⚡️";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "勝者";
+						tr.append(th);
+					}
+				}
+				const tbody = document.createElement("tbody");
+				table.append(tbody);
+				putDatas.forEach((arr) => {
+					const tr = document.createElement("tr");
+					tbody.append(tr);
+					{
+						const td = document.createElement("td");
+						td.textContent = arr[0];
+						if(arr[1]){
+							const img = document.createElement("img");
+							img.src = arr[1];
+							td.append(img);
+						}
+						td.dataset.truenum = arr[2]
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						td.textContent = arr[5];
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						td.textContent = arr[3];
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						td.textContent = arr[4];
+						tr.append(td);
+					}
+				});
+			}
+			section.append(sum_table);
+			section.append(data_table);
+		},
+		"search_mission_detail": function(){
+			const mission_id = document.querySelector("#LabelMissionID > input").value;
+			const result_div = document.querySelector("#ArticleMissionData .DivResults");
+			{
+				const exist_data_section = result_div.querySelector(`.mission${mission_id}`);
+				if(exist_data_section){
+					uniqueClassName("sc2", exist_data_section);
+					return;
+				}
+			}
+			
+			const section = document.createElement("section");
+			section.classList.add(`mission${mission_id}`);
+			uniqueClassName("sc2", section);
+			result_div.append(section);
+			
+			const datao = Missions[mission_id];
+			
+			{
+				const table = document.createElement("table");
+//				table.addEventListener("click", sortTable);
+				const caption = document.createElement("caption");
+				caption.innerHTML = `ミッション「<b>${mission_id}</b>」のデータ`;
+				table.append(caption);
+				const thead = document.createElement("thead");
+				table.append(thead);
+				{
+					const tr = document.createElement("tr");
+					thead.append(tr);
+					{
+						const th = document.createElement("th");
+						th.textContent = "レベル⚡️";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "内容";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "分類";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "勝者";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "シーズン";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "開催時刻";
+						tr.append(th);
+					}
+				}
+				const tbody = document.createElement("tbody");
+				table.append(tbody);
+				{
+					const data = datao;
+					const tr = document.createElement("tr");
+					tbody.append(tr);
+					{
+						let level = data["L"].replace("L", "");
+						if(level.includes("E")){
+							level = level.replace("E", "");
+							level = Number(level) * 3;
+						}else{
+							level = Number(level);
+						}
+						const td = document.createElement("td");
+						td.textContent = data["L"];
+						td.dataset.truenum = level;
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						const param = data["D"].split("#");
+						td.textContent = full_reconstructFuncs[param["0"]](param["1"], param["2"], param["3"]);
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						td.dataset.truenum = EVENTPOINT_KIND_IMAGE_HASHS[data["I"]];
+						tr.append(td);
+						const img = document.createElement("img");
+						img.src = data["I"];
+						td.append(img);
+					}
+					{
+						const td = document.createElement("td");
+						td.textContent = data["Ws"].length;
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						td.textContent = data["S"];
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						td.textContent = getDateString(new Date(data["T"]));
+						tr.append(td);
+					}
+				}
+				section.append(table);
+			}
+			{
+				const table = document.createElement("table");
+				table.addEventListener("click", sortTable);
+				const caption = document.createElement("caption");
+				caption.innerHTML = `ミッション「<b>${mission_id}</b>」の勝者データ`;
+				table.append(caption);
+				const thead = document.createElement("thead");
+				table.append(thead);
+				{
+					const tr = document.createElement("tr");
+					thead.append(tr);
+					{
+						const th = document.createElement("th");
+						th.textContent = "順位👑";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "プレイヤー";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
+						th.textContent = "ep🎃";
+						tr.append(th);
+					}
+				}
+				const tbody = document.createElement("tbody");
+				table.append(tbody);
+				let rank = 0;
+				datao["Ws"].forEach((arr) => {
+					rank++;
+					const tr = document.createElement("tr");
+					tbody.append(tr);
+					{
+						const td = document.createElement("td");
+						td.textContent = rank;
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						const a = document.createElement("a");
+						a.href = `?page=PlayerData&player_id=${arr[0]}`;
+						a.textContent = Players[arr[0]];
+						td.append(a);
+						tr.append(td);
+					}
+					{
+						const td = document.createElement("td");
+						td.textContent = arr[1];
+						tr.append(td);
+					}
+				});
+				section.append(table);
+			}
+		},
 	},
 	show_expansion: function(){
-	
+		this.popstate_search();
 	},
 	init_function: function(){
+		document.getElementById("FormMissionDataSubmit").addEventListener("click", this.click_target_search.bind(this));
+		document.getElementById("FormAllMissionDataSubmit").addEventListener("click", this.click_all_search.bind(this));
+
 	},
 });
-
-
-
-
-
-
-
-/*件数チェック用
-const textarea = document.createElement("textarea");
-let putData = [];
-for(const [mission_id, mission_data] of Object.entries(Missions)){
-	putData.push(mission_id);
-}
-putData = putData.sort();
-textarea.value = putData.join("\n");
-document.body.append(textarea);
-*/
-
 
 document.getElementById("ButtonCation").addEventListener("click", () => {
 	const str1 = `
@@ -632,6 +1241,175 @@ document.getElementById("ButtonCation").addEventListener("click", () => {
 });
 
 Control.popstate();
+
+
+
+
+
+
+/*
+//件数チェック用
+{
+	const textarea = document.createElement("textarea");
+	let putData = [];
+	for(const [mission_id, mission_data] of Object.entries(Missions)){
+		putData.push(mission_id);
+	}
+	putData = putData.sort();
+	textarea.value = putData.join("\n");
+	document.body.append(textarea);
+}
+*/
+/*
+//開催時刻セット用
+{
+	const day = new Date('2024-12-04 8:00');
+	let i = 0;
+	for(const [mission_id, mission_data] of Object.entries(Missions)){
+		i++;
+		mission_data["T"] = day.getTime();
+		if(i === 2){
+			day.setHours(day.getHours() + 1);
+			i = 0;
+		}
+	}
+	const textarea = document.createElement("textarea");
+	textarea.value = JSON.stringify(HayaData);
+	document.body.append(textarea);
+}
+*/
+/*
+//クエストの内容を出力する
+let arr = [];
+const trs = document.querySelectorAll("table")[1].querySelectorAll("tbody > tr");
+Array.from(trs).forEach((tr) => {
+	const td = tr.querySelector(":scope > td:nth-child(2)");
+	arr.push(td.textContent);
+});
+
+arr = [...new Set(arr)];
+console.log(arr.join("\n"));
+*/
+
+/*
+//クエストを圧縮する
+{
+const compactFuncs = [
+	function(str){
+		for(const [key, value] of Object.entries(JEMS)){
+			if(str.includes(key)){
+				const num = str.match(/\d+/)
+				return ["J0", value, num];
+			}
+		}
+	},
+	function(str){
+		if(/宝石/.test(str)){
+			const num = str.match(/\d+/) ?? 1;
+			if(/ゲームの報酬で/.test(str)){
+				return ["J1", num];
+			}
+			return ["J2", num];
+		}
+	},
+	function(str){
+		if(/アリーナチケット/.test(str)){
+			const num = str.match(/\d+/) ?? 1;
+			return ["A0", num];
+		}
+	},
+	function(str){
+		if(/アリーナコイン/.test(str)){
+			const num = str.match(/\d+/) ?? 1;
+			return ["A1", num];
+		}
+	},
+	function(str){
+		if(!/アリーナ/.test(str)){
+			return;
+		}
+		const num = str.match(/\d+/);
+		for(const [key, value] of Object.entries(ARENAS)){
+			if(str.includes(key)){
+				return ["A2", value, num];
+			}
+		}
+		return ["A3", num];
+	},
+	function(str){
+		if(/カスタム/.test(str)){
+			const nums = str.match(/\d+/g);
+			return ["K0", nums[0], nums[1], nums[2]];
+		}
+	},
+	function(str){
+		for(const [key, value] of Object.entries(MODES)){
+			if(str.includes(key)){
+				const num = str.match(/\d+/) ?? 1;
+				if(/ヒントなし/.test(str)){
+					return ["H0", value, num];
+				}
+				if(/秒以内/.test(str)){
+					return ["H1", value, num];
+				}
+				if(/フラグなし/.test(str)){
+					return ["H2", value, num];
+				}
+				if(/連続/.test(str)){
+					return ["H3", value, num];
+				}
+				const num2 = str.match(/\d+/g);
+				if(/効率/.test(str)){
+					return ["H4", value, num2[0], num2[1] ?? 1];
+				}
+				if(/回中/.test(str)){
+					return ["H5", value, num2[1]];
+				}
+				if(/24時間/.test(str)){
+					return ["H6", value, num2[1]];
+				}
+				return ["H7", value, num];
+			}
+		}
+	},
+	function(str){
+		if(/名誉ポイント/.test(str)){
+			const num = str.match(/\d+/) ?? 1;
+			return ["M0", num];
+		}
+	},
+	function(str){
+		if(/コイン/.test(str)){
+			const num = str.match(/\d+/) ?? 1;
+			if(/ゲームの報酬で/.test(str)){
+				return ["M1", num];
+			}
+			return ["M2", num];
+		}
+	},
+	function(str){
+		if(/イベントポイント/.test(str)){
+			const num = str.match(/\d+/) ?? 1;
+			return ["M3", num];
+		}
+	},
+];
+
+//圧縮
+for(const [mission_id, mission_data] of Object.entries(Missions)){
+	for(let i = 0; i < compactFuncs.length; i++){
+		const rs = compactFuncs[i](mission_data["D"]);
+		if(rs){
+			mission_data["D"] = rs.join("#");
+			break;
+		}
+	}
+}
+	const textarea = document.createElement("textarea");
+	textarea.value = JSON.stringify(HayaData);
+	document.body.append(textarea);
+}
+*/
 
 })();
   </script>
