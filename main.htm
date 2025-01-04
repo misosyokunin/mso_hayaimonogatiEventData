@@ -6,7 +6,10 @@
 	</head>
 	<style>
 * {
+/*
 	font-size: 1.0ch;
+*/
+	font-size: 16px;
 	color: light-dark(#181a1b, #c8c3bc);
 	background-color: light-dark(#fff, #c8c3bc);
 }
@@ -174,9 +177,6 @@ function sortTable(){
 	}
 }
 
-function traceObject(obj){
-	return Object.fromEntries(Object.entries(obj).map(([key, value]) => [value, key]));
-}
 
 async function getJSON(link){
 	const response = await fetch(link);
@@ -186,7 +186,7 @@ async function getJSON(link){
 
 const full_reconstructFuncs = {
 	"J0": function(x, y){
-		return `${y}個の${RE_JEMS[x]}を集める`;
+		return `${y}個の${JEMS[x]}を集める`;
 	},
 	"J1": function(x){
 		return `ゲームの報酬で ${x} 個の宝石を集める`;
@@ -201,7 +201,7 @@ const full_reconstructFuncs = {
 		return `${x} アリーナコインを稼ぐ`;
 	},
 	"A2": function(x, y){
-		return `L${y} ${RE_ARENAS[x]} のアリーナをクリアする`;
+		return `L${y} ${ARENAS[x]} のアリーナをクリアする`;
 	},
 	"A3": function(x){
 		return `L${x} 以上のレベルのアリーナをクリアする`;
@@ -210,28 +210,28 @@ const full_reconstructFuncs = {
 		return `サイズ ${x}x${y}/${z} のカスタムをクリアする`;
 	},
 	"H0": function(x, y){
-		return `レベル  ${RE_MODES[x]} のゲームをヒントなしで ${y} 回クリアする`;
+		return `レベル  ${MODES[x]} のゲームをヒントなしで ${y} 回クリアする`;
 	},
 	"H1": function(x, y){
-		return `レベル  ${RE_MODES[x]} のゲームを ${y} 秒以内にクリアする`;
+		return `レベル  ${MODES[x]} のゲームを ${y} 秒以内にクリアする`;
 	},
 	"H2": function(x, y){
-		return `レベル  ${RE_MODES[x]} のゲームをフラグなしで ${y} 回クリアする`;
+		return `レベル  ${MODES[x]} のゲームをフラグなしで ${y} 回クリアする`;
 	},
 	"H3": function(x, y){
-		return `レベル ${RE_MODES[x]} のゲームを ${y} 回連続でクリアする`;
+		return `レベル ${MODES[x]} のゲームを ${y} 回連続でクリアする`;
 	},
 	"H4": function(x, y, z){
-		return `レベル ${RE_MODES[x]} のゲームを効率${y}%以上で ${z} 回クリアする`;
+		return `レベル ${MODES[x]} のゲームを効率${y}%以上で ${z} 回クリアする`;
 	},
 	"H5": function(x, y){
-		return `レベル ${RE_MODES[x]} のゲームを100回中 ${y} 回クリアする`;
+		return `レベル ${MODES[x]} のゲームを100回中 ${y} 回クリアする`;
 	},
 	"H6": function(x, y){
-		return `レベル ${RE_MODES[x]} のゲームを24時間以内に ${y} 回クリアする`;
+		return `レベル ${MODES[x]} のゲームを24時間以内に ${y} 回クリアする`;
 	},
 	"H7": function(x, y){
-		return `レベル  ${RE_MODES[x]} のゲームを ${y}回クリアする`;
+		return `レベル  ${MODES[x]} のゲームを ${y}回クリアする`;
 	},
 	"M0": function(x){
 		return `${x} 名誉ポイントを稼ぐ`;
@@ -248,7 +248,7 @@ const full_reconstructFuncs = {
 }
 const short_reconstructFuncs = {
 	"J0": function(x, y){
-		return `${y}${RE_JEMS[x]}`;
+		return `${y}${JEMS[x]}`;
 	},
 	"J1": function(x){
 		return `${x}宝石（ゲーム報酬）`;
@@ -263,7 +263,7 @@ const short_reconstructFuncs = {
 		return `${x}アリーナコイン`;
 	},
 	"A2": function(x, y){
-		return `L${y}以上の${RE_ARENAS[x]}アリーナ`;
+		return `L${y}以上の${ARENAS[x]}アリーナ`;
 	},
 	"A3": function(x){
 		return `L${x}以上アリーナ`;
@@ -272,28 +272,28 @@ const short_reconstructFuncs = {
 		return `カスタム${x}x${y}/${z}`;
 	},
 	"H0": function(x, y){
-		return `${RE_MODES[x]}ヒントなし${y}回`;
+		return `${MODES[x]}ヒントなし${y}回`;
 	},
 	"H1": function(x, y){
-		return `${RE_MODES[x]}${y}秒以内`;
+		return `${MODES[x]}${y}秒以内`;
 	},
 	"H2": function(x, y){
-		return `${RE_MODES[x]}フラグなし${y}回`;
+		return `${MODES[x]}フラグなし${y}回`;
 	},
 	"H3": function(x, y){
-		return `${RE_MODES[x]}${y}連`;
+		return `${MODES[x]}${y}連`;
 	},
 	"H4": function(x, y, z){
-		return `${RE_MODES[x]}効率${y}%以上で${z}回`;
+		return `${MODES[x]}効率${y}%以上で${z}回`;
 	},
 	"H5": function(x, y){
-		return `${RE_MODES[x]}習熟${y}`;
+		return `${MODES[x]}習熟${y}`;
 	},
 	"H6": function(x, y){
-		return `${RE_MODES[x]}${y}回（24時間以内）`;
+		return `${MODES[x]}${y}回（24時間以内）`;
 	},
 	"H7": function(x, y){
-		return `${RE_MODES[x]}${y}回`;
+		return `${MODES[x]}${y}回`;
 	},
 	"M0": function(x){
 		return `${x}名誉`;
@@ -315,9 +315,6 @@ const MSO_CONSTANT = await getJSON("./common/mso_constant.json");
 const JEMS = MSO_CONSTANT["JEMS"];
 const ARENAS = MSO_CONSTANT["ARENAS"];
 const MODES = MSO_CONSTANT["MODES"];
-const RE_JEMS = traceObject(JEMS);
-const RE_ARENAS = traceObject(ARENAS);
-const RE_MODES = traceObject(MODES);
 
 
 const IMG = await getJSON("./common/img_data.json");
@@ -1294,9 +1291,16 @@ console.log(arr.join("\n"));
 /*
 //クエストを圧縮する
 {
+function traceObject(obj){
+	return Object.fromEntries(Object.entries(obj).map(([key, value]) => [value, key]));
+}
+const RE_JEMS = traceObject(JEMS);
+const RE_ARENAS = traceObject(ARENAS);
+const RE_MODES = traceObject(MODES);
+
 const compactFuncs = [
 	function(str){
-		for(const [key, value] of Object.entries(JEMS)){
+		for(const [key, value] of Object.entries(RE_JEMS)){
 			if(str.includes(key)){
 				const num = str.match(/\d+/)
 				return ["J0", value, num];
@@ -1329,7 +1333,7 @@ const compactFuncs = [
 			return;
 		}
 		const num = str.match(/\d+/);
-		for(const [key, value] of Object.entries(ARENAS)){
+		for(const [key, value] of Object.entries(RE_ARENAS)){
 			if(str.includes(key)){
 				return ["A2", value, num];
 			}
@@ -1343,7 +1347,7 @@ const compactFuncs = [
 		}
 	},
 	function(str){
-		for(const [key, value] of Object.entries(MODES)){
+		for(const [key, value] of Object.entries(RE_MODES)){
 			if(str.includes(key)){
 				const num = str.match(/\d+/) ?? 1;
 				if(/ヒントなし/.test(str)){
