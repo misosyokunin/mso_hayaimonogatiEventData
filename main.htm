@@ -42,10 +42,12 @@ header > * {
 header > h1 > a{
 	text-decoration: none;
 }
+/*
 header {
 	position: sticky;
 	top: 0px;
 }
+*/
 nav {
 	display: flex;
 	justify-content: space-evenly;
@@ -62,9 +64,10 @@ a{
 }
 table {
 	border-collapse: collapse;
-	margin: 2ch 0ch;
+	margin: 5ch 0ch;
 	width: 100%;
 	border-top: solid 1px #444;
+	white-space: pre;
 }
 td, th {
 	border-bottom: solid 1px #444;
@@ -97,6 +100,10 @@ main > article:not(.sc){
 	border-style: inset;
 }
 .table_playerSummary{
+}
+:is(.table_playerSummary, .table_allMissionSummary) > tbody > tr > td:nth-of-type(1) {
+	display: flex;
+	align-items: center;
 }
 .table_playerSummary > :is(thead, tbody) > tr > td:nth-of-type(2) {	/*count*/
 	text-align: right;
@@ -427,15 +434,15 @@ let Players = null;
 	SEASONS.forEach((season) => {
 		const label = document.createElement("label");
 		nav_season.append(label);
-		const span = document.createElement("span");
-		span.textContent = season;
-		label.append(span);
 		const input = document.createElement("input");
 		input.type = "checkbox";
 		input.id = `selectSeason${season}`;
 		input.dataset.season = season;
 		input.addEventListener("change", changeSeasonData);
 		label.append(input);
+		const span = document.createElement("span");
+		span.textContent = season;
+		label.append(span);
 	});
 }
 function setSeasonHref(article){
@@ -701,7 +708,7 @@ new PageData({
 					}
 					{
 						const th = document.createElement("th");
-						th.textContent = "ep/⚡️";
+						th.textContent = "🎃/⚡️";
 						tr.append(th);
 					}
 				}
@@ -828,13 +835,15 @@ new PageData({
 					tbody.append(tr);
 					{
 						const td = document.createElement("td");
-						td.textContent = arr[0];
+						td.dataset.truenum = arr[2]
 						if(arr[1]){
 							const img = document.createElement("img");
 							img.src = arr[1];
 							td.append(img);
 						}
-						td.dataset.truenum = arr[2]
+						const span = document.createElement("span");
+						span.textContent = arr[0];
+						td.append(span);
 						tr.append(td);
 					}
 					{
@@ -1184,13 +1193,15 @@ new PageData({
 					tbody.append(tr);
 					{
 						const td = document.createElement("td");
-						td.textContent = arr[0];
+						td.dataset.truenum = arr[2]
 						if(arr[1]){
 							const img = document.createElement("img");
 							img.src = arr[1];
 							td.append(img);
 						}
-						td.dataset.truenum = arr[2]
+						const span = document.createElement("span");
+						span.textContent = arr[0];
+						td.append(span);
 						tr.append(td);
 					}
 					{
