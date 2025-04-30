@@ -6,8 +6,12 @@
 	</head>
 	<style>
 * {
+/*
+	font-size: 1.0ch;
+*/
 	font-size: 16px;
 	color: light-dark(#181a1b, #c8c3bc);
+	background-color: #fff;
 	background-color: light-dark(#fff, #c8c3bc);
 }
 @media (prefers-color-scheme: dark) {
@@ -21,12 +25,17 @@
 }
 body{
 	font-family: Open Sans,sans-serif;
+	margin: 0px;
 }
 header > * {
 	display: inline-block;
 }
 header > h1 > a{
 	text-decoration: none;
+}
+header {
+	position: sticky;
+	top: 0px;
 }
 nav {
 	display: flex;
@@ -46,9 +55,11 @@ table {
 	border-collapse: collapse;
 	margin: 2ch 0ch;
 	width: 100%;
+	border-top: solid 1px #444;
 }
 td, th {
-	border: solid 1px #444;
+	border-bottom: solid 1px #444;
+	padding: 0.5ch 1ch;
 }
 img {
 	width: 1.5ch;
@@ -56,14 +67,11 @@ img {
 button{
 	cursor: pointer;
 }
+#NavSeason > label{
+	cursor: pointer;
+}
 main > article:not(.sc){
-	display: none !important;
-}
-#ArticlePlayerData{
-	display: block;
-}
-#ArticleMissionAllData{
-	display: block;
+	display: none;
 }
 .DivResults > section:not(.sc2){
 	display: none;
@@ -72,14 +80,90 @@ main > article:not(.sc){
 	font-weight: bold;
 	filter: invert(1);
 }
+.sortTable th {
+	border: outset 3px #888;
+	cursor: pointer;
+}
+.sortTable th:active {
+	border-style: inset;
+}
+.table_playerSummary{
+}
+.table_playerSummary > :is(thead, tbody) > tr > td:nth-of-type(2) {	/*count*/
+	text-align: right;
+}
+.table_playerSummary > :is(thead, tbody) > tr > td:nth-of-type(3) {	/*level*/
+	text-align: right;
+}
+.table_playerSummary > :is(thead, tbody) > tr > td:nth-of-type(4) {	/*ep*/
+	text-align: right;
+}
+.table_playerSummary > :is(thead, tbody) > tr > td:nth-of-type(5) {	/*ep/level*/
+	text-align: right;
+}
+.table_playerSummary > :is(thead, tbody) > tr > td:nth-of-type(6) {	/*ep/count*/
+	text-align: right;
+}
+.table_playerData{
+}
+.table_playerData > :is(thead, tbody) > tr > td:nth-of-type(3) {	/*分類*/
+	text-align: center;
+}
+.table_playerData > :is(thead, tbody) > tr > td:nth-of-type(4) {	/*順位*/
+	text-align: right;
+}
+.table_playerData > :is(thead, tbody) > tr > td:nth-of-type(5) {	/*ep*/
+	text-align: right;
+}
+.table_playerData > :is(thead, tbody) > tr > td:nth-of-type(6) {	/*ep/level*/
+	text-align: right;
+}
+.table_allMissionSummary{
+}
+.table_allMissionSummary > :is(thead, tbody) > tr > td:nth-of-type(2) {	/*数*/
+	text-align: right;
+}
+.table_allMissionSummary > :is(thead, tbody) > tr > td:nth-of-type(3) {	/*レベル*/
+	text-align: right;
+}
+.table_allMissionSummary > :is(thead, tbody) > tr > td:nth-of-type(4) {	/*勝者*/
+	text-align: right;
+}
+.table_allMissionData{
+}
+.table_allMissionData > :is(thead, tbody) > tr > td:nth-of-type(3) {	/*分類*/
+	text-align: center;
+}
+.table_allMissionData > :is(thead, tbody) > tr > td:nth-of-type(4) {	/*勝者*/
+	text-align: right;
+}
+.table_targetMissionDetail{
+}
+.table_targetMissionDetail > :is(thead, tbody) > tr > td:nth-of-type(3) {	/*分類*/
+	text-align: center;
+}
+.table_targetMissionDetail > :is(thead, tbody) > tr > td:nth-of-type(4) {	/*勝者*/
+	text-align: right;
+}
+.table_targetMissionWinners{
+}
+.table_targetMissionWinners > :is(thead, tbody) > tr > td:nth-of-type(1) {	/*順位*/
+	text-align: right;
+}
+.table_targetMissionWinners > :is(thead, tbody) > tr > td:nth-of-type(3) {	/*順位*/
+	text-align: right;
+}
+
 	</style>
 	<body>
 		<header>
 			<h1><a href="./main.htm" target>早い者勝ち挑戦データ</a></h1>
 			<button type="button" id="ButtonCation">注意書き</button>
+			<nav id="NavSeason">
+			</nav>
+			<nav id="NavMain">
+			</nav>
 		</header>
-		<nav id="NavMain">
-		</nav>
 		<main id="MainContent">
 		</main>
 	</body>
@@ -87,15 +171,21 @@ main > article:not(.sc){
 (async()=> {
 "use strict";
 
+const SEASONS = ["S108", "S112"];
 const IFURL = new class{	//InterFaceURL
 	query = {
-		get: (key) => {
-			const url = new URL(location);
+		get: (key, url = location) => {
+			url = new URL(url);
 			return url.searchParams.get(key);
 		},
-		set: (key, value) => {
-			const url = new URL(location);
+		set: (key, value, url = location) => {
+			url = new URL(url);
 			url.searchParams.set(key, value);
+			return url;
+		},
+		delete: (key, url = location) => {
+			url = new URL(url);
+			url.searchParams.delete(key);
 			return url;
 		},
 	}
@@ -281,7 +371,7 @@ const short_reconstructFuncs = {
 		return `${MODES[x]}${y}連`;
 	},
 	"H4": function(x, y, z){
-		return `${MODES[x]}効率${y}%以上で${z}回`;
+		return `${MODES[x]}効率${y}%以上${z}回`;
 	},
 	"H5": function(x, y){
 		return `${MODES[x]}習熟${y}`;
@@ -319,11 +409,69 @@ const EVENTPOINT_KIND_NAMES = IMG["EVENTPOINT_KIND_NAMES"];
 const EVENTPOINT_KIND_IMAGE_HASHS = IMG["EVENTPOINT_KIND_IMAGE_HASHS"];
 
 
-const HayaData = await getJSON("./S108/data.json");
-const Missions = HayaData["Ms"];
-const Players = HayaData["Ps"];
+let HayaData = {};
+let Missions = null;
+let Players = null;
+
+{
+	const nav_season = document.getElementById("NavSeason");
+	SEASONS.forEach((season) => {
+		const label = document.createElement("label");
+		nav_season.append(label);
+		const span = document.createElement("span");
+		span.textContent = season;
+		label.append(span);
+		const input = document.createElement("input");
+		input.type = "checkbox";
+		input.id = `selectSeason${season}`;
+		input.dataset.season = season;
+		input.addEventListener("change", changeSeasonData);
+		label.append(input);
+	});
+}
+function setSeasonHref(article){
+	const ancs = article.querySelectorAll("a");
+	const season = getSeasons();
+	ancs.forEach((anc) => {
+		anc.href = IFURL.query.set("season", season, anc.href);
+	});
+}
 
 
+const HayaDatas = {};
+async function changeSeasonData(){
+	IFURL.pushHistory(IFURL.query.set("season", getSeasons()));
+	if(event?.isTrusted){
+		location.href = location.href;
+		return;
+	}
+	const chkSeasons = document.querySelectorAll("#NavSeason > label > input");
+	HayaData = {};
+	Missions = {};
+	Players = {};
+	const checkedSeasons = [];
+	for(let i = 0; i < chkSeasons.length; i++){
+		const chk = chkSeasons[i];
+		if(!chk.checked){
+			continue;
+		}
+		const season = chk.dataset.season;
+		if(HayaDatas[season]){
+		
+		}else{
+			HayaDatas[season] = await getJSON(`./${season}/data.json`);
+		}
+		Object.assign(Missions, HayaDatas[season]["Ms"]);
+		Object.assign(Players, HayaDatas[season]["Ps"]);
+		checkedSeasons.push(season);
+	}
+	HayaData["Ms"] = Missions;
+	HayaData["Ps"] = Players;
+	setSeasonHref(document.getElementById("NavMain"));
+}
+function getSeasons(){
+	return Array.from(document.querySelectorAll("#NavSeason > label > input:checked")).map((ele) => ele.dataset.season).join("-");
+}
 const Control = new class{
 	constructor(){
 		this.before_page = null;
@@ -355,6 +503,7 @@ const Control = new class{
 		}
 	}
 }
+
 
 const Page = {};
 class PageData{
@@ -430,7 +579,8 @@ new PageData({
 		"click_search": function(){
 			const player_id = document.querySelector("#LabelPlayerID > input").value;
 			if(this.isExist(player_id)){
-				const url = IFURL.query.set("player_id", player_id);
+				let url = IFURL.query.set("player_id", player_id);
+				url = IFURL.query.set("season", getSeasons(), url);
 				IFURL.pushHistory(url);
 				this.main_search();
 			}
@@ -487,7 +637,9 @@ new PageData({
 			uniqueClassName("sc2", section);
 			result_div.append(section);
 			const sum_table = document.createElement("table");
+			sum_table.classList.add("table_playerSummary");
 			const data_table = document.createElement("table");
+			data_table.classList.add("table_playerData");
 			const kind_sums = {};
 			const basesrc = datas[0]["I"].replace(/\/\d.+/, "");
 			for(const kind of Object.keys(EVENTPOINT_KIND_NAMES)){
@@ -504,6 +656,7 @@ new PageData({
 			{
 				const table = data_table;
 				table.addEventListener("click", sortTable);
+				table.classList.add("sortTable");
 				const caption = document.createElement("caption");
 				caption.innerHTML = `<b>${player_name}</b>さんのクエストデータ`;
 				table.append(caption);
@@ -524,17 +677,17 @@ new PageData({
 					}
 					{
 						const th = document.createElement("th");
+						th.textContent = "分類";
+						tr.append(th);
+					}
+					{
+						const th = document.createElement("th");
 						th.textContent = "順位👑";
 						tr.append(th);
 					}
 					{
 						const th = document.createElement("th");
 						th.textContent = "ep🎃";
-						tr.append(th);
-					}
-					{
-						const th = document.createElement("th");
-						th.textContent = "分類";
 						tr.append(th);
 					}
 					{
@@ -574,6 +727,14 @@ new PageData({
 					}
 					{
 						const td = document.createElement("td");
+						td.dataset.truenum = EVENTPOINT_KIND_IMAGE_HASHS[data["I"]];
+						tr.append(td);
+						const img = document.createElement("img");
+						img.src = data["I"];
+						td.append(img);
+					}
+					{
+						const td = document.createElement("td");
 						const a = document.createElement("a");
 						a.href = `?page=MissionData&mission_id=${data["MissionID"]}`;
 						a.textContent = data["R"];
@@ -584,14 +745,6 @@ new PageData({
 						const td = document.createElement("td");
 						td.textContent = data["P"];
 						tr.append(td);
-					}
-					{
-						const td = document.createElement("td");
-						td.dataset.truenum = EVENTPOINT_KIND_IMAGE_HASHS[data["I"]];
-						tr.append(td);
-						const img = document.createElement("img");
-						img.src = data["I"];
-						td.append(img);
 					}
 					{
 						const td = document.createElement("td");
@@ -619,6 +772,7 @@ new PageData({
 				}
 				const table = sum_table;
 				table.addEventListener("click", sortTable);
+				table.classList.add("sortTable");
 				const caption = document.createElement("caption");
 				caption.innerHTML = `<b>${player_name}</b>さんのデータまとめ`;
 				table.append(caption);
@@ -715,6 +869,7 @@ new PageData({
 			}
 			section.append(sum_table);
 			section.append(data_table);
+			setSeasonHref(section);
 		},
 	},
 	show_expansion: function(){
@@ -729,6 +884,9 @@ new PageData({
 	headerText: "全体のデータ",
 	body: (() => {
 		const fragment = document.createDocumentFragment();
+		const span = document.createElement("span");
+		span.textContent = "まだ作っていません。";
+		fragment.append(span);
 		return fragment;
 	})(),
 	functions: {
@@ -786,13 +944,16 @@ new PageData({
 		"click_target_search": function(){
 			const mission_id = document.querySelector("#LabelMissionID > input").value;
 			if(this.isExist(mission_id)){
-				const url = IFURL.query.set("mission_id", mission_id);
+				let url = IFURL.query.set("mission_id", mission_id);
+				url = IFURL.query.set("season", getSeasons(), url);
 				IFURL.pushHistory(url);
 				this.search_mission_detail();
 			}
 		},
 		"click_all_search": function(){
-			const url = "?page=MissionData";
+			let url = IFURL.query.set("page", this.id);
+			url = IFURL.query.delete("mission_id", url);
+			url = IFURL.query.set("season", getSeasons(), url);
 			IFURL.pushHistory(url);
 			this.search_all_mission();
 		},
@@ -865,7 +1026,9 @@ new PageData({
 			const data_table = document.createElement("table");
 			{
 				const table = data_table;
+				table.classList.add("table_allMissionData");
 				table.addEventListener("click", sortTable);
+				table.classList.add("sortTable");
 				const caption = document.createElement("caption");
 				caption.innerHTML = "ミッションデータ一覧";
 				table.append(caption);
@@ -973,7 +1136,9 @@ new PageData({
 					putDatas.push(["＊合計", "", "ZZ", s_levels, s_winners, s_count]);
 				}
 				const table = sum_table;
+				table.classList.add("table_allMissionSummary");
 				table.addEventListener("click", sortTable);
+				table.classList.add("sortTable");
 				const caption = document.createElement("caption");
 				caption.innerHTML = "ミッションデータまとめ";
 				table.append(caption);
@@ -1059,7 +1224,9 @@ new PageData({
 			
 			{
 				const table = document.createElement("table");
+				table.classList.add("table_targetMissionDetail");
 //				table.addEventListener("click", sortTable);
+//				table.classList.add("sortTable");
 				const caption = document.createElement("caption");
 				caption.innerHTML = `ミッション「<b>${mission_id}</b>」のデータ`;
 				table.append(caption);
@@ -1152,7 +1319,9 @@ new PageData({
 			}
 			{
 				const table = document.createElement("table");
+				table.classList.add("table_targetMissionWinners");
 				table.addEventListener("click", sortTable);
+				table.classList.add("sortTable");
 				const caption = document.createElement("caption");
 				caption.innerHTML = `ミッション「<b>${mission_id}</b>」の勝者データ`;
 				table.append(caption);
@@ -1234,7 +1403,19 @@ document.getElementById("ButtonCation").addEventListener("click", () => {
 	alert(str2);
 });
 
-Control.popstate();
+async function startUp(){
+	const getSeasons = IFURL.query.get("season")?.split("-");
+	if(getSeasons?.length && getSeasons[0]){
+		getSeasons.forEach((season) => {
+			document.getElementById(`selectSeason${season}`).checked = true;
+		});
+	}else{
+		document.querySelector("#NavSeason > label:last-child > input").checked = true;
+	}
+	await changeSeasonData();
+	Control.popstate();
+}
+startUp();
 
 
 
@@ -1257,19 +1438,25 @@ Control.popstate();
 /*
 //開催時刻セット用
 {
-	const day = new Date('2024-12-04 8:00');
-	let i = 0;
-	for(const [mission_id, mission_data] of Object.entries(Missions)){
-		i++;
-		mission_data["T"] = day.getTime();
-		if(i === 2){
-			day.setHours(day.getHours() + 1);
-			i = 0;
+	const button = document.createElement("button");
+	button.type = "button";
+	button.textContent = "開催時刻セット";
+	document.body.append(button);
+	button.addEventListener("click", () => {
+		const day = new Date('2025-04-04 9:00');
+		let i = 0;
+		for(const [mission_id, mission_data] of Object.entries(Missions)){
+			i++;
+			mission_data["T"] = day.getTime();
+			if(i === 2){
+				day.setHours(day.getHours() + 1);
+				i = 0;
+			}
 		}
-	}
-	const textarea = document.createElement("textarea");
-	textarea.value = JSON.stringify(HayaData);
-	document.body.append(textarea);
+		const textarea = document.createElement("textarea");
+		textarea.value = JSON.stringify(HayaData);
+		document.body.append(textarea);
+	});
 }
 */
 /*
