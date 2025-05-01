@@ -460,7 +460,7 @@ function setSeasonHref(article){
 
 const HayaDatas = {};
 async function changeSeasonData(){
-	IFURL.pushHistory(IFURL.query.set("season", getSeasons()));
+	IFURL.replaceState(IFURL.query.set("season", getSeasons()));
 	if(event?.isTrusted){
 		location.href = location.href;
 		return;
@@ -469,7 +469,6 @@ async function changeSeasonData(){
 	HayaData = {};
 	Missions = {};
 	Players = {};
-	const checkedSeasons = [];
 	for(let i = 0; i < chkSeasons.length; i++){
 		const chk = chkSeasons[i];
 		if(!chk.checked){
@@ -483,7 +482,6 @@ async function changeSeasonData(){
 		}
 		Object.assign(Missions, HayaDatas[season]["Ms"]);
 		Object.assign(Players, HayaDatas[season]["Ps"]);
-		checkedSeasons.push(season);
 	}
 	HayaData["Ms"] = Missions;
 	HayaData["Ps"] = Players;
