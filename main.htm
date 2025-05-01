@@ -1084,7 +1084,7 @@ new PageData({
 					}
 					{
 						const th = document.createElement("th");
-						th.textContent = "開催時刻";
+						th.textContent = "最終🎃/⚡️";
 						tr.append(th);
 					}
 				}
@@ -1139,7 +1139,13 @@ new PageData({
 					}
 					{
 						const td = document.createElement("td");
-						td.textContent = getDateString(new Date(data["T"]));
+						const num = Number.parseFloat(Number(data["Ws"][data["Ws"].at(-1)[1]) / level);
+						if(Number.isNaN(num)){
+							td.textContent = "";
+							td.dataset.truenum = 0;
+						}else{
+							td.textContent = num.toFixed(2);
+						}
 						tr.append(td);
 					}
 				});
