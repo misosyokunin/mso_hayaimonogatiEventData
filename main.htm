@@ -1019,7 +1019,7 @@ new PageData({
 				o["I"] = value["I"];
 				o["S"] = value["S"];
 				o["T"] = value["T"];
-				o["Ws"] = value["Ws"].length;
+				o["Ws"] = value["Ws"];
 				datas.push(o);
 			}
 			
@@ -1102,7 +1102,7 @@ new PageData({
 					}
 					const kind = EVENTPOINT_KIND_IMAGE_HASHS[data["I"]];
 					kind_sums[kind]["levels"] += level;
-					kind_sums[kind]["winners"] += data["Ws"];
+					kind_sums[kind]["winners"] += data["Ws"].length;
 					kind_sums[kind]["count"] += 1;
 					{
 						const td = document.createElement("td");
@@ -1128,7 +1128,7 @@ new PageData({
 						const td = document.createElement("td");
 						const a = document.createElement("a");
 						a.href = `?page=MissionData&mission_id=${data["ID"]}`;
-						a.textContent = data["Ws"];
+						a.textContent = data["Ws"].length;
 						td.append(a);
 						tr.append(td);
 					}
