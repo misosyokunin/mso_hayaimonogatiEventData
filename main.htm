@@ -1080,7 +1080,7 @@ new PageData({
 					}
 					{
 						const th = document.createElement("th");
-						th.textContent = "シーズン";
+						th.textContent = "開催時刻";
 						tr.append(th);
 					}
 					{
@@ -1135,7 +1135,7 @@ new PageData({
 					}
 					{
 						const td = document.createElement("td");
-						td.textContent = data["S"];
+						td.textContent = getDateString(new Date(data["T"]));
 						tr.append(td);
 					}
 					{
