@@ -36,11 +36,16 @@ input[type=checkbox] {
 	transform: scale(1.5);
 	margin: 1ch;
 }
-header > * {
+h1{
+	width: 74%;
 	display: inline-block;
 }
 header > h1 > a{
 	text-decoration: none;
+}
+#ButtonCation{
+	width: 25%;
+	display: inline-block;
 }
 /*
 header {
@@ -117,6 +122,10 @@ dialog > ul > li > label{
 	align-items: baseline;
 	
 }
+dialog > ul > li > label > input {
+	width: 2ch;
+	flex: none;
+}
 dialog > ul > li > label > strong {
 	margin-right: 1em;
 	width: 10ch;
@@ -131,7 +140,7 @@ dialog > button {
 	<body>
 		<header>
 			<h1><a href="./main.htm" target>早い者勝ち挑戦データ</a></h1>
-			<button type="button" id="ButtonCation">注意書き</button>
+			<button type="button" id="ButtonCaution">注意書き</button>
 			<nav id="NavSeason">
 			</nav>
 			<nav id="NavMain">
@@ -682,8 +691,8 @@ new PageData({
 						},
 					},
 					{
-						"name": "ep🍬",
-						"details": "獲得したEP数です（※補正値無し）。",
+						"name": "EP🍬",
+						"details": "獲得したEP数です。",
 						"initShow": true,
 						"style": `
 							text-align: right;
@@ -694,7 +703,7 @@ new PageData({
 					},
 					{
 						"name": "🍬/⚡️",
-						"details": "クエストのレベルに対する獲得EPの割合です。",
+						"details": "1レベルあたりの獲得EPです。",
 						"initShow": true,
 						"style": `
 							text-align: right;
@@ -771,8 +780,8 @@ new PageData({
 						},
 					},
 					{
-						"name": "ep🍬",
-						"details": "獲得したEP数です（※補正値無し）。",
+						"name": "EP🍬",
+						"details": "獲得したEP数です。",
 						"initShow": true,
 						"style": `
 							text-align: right;
@@ -783,7 +792,7 @@ new PageData({
 					},
 					{
 						"name": "🍬/⚡️",
-						"details": "クエストのレベルに対する獲得EPの割合です。",
+						"details": "1レベルあたりの獲得EPです。",
 						"initShow": true,
 						"style": `
 							text-align: right;
@@ -793,8 +802,8 @@ new PageData({
 						},
 					},
 					{
-						"name": "🍬/⚡️",
-						"details": "ミッション数に対する獲得EPの割合です。",
+						"name": "🍬/🪧",
+						"details": "1ミッションあたりの獲得EPです。",
 						"initShow": true,
 						"style": `
 							text-align: right;
@@ -1142,8 +1151,8 @@ new PageData({
 						},
 					},
 					{
-						"name": "レベル⚡️",
-						"details": "クエストのレベル（＝挑戦するのに必要なアクティビティ数）です。",
+						"name": "mission🪧",
+						"details": "公開されたミッション数です。",
 						"initShow": true,
 						"style": `
 							text-align: right;
@@ -1153,8 +1162,8 @@ new PageData({
 						},
 					},
 					{
-						"name": "mission🪧",
-						"details": "公開されたミッション数です。",
+						"name": "レベル⚡️",
+						"details": "クエストのレベル（＝挑戦するのに必要なアクティビティ数）です。",
 						"initShow": true,
 						"style": `
 							text-align: right;
@@ -1339,7 +1348,7 @@ new PageData({
 						},
 					},
 					{
-						"name": "ep🍬",
+						"name": "EP🍬",
 						"details": "獲得したEPです。",
 						"initShow": true,
 						"style": `
@@ -1351,7 +1360,7 @@ new PageData({
 					},
 					{
 						"name": "🍬/⚡️",
-						"details": "クエストのレベルに対する獲得EPの割合です。",
+						"details": "1レベルあたりの獲得EPです。",
 						"initShow": true,
 						"style": `
 							text-align: right;
@@ -1503,21 +1512,21 @@ function getDivision(num1, num2){
 	}
 }
 
-document.getElementById("ButtonCation").addEventListener("click", () => {
-	const str1 = `
-●データを取得した最終時刻は08:50辺りなので、それ以降にクリアしたプレイヤーはデータに含まれていません。
-●プレイヤー名は各シーズン最終日当時のものです。
-●獲得epは補正値無しのものです。
-●小数は小数点以下2位を四捨五入しています。
-`;
-	const str2 = `
-●作った人：魚頭男
-●当コンテンツはMSO様より公認を受けていない非公認のものです。
-●当コンテンツについてMSO様にお問い合わせを絶対にしないでください。
-●問題などありましたら直ちに公開を取りやめいたします。
-`;
-	alert(str1);
-	alert(str2);
+document.getElementById("ButtonCaution").addEventListener("click", () => {
+	const messages = [];
+	messages.push(`
+🔵データを取得した最終時刻は08:50辺りなので、それ以降にクリアしたプレイヤーはデータに含まれていません。
+🔵プレイヤー名は各シーズン最終日当時のものです。
+🔵獲得EPは補正値無しのものです。
+🔵小数は小数点2位未満を四捨五入しています。
+	)`;
+	messages.push(`
+🔵作った人：魚頭男
+🟡当コンテンツはMSO様より公認を受けていない非公認のものです。
+🟡当コンテンツについてMSO様にお問い合わせを絶対にしないでください。
+🟡問題などありましたら直ちに公開を取りやめいたします。
+	)`;
+	messages.forEach((message) => alert(message));
 });
 
 async function startUp(){
