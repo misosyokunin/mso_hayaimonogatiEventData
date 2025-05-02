@@ -36,16 +36,13 @@ input[type=checkbox] {
 	transform: scale(1.5);
 	margin: 1ch;
 }
-h1{
-	width: 74%;
-	display: inline-block;
+#NavSiteHeader{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
-header > h1 > a{
+#NavSiteHeader > h1 > a{
 	text-decoration: none;
-}
-#ButtonCaution{
-	width: 25%;
-	display: inline-block;
 }
 /*
 header {
@@ -53,11 +50,11 @@ header {
 	top: 0px;
 }
 */
-nav {
+:is(#NavSeason, #NavMain){
 	display: flex;
 	justify-content: space-evenly;
 }
-nav > * {
+:is(#NavSeason, #NavMain) > * {
 	border: solid 1px #444;
 	width: 100%;
 	text-align: center;
@@ -139,8 +136,10 @@ dialog > button {
 	</style>
 	<body>
 		<header>
-			<h1><a href="./main.htm" target>早い者勝ち挑戦データ</a></h1>
-			<button type="button" id="ButtonCaution">注意書き</button>
+			<nav id="NavSiteHeader">
+				<h1><a href="./main.htm" target>早い者勝ち挑戦データ</a></h1>
+				<button type="button" id="ButtonCaution">注意書き</button>
+			</nav>
 			<nav id="NavSeason">
 			</nav>
 			<nav id="NavMain">
@@ -1519,13 +1518,13 @@ document.getElementById("ButtonCaution").addEventListener("click", () => {
 🔵プレイヤー名は各シーズン最終日当時のものです。
 🔵獲得EPは補正値無しのものです。
 🔵小数は小数点2位未満を四捨五入しています。
-	`);
+`);
 	messages.push(`
 🔵作った人：魚頭男
 🟡当コンテンツはMSO様より公認を受けていない非公認のものです。
 🟡当コンテンツについてMSO様にお問い合わせを絶対にしないでください。
 🟡問題などありましたら直ちに公開を取りやめいたします。
-	`);
+`);
 	messages.forEach((message) => alert(message));
 });
 
