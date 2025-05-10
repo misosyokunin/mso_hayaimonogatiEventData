@@ -17,9 +17,11 @@
 @media (prefers-color-scheme: dark) {
 	*{
 		background-color: #181a1b;
+	}
+	*:not(a){
 		color: #c8c3bc;
 	}
-	a{
+	a:not(:visited){
 		color: #69a6d5;
 	}
 }
@@ -61,8 +63,10 @@ header {
 }
 
 a{
-	color: #337ab7;
 	text-decoration: none;
+}
+a:not(:visited){
+	color: #337ab7;
 }
 table {
 	border-collapse: collapse;
@@ -74,12 +78,17 @@ table {
 */
 }
 td, th {
+/*
+	border-right: dashed 1px #888;
+	border-left: dashed 1px #888;
+*/
 	border-bottom: solid 1px #444;
 	padding: 0.5ch 1ch;
 }
 img {
 	width: 2.0ch;
 }
+label,
 button{
 	cursor: pointer;
 }
@@ -98,7 +107,7 @@ main > article:not(.sc){
 }
 .active {
 	font-weight: bold;
-	filter: invert(1);
+	background-color: #F84;
 }
 .sortTable th {
 	border: outset 3px #888;
@@ -110,35 +119,60 @@ main > article:not(.sc){
 .DivResults table > caption > button{
 	margin: 0em 1em;
 }
-dialog > ul {
+dialog > article > ul {
 	list-style: none;
 	padding: 0px;
 }
-dialog > ul > li > label{
+dialog > article > ul > li > label{
 	display: flex;
 	align-items: baseline;
 	
 }
-dialog > ul > li > label > input {
+dialog > article > ul > li > label > input {
 	width: 2ch;
 	flex: none;
 }
-dialog > ul > li > label > strong {
+dialog > article > ul > li > label > strong {
 	margin-right: 1em;
 	width: 10ch;
 	display: inline-block;
 	flex: none;
 }
-dialog > button {
+
+dialog {
+	margin: auto max(3ch, 5%);
+	height: 80vh;
+	padding: 0px;
+}
+dialog > article {
+	height: 90%;
+	overflow-y: scroll;
+	padding: 2ch;
+	margin: 0px;
+	box-sizing: border-box;
+}
+dialog > footer {
+	height: 10%;
+	padding: 1ch;
+	box-sizing: border-box;
+}
+dialog > footer > button{
 	width: 100%;
 }
-
+a[target=_blank]:after {
+	content: "↗️ ";
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	margin: 0px 0.5ch;
+	vertical-align: middle;
+}
 	</style>
 	<body>
 		<header>
 			<nav id="NavSiteHeader">
 				<h1><a href="./main.htm" target>早い者勝ち挑戦データ</a></h1>
-				<button type="button" id="ButtonCaution">注意書き</button>
+				<button type="button" onClick="readme.showModal();">🔰README</button>
 			</nav>
 			<nav id="NavSeason">
 			</nav>
@@ -147,10 +181,60 @@ dialog > button {
 		</header>
 		<main id="MainContent">
 		</main>
+		<dialog id="readme">
+			<article>
+				<section>
+					<h2>注意書き</h2>
+					<p>🟡当コンテンツはMSO様より公認を受けていない非公認のものです。</p>
+					<p>🟡当コンテンツについてMSO様にお問い合わせを絶対にしないでください。</p>
+					<p>🟡問題などありましたら直ちに公開を取りやめいたします。</p>
+				</section>
+				<hr>
+				<section>
+					<h2>表示内容について</h2>
+					<p>🔵データを取得した最終時刻は08:50辺りなので、それ以降にクリアしたプレイヤーはデータに含まれていません。</p>
+					<p>🔵プレイヤー名は各シーズン最終日当時のものです。</p>
+					<p>🔵獲得EPは補正値無しのものです。</p>
+					<p>🔵小数は小数点2位未満を四捨五入しています。</p>
+				</section>
+				<hr>
+				<address>
+					<h2>クレジット</h2>
+					<p>🐟️作った人：<a href="https://minesweeper.online/ja/player/16842796" target="_blank" rel="noopener noreferrer">魚頭男</a></p>
+					<p>🎲マスタご提供：<a href="https://minesweeper.online/ja/player/11151489" target="_blank" rel="noopener noreferrer">3156(Shima)</a></p>
+					<ul>
+						<li><a href="https://docs.google.com/spreadsheets/d/1qk5b1yZ7NBL2jD9-RtUVFMSyEVRhDyIpJXTGfR6a1go/edit?gid=2078390436#gid=2078390436" target="_blank" rel="noopener noreferrer">EPと順位</a></li>
+					</ul>
+				</address>
+				<hr>
+				<section>
+					<h2>更新履歴</h2>
+					<aside>
+						<h3>2025/05/10</h3>
+						<p>🔵ミッションデータに人気度を追加しました。</p>
+						<p>🔵注意書きを🔰READMEに変更し、内容を追記しました。</p>
+						<p>🔵ミッション詳細からカスタム盤面へ飛べるようにしました。<br/><a href="./main.htm?page=MissionData&mission_id=7168&season=S112">こんな感じ</a>です。</p>
+						<p>🔵クエストの内容からミッション詳細へ飛べるようにしました。</p>
+						<p>🟢訪問済みのリンクを区別するようにデザインを変更しました。</p>
+						<p>🔴表をコピーしたときに、分類がコピーできていなかったのを修正しました。</p>
+						<p>🟡3156さんのマスタを導入しました。</p>
+					</aside>
+					<aside>
+						<h3>2025/05/01</h3>
+						<p>公開しました。<br/>でも宣伝を全然していないので限定公開です。</p>
+					</aside>
+				</section>
+			</article>
+			<footer>
+				<button type="button" onClick="readme.close();">閉じる</button>
+			</footer>
+		</dialog>
 	</body>
 	<script>
 (async()=> {
 "use strict";
+
+
 
 const SEASONS = ["S108", "S112"];
 const IFURL = new class{	//InterFaceURL
@@ -252,6 +336,9 @@ async function getJSON(link){
 }
 
 
+function getEP(level, rank){
+	return RANK_EP[level][rank - 1] ?? level;
+}
 const full_reconstructFuncs = {
 	"J0": function(x, y){
 		return `${y}個の${JEMS[x]}を集める`;
@@ -384,10 +471,11 @@ const JEMS = MSO_CONSTANT["JEMS"];
 const ARENAS = MSO_CONSTANT["ARENAS"];
 const MODES = MSO_CONSTANT["MODES"];
 
-
 const IMG = await getJSON("./common/img_data.json");
 const EVENTPOINT_KIND_NAMES = IMG["EVENTPOINT_KIND_NAMES"];
 const EVENTPOINT_KIND_IMAGE_HASHS = IMG["EVENTPOINT_KIND_IMAGE_HASHS"];
+
+const RANK_EP = await getJSON("./common/hayaimonogati_LevelRankEp.json");
 
 
 let HayaData = {};
@@ -595,33 +683,37 @@ new PageData({
 			}
 			
 			this.datas = [];
-			for(const [mission_id, mission_data] of Object.entries(Missions)){
-				for(let i = 0; i < mission_data["Ws"].length; i++){
-					const windata = mission_data["Ws"][i];
-					if(windata[0] === player_id){
-						const o = {};
-						o["L"] = mission_data["L"];
-						o["level"] = getNumberLevel(o["L"]);
-						o["D"] = mission_data["D"];
-						o["I"] = mission_data["I"];
-						o["R"] = i + 1;
-						o["P"] = windata[1];
-						o["MissionID"] = mission_id;
-						this.datas.push(o);
+			{
+				const pi = Number(player_id);
+				for(const [mission_id, mission_data] of Object.entries(Missions)){
+					const index = mission_data["Ws"].indexOf(pi);
+					if(index === -1){
+						continue;
 					}
+					const windata = mission_data["Ws"][index];
+					const o = {};
+					o["L"] = mission_data["L"];
+					o["level"] = getNumberLevel(o["L"]);
+					o["D"] = mission_data["D"];
+					o["I"] = mission_data["I"];
+					o["R"] = index + 1;
+					o["P"] = getEP(o["level"], o["R"]);
+					o["MissionID"] = mission_id;
+					this.datas.push(o);
 				}
 			}
 			
 			this.kind_sums = {};
 			{
-				const basesrc = this.datas[0]["I"].replace(/\/\d.+/, "");
+				const epkind = this.datas[0]["I"].replace(/\/\d.+/, "");
+				const basesrc = `https://minesweeper.online/img/candies/${epkind}`;
 				for(const kind of Object.keys(EVENTPOINT_KIND_NAMES)){
 					this.kind_sums[kind] = {};
 					this.kind_sums[kind]["levels"] = 0;
 					this.kind_sums[kind]["eps"] = 0;
 					this.kind_sums[kind]["count"] = 0;
 					for(const [src, key] of Object.entries(EVENTPOINT_KIND_IMAGE_HASHS)){
-						if(src.includes(basesrc) && key === kind){
+						if(src.startsWith(basesrc) && key === kind){
 							this.kind_sums[kind]["img"] = src;
 						}
 					}
@@ -646,7 +738,7 @@ new PageData({
 						"style": `
 						`,
 						"makeTD": (td, data) => {
-							td.textContent = data["L"];
+							td.textContent = `L${data["L"]}`;
 							td.dataset.truenum = data["level"];
 						},
 					},
@@ -658,7 +750,13 @@ new PageData({
 						`,
 						"makeTD": (td, data) => {
 							const param = data["D"].split("#");
+							const a = document.createElement("a");
+							a.href = `?page=MissionData&mission_id=${data["MissionID"]}`;
+							a.textContent = short_reconstructFuncs[param["0"]](param["1"], param["2"], param["3"]);
+							td.append(a);
+/*
 							td.textContent = short_reconstructFuncs[param["0"]](param["1"], param["2"], param["3"]);
+*/
 						},
 					},
 					{
@@ -669,9 +767,11 @@ new PageData({
 							text-align: center;
 						`,
 						"makeTD": (td, data) => {
-							td.dataset.truenum = EVENTPOINT_KIND_IMAGE_HASHS[data["I"]];
+							const src = `https://minesweeper.online/img/candies/${data["I"]}`;
+							td.dataset.truenum = EVENTPOINT_KIND_IMAGE_HASHS[src];
 							const img = document.createElement("img");
-							img.src = data["I"];
+							img.src = src;
+							img.setAttribute("alt", EVENTPOINT_KIND_NAMES[td.dataset.truenum]);
 							td.append(img);
 						},
 					},
@@ -714,7 +814,8 @@ new PageData({
 				],
 				"createTbodyFunction": (tbody, param) => {
 					this.datas.forEach((data) => {
-						const kind = EVENTPOINT_KIND_IMAGE_HASHS[data["I"]];
+						const src = `https://minesweeper.online/img/candies/${data["I"]}`;
+						const kind = EVENTPOINT_KIND_IMAGE_HASHS[src];
 						this.kind_sums[kind]["levels"] += data["level"];
 						this.kind_sums[kind]["eps"] += Number(data["P"]);
 						this.kind_sums[kind]["count"] += 1;
@@ -758,7 +859,7 @@ new PageData({
 					},
 					{
 						"name": "mission🪧",
-						"details": "挑戦したミッション数です。",
+						"details": "挑戦したクエスト数です。",
 						"initShow": true,
 						"style": `
 							text-align: right;
@@ -802,7 +903,7 @@ new PageData({
 					},
 					{
 						"name": "🍬/🪧",
-						"details": "1ミッションあたりの獲得EPです。",
+						"details": "1クエストあたりの獲得EPです。",
 						"initShow": true,
 						"style": `
 							text-align: right;
@@ -972,14 +1073,15 @@ new PageData({
 			
 			this.kind_sums = {};
 			{
-				const basesrc = this.datas[0]["I"].replace(/\/\d.+/, "");
+				const epkind = this.datas[0]["I"].replace(/\/\d.+/, "");
+				const basesrc = `https://minesweeper.online/img/candies/${epkind}`;
 				for(const kind of Object.keys(EVENTPOINT_KIND_NAMES)){
 					this.kind_sums[kind] = {};
 					this.kind_sums[kind]["levels"] = 0;
 					this.kind_sums[kind]["winners"] = 0;
 					this.kind_sums[kind]["count"] = 0;
 					for(const [src, key] of Object.entries(EVENTPOINT_KIND_IMAGE_HASHS)){
-						if(src.includes(basesrc) && key === kind){
+						if(src.startsWith(basesrc) && key === kind){
 							this.kind_sums[kind]["img"] = src;
 						}
 					}
@@ -999,7 +1101,7 @@ new PageData({
 				"THS": [
 					{
 						"name": "ID",
-						"details": "ミッションのIDです。",
+						"details": "クエストのIDです。",
 						"initShow": false,
 						"style": `
 						`,
@@ -1017,7 +1119,7 @@ new PageData({
 						"style": `
 						`,
 						"makeTD": (td, data) => {
-							td.textContent = data["L"];
+							td.textContent = `L${data["L"]}`;
 							td.dataset.truenum = data["level"];
 						},
 					},
@@ -1029,7 +1131,13 @@ new PageData({
 						`,
 						"makeTD": (td, data) => {
 							const param = data["D"].split("#");
+							const a = document.createElement("a");
+							a.href = `?page=MissionData&mission_id=${data["ID"]}`;
+							a.textContent = short_reconstructFuncs[param["0"]](param["1"], param["2"], param["3"]);
+							td.append(a);
+/*
 							td.textContent = short_reconstructFuncs[param["0"]](param["1"], param["2"], param["3"]);
+*/
 						},
 					},
 					{
@@ -1040,38 +1148,64 @@ new PageData({
 							text-align: center;
 						`,
 						"makeTD": (td, data) => {
-							td.dataset.truenum = EVENTPOINT_KIND_IMAGE_HASHS[data["I"]];
+							const src = `https://minesweeper.online/img/candies/${data["I"]}`;
+							td.dataset.truenum = EVENTPOINT_KIND_IMAGE_HASHS[src];
 							const img = document.createElement("img");
-							img.src = data["I"];
+							img.src = src;
+							img.setAttribute("alt", EVENTPOINT_KIND_NAMES[td.dataset.truenum]);
 							td.append(img);
 						},
 					},
 					{
 						"name": "勝者",
 						"details": "クエストの勝者数です。",
-						"initShow": true,
-						"style": `
-							text-align: right;
-						`,
-						"makeTD": (td, data) => {
-							const a = document.createElement("a");
-							a.href = `?page=MissionData&mission_id=${data["ID"]}`;
-							a.textContent = data["Ws"].length;
-							td.append(a);
-						},
-					},
-/*
-					{
-						"name": "1.0倍ライン",
-						"details": "EP/EVENTが1.0になる順位です。",
 						"initShow": false,
 						"style": `
 							text-align: right;
 						`,
 						"makeTD": (td, data) => {
+							td.textContent = data["Ws"].length;
+/*
+							const a = document.createElement("a");
+							a.href = `?page=MissionData&mission_id=${data["ID"]}`;
+							a.textContent = data["Ws"].length;
+							td.append(a);
+*/
 						},
 					},
-*/
+					{
+						"name": "1.0倍ライン",
+						"details": "EP/EVENTが1.0となる順位です。",
+						"initShow": false,
+						"style": `
+							text-align: right;
+						`,
+						"makeTD": (td, data) => {
+							td.textContent = RANK_EP[data["level"]].length;
+						},
+					},
+					{
+						"name": "人気度(%)",
+						"details": "1.0倍ラインに対する挑戦したプレイヤーの割合です。",
+						"initShow": true,
+						"style": `
+							text-align: right;
+						`,
+						"makeTD": (td, data) => {
+							[td.dataset.truenum, td.textContent] = getDivision(data["Ws"].length * 100, RANK_EP[data["level"]].length);
+						},
+					},
+					{
+						"name": "最終🍬/⚡️",
+						"details": "最後にクリアしたプレイヤーのEP/LEVELです。",
+						"initShow": false,
+						"style": `
+							text-align: right;
+						`,
+						"makeTD": (td, data) => {
+							[td.dataset.truenum, td.textContent] = getDivision(getEP(data["level"], data["Ws"].length), data["level"]);
+						},
+					},
 					{
 						"name": "開催時刻",
 						"details": "クエストが開催された時刻です。",
@@ -1079,7 +1213,7 @@ new PageData({
 						"style": `
 						`,
 						"makeTD": (td, data) => {
-							td.textContent = getDateString(new Date(data["T"]));
+							td.textContent = getDateString(new Date(data["T"] * 48000));
 						},
 					},
 					{
@@ -1087,27 +1221,16 @@ new PageData({
 						"details": "クエストが開催されたシーズンです。",
 						"initShow": false,
 						"style": `
-							text-align: right;
 						`,
 						"makeTD": (td, data) => {
-							td.textContent = data["S"];
-						},
-					},
-					{
-						"name": "最終🍬/⚡️",
-						"details": "最後にクリアしたプレイヤーのEP/LEVELです。",
-						"initShow": true,
-						"style": `
-							text-align: right;
-						`,
-						"makeTD": (td, data) => {
-							[td.dataset.truenum, td.textContent] = getDivision(data["Ws"].at(-1)[1], data["level"]);
+							td.textContent = `S${data["S"]}`;
 						},
 					},
 				],
 				"createTbodyFunction": (tbody, param) => {
 					this.datas.forEach((data) => {
-						const kind = EVENTPOINT_KIND_IMAGE_HASHS[data["I"]];
+						const src = `https://minesweeper.online/img/candies/${data["I"]}`;
+						const kind = EVENTPOINT_KIND_IMAGE_HASHS[src];
 						this.kind_sums[kind]["levels"] += data["level"];
 						this.kind_sums[kind]["winners"] += data["Ws"].length;
 						this.kind_sums[kind]["count"] += 1;
@@ -1151,7 +1274,7 @@ new PageData({
 					},
 					{
 						"name": "mission🪧",
-						"details": "公開されたミッション数です。",
+						"details": "公開されたクエスト数です。",
 						"initShow": true,
 						"style": `
 							text-align: right;
@@ -1242,7 +1365,7 @@ new PageData({
 						"style": `
 						`,
 						"makeTD": (td, data) => {
-							td.textContent = data["L"];
+							td.textContent = `L${data["L"]}`;
 							td.dataset.truenum = data["level"];
 						},
 					},
@@ -1254,7 +1377,13 @@ new PageData({
 						`,
 						"makeTD": (td, data) => {
 							const param = data["D"].split("#");
-							td.textContent = full_reconstructFuncs[param["0"]](param["1"], param["2"], param["3"]);
+							let text = full_reconstructFuncs[param["0"]](param["1"], param["2"], param["3"]);
+							if(text.includes("カスタム")){
+								const mat = text.match(/\d+x\d+\/\d+/)[0];
+								text = text.replace(mat, `<a href="https://minesweeper.online/ja/start/${mat}" target="_blank" rel="noopener noreferrer">${mat}</a>`);
+							}
+							td.innerHTML = text;
+							
 						},
 					},
 					{
@@ -1265,9 +1394,11 @@ new PageData({
 							text-align: center;
 						`,
 						"makeTD": (td, data) => {
-							td.dataset.truenum = EVENTPOINT_KIND_IMAGE_HASHS[data["I"]];
+							const src = `https://minesweeper.online/img/candies/${data["I"]}`;
+							td.dataset.truenum = EVENTPOINT_KIND_IMAGE_HASHS[src];
 							const img = document.createElement("img");
-							img.src = data["I"];
+							img.src = src;
+							img.setAttribute("alt", EVENTPOINT_KIND_NAMES[td.dataset.truenum]);
 							td.append(img);
 						},
 					},
@@ -1287,10 +1418,9 @@ new PageData({
 						"details": "クエストが開催されたシーズンです。",
 						"initShow": true,
 						"style": `
-							text-align: right;
 						`,
 						"makeTD": (td, data) => {
-							td.textContent = data["S"];
+							td.textContent = `S${data["S"]}`;
 						},
 					},
 					{
@@ -1300,7 +1430,7 @@ new PageData({
 						"style": `
 						`,
 						"makeTD": (td, data) => {
-							td.textContent = getDateString(new Date(data["T"]));
+							td.textContent = getDateString(new Date(data["T"] * 48000));
 						},
 					},
 				],
@@ -1339,10 +1469,10 @@ new PageData({
 						"initShow": true,
 						"style": `
 						`,
-						"makeTD": (td, data) => {
+						"makeTD": (td, pid) => {
 							const a = document.createElement("a");
-							a.href = `?page=PlayerData&player_id=${data[0]}`;
-							a.textContent = Players[data[0]];
+							a.href = `?page=PlayerData&player_id=${pid}`;
+							a.textContent = Players[pid];
 							td.append(a);
 						},
 					},
@@ -1353,8 +1483,8 @@ new PageData({
 						"style": `
 							text-align: right;
 						`,
-						"makeTD": (td, data) => {
-							td.textContent = data[1];
+						"makeTD": (td, pid) => {
+							td.textContent = getEP(data["level"], this.rank);
 						},
 					},
 					{
@@ -1364,20 +1494,20 @@ new PageData({
 						"style": `
 							text-align: right;
 						`,
-						"makeTD": (td, arr) => {
-							[td.dataset.truenum, td.textContent] = getDivision(arr["1"], data["level"]);
+						"makeTD": (td, pid) => {
+							[td.dataset.truenum, td.textContent] = getDivision(getEP(data["level"], this.rank), data["level"]);
 						},
 					},
 				],
 				"createTbodyFunction": (tbody, param) => {
 					this.rank = 0;
-					data["Ws"].forEach((data) => {
+					data["Ws"].forEach((pid) => {
 						this.rank++;
 						const tr = document.createElement("tr");
 						tbody.append(tr);
 						param["THS"].forEach((TH) => {
 							const td = document.createElement("td");
-							TH["makeTD"](td, data);
+							TH["makeTD"](td, pid);
 							tr.append(td);
 						});
 					});
@@ -1413,8 +1543,10 @@ function createTable(param){
 			}
 		`;
 		{
+			const article = document.createElement("article");
+			dialog.append(article);
 			const ul = document.createElement("ul");
-			dialog.append(ul);
+			article.append(ul);
 			param["THS"].forEach((TH, index) => {
 				const li = document.createElement("li");
 				ul.append(li);
@@ -1432,7 +1564,7 @@ function createTable(param){
 				label.append(span);
 				
 				style_innerHTML += `
-					body:has(#${dialogID} > ul > li:nth-of-type(${index + 1}) > label > input:not(:checked)) .${tableClassName} > :is(thead, tbody) > tr > :is(th, td):nth-of-type(${index + 1}){
+					body:has(#${dialogID} > article > ul > li:nth-of-type(${index + 1}) > label > input:not(:checked)) .${tableClassName} > :is(thead, tbody) > tr > :is(th, td):nth-of-type(${index + 1}){
 						display: none;
 					}
 					.${tableClassName} > :is(thead, tbody) > tr > td:nth-of-type(${index + 1}) {
@@ -1441,10 +1573,14 @@ function createTable(param){
 				`;
 			});
 			style.innerHTML = style_innerHTML;
+		}
+		{
+			const footer = document.createElement("footer");
+			dialog.append(footer);
 			const button = document.createElement("button");
 			button.type = "button";
 			button.textContent = "閉じる";
-			dialog.append(button);
+			footer.append(button);
 			button.addEventListener("click", () => {
 				document.getElementById(dialogID).close();
 			});
@@ -1490,7 +1626,6 @@ function createTable(param){
 	return table;
 }
 function getNumberLevel(level){
-	level = level.replace("L", "");
 	if(level.includes("E")){
 		level = level.replace("E", "");
 		level = Number(level) * 3;
@@ -1511,22 +1646,6 @@ function getDivision(num1, num2){
 	}
 }
 
-document.getElementById("ButtonCaution").addEventListener("click", () => {
-	const messages = [];
-	messages.push(`
-🔵データを取得した最終時刻は08:50辺りなので、それ以降にクリアしたプレイヤーはデータに含まれていません。
-🔵プレイヤー名は各シーズン最終日当時のものです。
-🔵獲得EPは補正値無しのものです。
-🔵小数は小数点2位未満を四捨五入しています。
-`);
-	messages.push(`
-🔵作った人：魚頭男
-🟡当コンテンツはMSO様より公認を受けていない非公認のものです。
-🟡当コンテンツについてMSO様にお問い合わせを絶対にしないでください。
-🟡問題などありましたら直ちに公開を取りやめいたします。
-`);
-	messages.forEach((message) => alert(message));
-});
 
 async function startUp(){
 	const getSeasons = IFURL.query.get("season")?.split("-");
@@ -1572,7 +1691,7 @@ startUp();
 		let i = 0;
 		for(const [mission_id, mission_data] of Object.entries(Missions)){
 			i++;
-			mission_data["T"] = day.getTime();
+			mission_data["T"] = day.getTime() / 48000;
 			if(i === 2){
 				day.setHours(day.getHours() + 1);
 				i = 0;
