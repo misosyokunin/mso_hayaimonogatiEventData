@@ -65,6 +65,9 @@ header {
 a{
 	text-decoration: none;
 }
+a:visited{
+	color: #808;
+}
 a:not(:visited){
 	color: #337ab7;
 }
@@ -499,7 +502,7 @@ let Players = null;
 	});
 }
 function setSeasonHref(article){
-	const ancs = article.querySelectorAll("a");
+	const ancs = article.querySelectorAll("a:not([target='_blank'])");
 	const season = getSeasons();
 	ancs.forEach((anc) => {
 		anc.href = IFURL.query.set("season", season, anc.href);
@@ -727,7 +730,7 @@ new PageData({
 			
 			section.append(createTable.call(this, {
 				"unityID": "PlayerChallengeData",
-				"caption_text": `<b>${Players[player_id]}</b>さんのクエストデータ`,
+				"caption_text": `<b>${Players[player_id]}</b>さんの挑戦データ`,
 				"style": `
 				`,
 				"THS": [
@@ -1468,6 +1471,11 @@ new PageData({
 						"details": "プレイヤー名です。",
 						"initShow": true,
 						"style": `
+							/*半透明となるプレイヤー対策*/
+							a{
+								display: inline-block;
+								min-width: 3ch;
+							}
 						`,
 						"makeTD": (td, pid) => {
 							const a = document.createElement("a");
