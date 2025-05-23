@@ -2,17 +2,15 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width">
-		<title>早い者勝ち</title>
+		<title>MSO_早い者勝ちイベントデータ</title>
 	</head>
 	<style>
-* {
-/*
-	font-size: 1.0ch;
-*/
+:root{
+	--headerHeight: 2ch;
+}
+*{
 	font-size: 16px;
-	color: light-dark(#181a1b, #c8c3bc);
 	background-color: #fff;
-	background-color: light-dark(#fff, #c8c3bc);
 }
 @media (prefers-color-scheme: dark) {
 	*{
@@ -29,7 +27,7 @@ body{
 	font-family: Open Sans, sans-serif;
 	max-width: 70ch;
 	margin: auto;
-	padding: 0em 1em 3em 1em;
+	padding: 0px;
 	font-size: 1.10em;
 	line-height: 1.75;
 	overflow-y: scroll;
@@ -38,35 +36,27 @@ input[type=checkbox] {
 	transform: scale(1.5);
 	margin: 1ch;
 }
+body > header{
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	height: var(--HeaderHeight);
+}
 #NavSiteHeader{
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-start;
 	align-items: center;
+	gap: 1ch;
+	border-bottom: solid 2px #888;
 }
 #NavSiteHeader > h1 > a{
 	text-decoration: none;
 }
-/*
-header {
-	position: sticky;
-	top: 0px;
+main{
+	padding: 0em 1em 3em 1em;
 }
-*/
-:is(#NavSeason, #NavMain){
-	display: flex;
-	justify-content: space-evenly;
-}
-:is(#NavSeason, #NavMain) > * {
-	border: solid 1px #444;
-	width: 100%;
-	text-align: center;
-}
-
 a{
 	text-decoration: none;
-}
-a:visited{
-	color: #808;
 }
 a:not(:visited){
 	color: #337ab7;
@@ -95,8 +85,11 @@ label,
 button{
 	cursor: pointer;
 }
-#NavSeason > label{
-	cursor: pointer;
+table > caption:nth-of-type(1){
+	caption-side: top;
+}
+table > caption:nth-of-type(2){
+	caption-side: bottom;
 }
 main > article:not(.sc){
 	display: none;
@@ -109,7 +102,6 @@ main > article:not(.sc){
 	display: none;
 }
 .active {
-	font-weight: bold;
 	background-color: #F84;
 }
 .sortTable th {
@@ -119,7 +111,10 @@ main > article:not(.sc){
 .sortTable th:active {
 	border-style: inset;
 }
-.DivResults table > caption > button{
+.DivResults table > tbody{
+	vertical-align: baseline;
+}
+.buttonOpenConfigShowTableCol{
 	margin: 0em 1em;
 }
 dialog > article > ul {
@@ -158,6 +153,7 @@ dialog > footer {
 	height: 10%;
 	padding: 1ch;
 	box-sizing: border-box;
+	display: flex;
 }
 dialog > footer > button{
 	width: 100%;
@@ -170,31 +166,162 @@ a[target=_blank]:after {
 	margin: 0px 0.5ch;
 	vertical-align: middle;
 }
+#sorting_bg{
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	background-color: rgba(0, 0, 0, 0.2);
+	width: 100%;
+	height: 100%;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	font-size: 3ch;
+}
+#sorting_bg.isShow{
+	display: flex;
+}
+#ArticleAllData table ul {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+}
+#ArticleAllData table ul > li {
+	white-space: pre;
+	height: 2.5ch;
+}
+#menu:has(> #menucontent.open) {
+	width: 100%;
+}
+#menu {
+	position: fixed;
+	transition: width 0.5s;
+	top: var(--HeaderHeight);
+	left: 0px;
+	height: calc(100% - var(--HeaderHeight));
+	width: 0px;
+	display: flex;
+	background-color: transparent;
+	z-index: 10;
+}
+#menucontent {
+	min-height: 100vh;
+	padding-bottom: 10em;
+	
+	transition: grid-template-columns 0.3s ease-out;
+	grid-template-columns: 0fr;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	white-space: nowrap;
+	display: flex;
+	flex-direction: column;
+}
+#menucontent.open {
+	grid-template-columns: 1fr;
+}
+#menucontent > * {
+	padding: 1em 3em 1em 1em;
+	border: none;
+	border-bottom: solid 2px #444;
+	text-align: left;
+}
+#menucontent > *:first-child{
+	border-top: solid 2px #444;
+}
+#menuback{
+	background-color: rgba(0, 0, 0, 0.2);
+	flex: 1;
+}
+#menuopener{
+	border: none;
+	font-size: 2.5em;
+	padding: 0px;
+	padding: 0px 16px;
+}
+#configDataFilter fieldset{
+	column-count: 2;
+}
+#configDataFilter fieldset > label{
+	display: block;
+}
+.buttonMoreRead{
+	width: 100%;
+	margin: 0px;
+}
+#AllData_B01 td > span{
+	position: sticky;
+	top: calc(var(--headerHeight) + 4ch);
+}
+#NavSiteHeader_shortcuts{
+	margin-left: auto;
+	margin-right: 1ch;
+	display: flex;
+	gap: 1ch;
+}
+#NavSiteHeader_shortcuts > button{
+	padding: 1ch;
+}
+#buttonOpenDataFilter{
+	order: 2;
+}
+#buttonSiteConfig{
+	order: 3;
+}
+
+:where(dialog)::backdrop {
+	background: oklch(0% 0 0 / 0.3);
+}
+/*
+:where(dialog),
+:where(dialog)::backdrop {
+	opacity: 0;
+	transition: opacity 300ms ease-out, display 300ms allow-discrete, overlay 300ms allow-discrete;
+}
+:where(dialog[open]),
+:where(dialog[open])::backdrop {
+	opacity: 1;
+}
+@starting-style {
+	:where(dialog[open]),
+	:where(dialog[open])::backdrop {
+		opacity: 0;
+	}
+}
+*/
+
 	</style>
 	<body>
 		<header>
 			<nav id="NavSiteHeader">
-				<h1><a href="./main.htm" target>早い者勝ち挑戦データ</a></h1>
-				<button type="button" onClick="readme.showModal();">🔰README</button>
-			</nav>
-			<nav id="NavSeason">
-			</nav>
-			<nav id="NavMain">
+				<button id="menuopener" type="button">≡</button>
+				<h1><a href="./main.htm" target>MSO_早い者勝ちデータ</a></h1>
+				<div id="NavSiteHeader_shortcuts">
+					<button type="button" onClick="document.getElementById('buttonSiteConfig').click();">⚙️ </button>
+					<button type="button" onClick="document.getElementById('buttonOpenDataFilter').click();">🧽 </button>
+				</div>
 			</nav>
 		</header>
+		<nav id="menu">
+			<div id="menucontent">
+				<a href="./main.htm" target>🏠️トップ</a>
+				<button type="button" id="buttonOpenDataFilter">🧽 絞り込み</button>
+				<button type="button" id="buttonSiteConfig">⚙️ 設定</button>
+			</div>
+			<div id="menuback">
+			</div>
+		</nav>
 		<main id="MainContent">
-		</main>
-		<dialog id="readme">
-			<article>
+			<article id="toppage">
 				<section>
-					<h2>注意書き</h2>
+					<h2>ℹ️当サイトについて</h2>
+					<p>🟡<a href="https://minesweeper.online/ja/" target="_blank" rel="noopener noreferrer">Minesweeper.Online</a>さんの早い者勝ちイベントのデータを集めたものです。</p>
 					<p>🟡当コンテンツはMSO様より公認を受けていない非公認のものです。</p>
 					<p>🟡当コンテンツについてMSO様にお問い合わせを絶対にしないでください。</p>
 					<p>🟡問題などありましたら直ちに公開を取りやめいたします。</p>
 				</section>
 				<hr>
 				<section>
-					<h2>表示内容について</h2>
+					<h2>🗂️ 表示内容について</h2>
 					<p>🔵データを取得した最終時刻は08:50辺りなので、それ以降にクリアしたプレイヤーはデータに含まれていません。</p>
 					<p>🔵プレイヤー名は各シーズン最終日当時のものです。</p>
 					<p>🔵獲得EPは補正値無しのものです。</p>
@@ -202,7 +329,7 @@ a[target=_blank]:after {
 				</section>
 				<hr>
 				<address>
-					<h2>クレジット</h2>
+					<h2>👥クレジット</h2>
 					<p>🐟️作った人：<a href="https://minesweeper.online/ja/player/16842796" target="_blank" rel="noopener noreferrer">魚頭男</a></p>
 					<p>🎲マスタご提供：<a href="https://minesweeper.online/ja/player/11151489" target="_blank" rel="noopener noreferrer">3156(Shima)</a></p>
 					<ul>
@@ -211,7 +338,16 @@ a[target=_blank]:after {
 				</address>
 				<hr>
 				<section>
-					<h2>更新履歴</h2>
+					<h2>🆙更新履歴</h2>
+					<aside>
+						<h3>2025/05/21</h3>
+						<p>🟢コンテンツをメニューから選ぶように変更しました。<br/>（コンテンツを替えようと思った場合に元の位置にスクロールし直すのが面倒くさく感じたのがきっかけです。）</p>
+						<p>🔵<a href="./main.htm?page=AllData">全体のデータ</a>にコンテンツを追加しました。</p>
+						<p>🔵分類などを絞り込めるようにしました。<br/><button onClick='document.getElementById("buttonOpenDataFilter").click();'>🧽 絞り込み</button>より変更できます。</p>
+						<p>🔵ソート中に読み込み中である旨を表示するようにしました。</p>
+						<p>🔵絞り込み内のそれぞれの設定のタイトル（「分類🎁」など）をタップするとチェックを反転するようにしました。</p>
+						<p>🔵ランキングなどのソートをあまりしないような表に関して、「さらに読み込む」ボタンを押して行を徐々に読み込む方式にしました。<br/>描画速度が上がります。<br/>なお、従来のように一気に読み込みたい場合は、<button onClick='document.getElementById("buttonSiteConfig").click();'>⚙️ 設定</button>より変更できます。</p>
+					</aside>
 					<aside>
 						<h3>2025/05/10</h3>
 						<p>🔵ミッションデータに人気度を追加しました。</p>
@@ -228,18 +364,63 @@ a[target=_blank]:after {
 					</aside>
 				</section>
 			</article>
-			<footer>
-				<button type="button" onClick="readme.close();">閉じる</button>
-			</footer>
-		</dialog>
+		</main>
+		<div id="sorting_bg">ソート中…<br/>しばらくお待ちください。</div>
 	</body>
 	<script>
 (async()=> {
 "use strict";
 
+const SEASONS = {
+	"S108": "https://minesweeper.online/img/candies/candy/528.svg?v4",
+	"S112": "https://minesweeper.online/img/candies/egg/408.svg?v5",
+/*
+	"S116": "https://minesweeper.online/img/candies/drink/468.svg?v4",
+*/
+};
 
+const Wait = {
+	waits : {},
+	add(key){
+		return new Promise((resolve) =>{
+			this.waits[key] = resolve;
+		});
+	},
+	release(key){
+		this.waits[key]();
+		delete this.waits[key];
+	},
+	time(sec){
+		return new Promise((resolve) =>{
+			setTimeout(function(){resolve();}, sec * 1000);
+		});
+	},
+};
+const Menu = new class{
+	constructor(){
+		this.menu = document.getElementById("menucontent");
+		document.getElementById("menuopener").addEventListener("click", this.toggle.bind(this));
+		document.getElementById("menuback").addEventListener("click", this.close.bind(this));
+		this.menu.addEventListener("click", () => {
+			if(event.target.tagName === "A"){
+				this.close();
+			}
+		});
+	}
+	open(){
+		this.menu.classList.add("open");
+	}
+	close(){
+		this.menu.classList.remove("open");
+	}
+	toggle(){
+		this.menu.classList.toggle("open");
+	}
+	add(dom){
+		this.menu.append(dom);
+	}
+}
 
-const SEASONS = ["S108", "S112"];
 const IFURL = new class{	//InterFaceURL
 	query = {
 		get: (key, url = location) => {
@@ -264,6 +445,43 @@ const IFURL = new class{	//InterFaceURL
 		history.replaceState({}, "", url);
 	}
 }
+class Dialog{
+	constructor(param){
+		param["opener"].addEventListener("click", () => {
+			this.open();
+		});
+		this.dialog = this.#create();
+	}
+	#create(){
+		const dialog = document.createElement("dialog");
+		{
+			const article = document.createElement("article");
+			dialog.append(article);
+		}
+		{
+			const footer = document.createElement("footer");
+			dialog.append(footer);
+			{
+				const button = document.createElement("button");
+				button.type = "button";
+				button.textContent = "閉じる";
+				button.addEventListener("click", () => {
+					this.close();
+				});
+				footer.append(button);
+			}
+		}
+		
+		document.body.append(dialog);
+		return dialog;
+	}
+	open(){
+		this.dialog.showModal();
+	}
+	close(){
+		this.dialog.close();
+	}
+}
 function uniqueClassName(className, addDOM){
 	const tars = document.querySelectorAll(`.${className}`);
 	for(let i = tars.length - 1; i >= 0; i--){
@@ -281,16 +499,19 @@ function getDateString(date){
   return `${YYYY}-${MM}-${DD} ${HH}:${mm}`;
 }
 
-function sortTable(){
-	if(event.target.tagName !== "TH"){
+function sortTable(tar){
+	if(tar === event){
+		tar = event.target;
+	}
+	if(tar.tagName !== "TH"){
 		return;
 	}
-	if(!event.target.textContent){
+	if(!tar.textContent){
 		return;
 	}
 	let func;
-	if(event.target.dataset.sorted === "1"){
-		event.target.dataset.sorted = "2";
+	if(tar.dataset.sorted === "1"){
+		tar.dataset.sorted = "2";
 		func = function(td1, td2){
 			if(!(isNaN(td1) && isNaN(td2))){
 				td1 = Number(td1);
@@ -299,7 +520,7 @@ function sortTable(){
 			return td1 < td2;
 		}
 	}else{
-		event.target.dataset.sorted = "1";
+		tar.dataset.sorted = "1";
 		func = function(td1, td2){
 			if(!(isNaN(td1) && isNaN(td2))){
 				td1 = Number(td1);
@@ -309,9 +530,9 @@ function sortTable(){
 		}
 	}
 	
-	const table = event.currentTarget;
+	const table = tar.closest("table");
 	const ths = table.querySelectorAll("th");
-	const thnum = Array.from(ths).findIndex((th) => th === event.target) + 1;
+	const thnum = Array.from(ths).findIndex((th) => th === tar) + 1;
 	
 	const tbody = table.querySelector("tbody");
 	const trs = tbody.getElementsByTagName("tr");
@@ -330,6 +551,24 @@ function sortTable(){
 			trs[i].insertAdjacentElement("beforebegin", tr);
 		}
 	}
+}
+function splitArray(arr, add){
+/*
+splitArray([1,2,3,4,5], 2) //=> [[1,2], [3,4], [5]]
+*/
+	const ra = [];
+	let startnum = 0;
+	let endnum = add;
+	while(true){
+		const sa = arr.slice(startnum, endnum);
+		if(!sa.length){
+			break;
+		}
+		ra.push(sa);
+		startnum += add;
+		endnum += add;
+	}
+	return ra;
 }
 
 
@@ -466,8 +705,206 @@ const short_reconstructFuncs = {
 		return `${x}イベントポイント`;
 	},
 }
+function getDecodeMissionDetail(code){
+	const param = code.split("#");
+	return short_reconstructFuncs[param["0"]](param["1"], param["2"], param["3"])
+}
+function createTable(param){
+	const tableClassName = `table${param["unityID"]}`;
+	
+	const table = document.createElement("table");
+	table.classList.add(tableClassName);
+	{
+		const caption = document.createElement("caption");
+		caption.innerHTML = param["caption_text"];
+		table.append(caption);
+		{
+			const button = document.createElement("button");
+			button.type = "button";
+			button.textContent = "⚙️";
+			button.classList.add("buttonOpenConfigShowTableCol");
+			caption.append(button);
+		}
+	}
+	{
+		const thead = document.createElement("thead");
+		table.append(thead);
+		if(param["isSortable"]){
+			table.classList.add("sortTable");
+			thead.addEventListener("click", async() => {
+				const bg = document.getElementById("sorting_bg");
+				bg.classList.add("isShow");
+				await new Promise((resolve) => {
+					const evt = event.target;
+					setTimeout(() => {
+						sortTable(evt);
+						resolve();
+					});
+				});
+				bg.classList.remove("isShow");
+			});
+		}
+		{
+			const tr = document.createElement("tr");
+			thead.append(tr);
+			param["THS"].forEach((TH) => {
+				const th = document.createElement("th");
+				th.textContent = TH["name"];
+				tr.append(th);
+			});
+		}
+	}
+	{
+		const tbody = document.createElement("tbody");
+		table.append(tbody);
+		param["createTbodyFunction"](tbody, param);
+	}
+	
+	const dialogID = `dialog${param["unityID"]}`;
+	if(!document.getElementById(dialogID)){
+		const od = new class extends Dialog{
+			constructor(){
+				super({
+					"opener": table.querySelector(".buttonOpenConfigShowTableCol"),
+				});
+				this.#dialogAppend();
+			}
+			#dialogAppend(){
+				const dialog = this.dialog;
+				dialog.id = dialogID;
+				const style = document.createElement("style");
+				document.body.append(style);
+				let style_innerHTML = `
+					.${tableClassName}{
+						${param["style"]}
+					}
+				`;
+				{
+					const article = this.dialog.querySelector(":scope > article");
+					const ul = document.createElement("ul");
+					article.append(ul);
+					param["THS"].forEach((TH, index) => {
+						const li = document.createElement("li");
+						ul.append(li);
+						const label = document.createElement("label");
+						li.append(label);
+						const input = document.createElement("input");
+						input.type = "checkbox";
+						input.checked = TH["initShow"];
+						label.append(input);
+						const strong = document.createElement("strong");
+						strong.textContent = TH["name"];
+						label.append(strong);
+						const span = document.createElement("span");
+						span.innerText = TH["details"];
+						label.append(span);
+						
+						style_innerHTML += `
+							body:has(#${dialogID} > article > ul > li:nth-of-type(${index + 1}) > label > input:not(:checked)) .${tableClassName} > :is(thead, tbody) > tr > :is(th, td):nth-of-type(${index + 1}){
+								display: none;
+							}
+							.${tableClassName} > :is(thead, tbody) > tr > td:nth-of-type(${index + 1}) {
+								${TH["style"]}
+							}
+						`;
+					});
+					style.innerHTML = style_innerHTML;
+				}
+				{
+					const footer = this.dialog.querySelector(":scope > footer");
+				}
+			}
+		};
+	}
+	
+	return table;
+}
+function getNumberLevel(level){
+	if(level.includes("E")){
+		level = level.replace("E", "");
+		level = Number(level) * 3;
+	}else{
+		level = Number(level);
+	}
+	return level;
+}
+function getDivision(num1, num2){
+	const n1 = Number(num1);
+	const n2 = Number(num2);
+	const num = Number.parseFloat(n1 / n2);
+	if(Number.isNaN(num)){
+		return [0, ""];
+	}else{
+		const n = num.toFixed(2);
+		return [n, n];
+	}
+}
+function setPlayerMissions(){
+	if(Object.keys(PlayerMissions).length){
+		return;
+	}
+	Object.entries(Missions).forEach(([mid, obj]) => {
+		obj["Ws"].forEach((pid, index) => {
+			if(!PlayerMissions[pid]){
+				PlayerMissions[pid] = [];
+			}
+			const o = {};
+			o["L"] = obj["L"];
+			o["level"] = getNumberLevel(o["L"]);
+			o["D"] = obj["D"];
+			o["I"] = obj["I"];
+			o["R"] = index + 1;
+			o["P"] = getEP(o["level"], o["R"]);
+			o["T"] = obj["T"];
+			o["MissionID"] = mid;
+			PlayerMissions[pid].push(o);
+		});
+		
+	});
+}
+
+
+const Config = new class extends Dialog{
+	constructor(){
+		super({
+			"opener": document.getElementById("buttonSiteConfig"),
+		});
+		this.#dialogAppend();
+	}
+	#dialogAppend(){
+		const dialog = this.dialog;
+		dialog.id = "configSiteViewing";
+		{
+			const article = this.dialog.querySelector(":scope > article");
+			{
+				const fieldset = document.createElement("fieldset");
+				fieldset.id = "filterSeason";
+				article.append(fieldset);
+				const legend = document.createElement("legend");
+				legend.textContent = "設定";
+				fieldset.append(legend);
+				{
+					const label = document.createElement("label");
+					fieldset.append(label);
+					const input = document.createElement("input");
+					input.type = "checkbox";
+					input.id = "isIgnoreMoreRead";
+					input.checked = false;
+					label.append(input);
+					const span = document.createElement("span");
+					span.textContent = "「さらに読み込む」を無視して一気に読み込む";
+					label.append(span);
+				}
+			}
+		}
+		{
+			const footer = this.dialog.querySelector(":scope > footer");
+		}
+	}
+}
 //========================================
 
+const IMG_DOMAIN = "https://minesweeper.online/img/candies/";
 
 const MSO_CONSTANT = await getJSON("./common/mso_constant.json");
 const JEMS = MSO_CONSTANT["JEMS"];
@@ -480,69 +917,269 @@ const EVENTPOINT_KIND_IMAGE_HASHS = IMG["EVENTPOINT_KIND_IMAGE_HASHS"];
 
 const RANK_EP = await getJSON("./common/hayaimonogati_LevelRankEp.json");
 
+const Filter = new class extends Dialog{
+	constructor(){
+		super({
+			"opener": document.getElementById("buttonOpenDataFilter"),
+		});
+		this.nowFilter = this.getFilter();
+		this.#dialogAppend();
+		this.setFilter();
+	}
+	getFilter(){
+		const query = IFURL.query.get("filter");
+		if(query){
+			return query.split("-");
+		}else{
+			return [];
+		}
+	}
+	setFilter(){
+		const fil = this.getQuery();
+		IFURL.replaceHistory(IFURL.query.set("filter", fil));
+	}
+	#dialogAppend(){
+		const dialog = this.dialog;
+		dialog.id = "configDataFilter";
+		dialog.addEventListener("close", this.setConfigs.bind(this));	//エスケープによって閉じたときにも変更を初期化する
+		{
+			const article = dialog.querySelector(":scope > article");
+			{
+				const fieldset = document.createElement("fieldset");
+				fieldset.id = "filterSeason";
+				article.append(fieldset);
+				const legend = document.createElement("legend");
+				legend.textContent = "シーズン🗓️";
+				legend.addEventListener("click", () => {
+					fieldset.querySelectorAll("input[type=checkbox]").forEach((chk) => {
+						chk.checked = !chk.checked;
+					});
+				});
+				fieldset.append(legend);
+				Object.entries(SEASONS).forEach(([season, src]) => {
+					const label = document.createElement("label");
+					fieldset.append(label);
+					const input = document.createElement("input");
+					input.type = "checkbox";
+					input.dataset.key = season;
+					input.checked = this.nowFilter.includes(season);
+					label.append(input);
+					const img = document.createElement("img");
+					img.src = src;
+					label.append(img);
+					const span = document.createElement("span");
+					span.textContent = season;
+					label.append(span);
+				});
+				/*何も✓されていない場合は最新シーズンをあらかじめ選択する*/
+				if(fieldset.querySelectorAll("input:checked").length === 0){
+					const las = fieldset.querySelector(":scope > label:last-of-type > input");
+					las.checked = true;
+					this.nowFilter.push(las.dataset.key);
+				}
+			}
+			{
+				const fieldset = document.createElement("fieldset");
+				fieldset.id = "filterKind";
+				article.append(fieldset);
+				const legend = document.createElement("legend");
+				legend.textContent = "分類🎁";
+				legend.addEventListener("click", () => {
+					fieldset.querySelectorAll("input[type=checkbox]").forEach((chk) => {
+						chk.checked = !chk.checked;
+					});
+				});
+				fieldset.append(legend);
+				Object.entries(EVENTPOINT_KIND_NAMES).forEach(([key, value]) => {
+					const label = document.createElement("label");
+					fieldset.append(label);
+					const input = document.createElement("input");
+					input.type = "checkbox";
+					input.dataset.key = key;
+					input.checked = this.nowFilter.includes(key);
+					label.append(input);
+					const span = document.createElement("span");
+					span.textContent = value;
+					label.append(span);
+				});
+				/*何も✓されていない場合はすべての種別をあらかじめ選択する*/
+				if(fieldset.querySelectorAll("input:checked").length === 0){
+					const chks = fieldset.querySelectorAll("input");
+					chks.forEach((chk) => {
+						chk.checked = true;
+						this.nowFilter.push(chk.dataset.key);
+					});
+				}
+			}
+			{
+				const fieldset = document.createElement("fieldset");
+				fieldset.id = "filterLevel";
+				article.append(fieldset);
+				const legend = document.createElement("legend");
+				legend.textContent = "クエストのレベル⚡️";
+				legend.addEventListener("click", () => {
+					fieldset.querySelectorAll("input[type=checkbox]").forEach((chk) => {
+						chk.checked = !chk.checked;
+					});
+				});
+				fieldset.append(legend);
+				const levels = {
+					"EOFF": "通常",
+					"EON": "エリート",
+				};
+				Object.entries(levels).forEach(([key, value]) => {
+					const label = document.createElement("label");
+					fieldset.append(label);
+					const input = document.createElement("input");
+					input.type = "checkbox";
+					input.dataset.key = key;
+					input.checked = this.nowFilter.includes(key);
+					label.append(input);
+					const span = document.createElement("span");
+					span.textContent = value;
+					label.append(span);
+				});
+				/*何も✓されていない場合はすべてのレベルをあらかじめ選択する*/
+				if(fieldset.querySelectorAll("input:checked").length === 0){
+					const chks = fieldset.querySelectorAll("input");
+					chks.forEach((chk) => {
+						chk.checked = true;
+						this.nowFilter.push(chk.dataset.key);
+					});
+				}
+			}
+		}
+		{
+			const footer = dialog.querySelector(":scope > footer");
+			footer.querySelector(":scope > button").remove();	/*デフォルトを変更する*/
+			{
+				const button = document.createElement("button");
+				button.type = "button";
+				button.textContent = "変更せずに閉じる";
+				button.addEventListener("click", () => {
+					this.close();
+				});
+				footer.append(button);
+			}
+			{
+				const button = document.createElement("button");
+				button.type = "button";
+				button.textContent = "絞り込む";
+				button.addEventListener("click", () => {
+					this.changeConfigs();
+					const url = IFURL.query.set("filter", this.getQuery())
+					location.href = url;
+				});
+				footer.append(button);
+			}
+		}
+	}
+	setConfigs(){
+		this.dialog.querySelectorAll("input[type=checkbox]").forEach((chk) => {
+			chk.checked = this.nowFilter.includes(chk.dataset.key);
+		});
+	}
+	changeConfigs(){
+		const sa = [];
+		this.dialog.querySelectorAll("input[type=checkbox]:checked").forEach((chk) => {
+			sa.push(chk.dataset.key);
+		});
+		this.nowFilter = sa;
+	}
+	setHref(article){
+		const ancs = article.querySelectorAll("a");
+		const fil = this.getQuery();
+		ancs.forEach((anc) => {
+			anc.href = IFURL.query.set("filter", fil, anc.href);
+		});
+	}
+	getQuery(){
+		return this.nowFilter.join("-");
+	}
+}
 
-let HayaData = {};
 let Missions = null;
 let Players = null;
+let SeasonKindImgs = {};	/*サマリに使う画像*/
 
-{
-	const nav_season = document.getElementById("NavSeason");
-	SEASONS.forEach((season) => {
-		const label = document.createElement("label");
-		nav_season.append(label);
-		const input = document.createElement("input");
-		input.type = "checkbox";
-		input.id = `selectSeason${season}`;
-		input.dataset.season = season;
-		input.addEventListener("change", changeSeasonData);
-		label.append(input);
-		const span = document.createElement("span");
-		span.textContent = season;
-		label.append(span);
-	});
-}
-function setSeasonHref(article){
-	const ancs = article.querySelectorAll("a:not([target='_blank'])");
-	const season = getSeasons();
-	ancs.forEach((anc) => {
-		anc.href = IFURL.query.set("season", season, anc.href);
-	});
-}
+let PlayerMissions = {};	/*プレイヤー→ミッション、論理ファイル的扱い*/
 
 
-const HayaDatas = {};
-async function changeSeasonData(){
-	IFURL.replaceHistory(IFURL.query.set("season", getSeasons()));
-	if(event?.isTrusted){
-		location.href = location.href;
-		return;
-	}
-	const chkSeasons = document.querySelectorAll("#NavSeason > label > input");
-	HayaData = {};
+async function setUseData(){
+	/*データ読み込み*/
 	Missions = {};
 	Players = {};
-	for(let i = 0; i < chkSeasons.length; i++){
-		const chk = chkSeasons[i];
-		if(!chk.checked){
-			continue;
-		}
-		const season = chk.dataset.season;
-		if(HayaDatas[season]){
-		
-		}else{
-			HayaDatas[season] = await getJSON(`./${season}/data.json`);
-		}
-		Object.assign(Missions, HayaDatas[season]["Ms"]);
-		Object.assign(Players, HayaDatas[season]["Ps"]);
+	const seasons = Filter.nowFilter.filter((fil) => fil[0] === "S");
+	for(let i = 0; i < seasons.length; i++){
+		const season = seasons[i];
+		const data = await getJSON(`./${season}/data.json`);
+		Object.assign(Missions, data["Ms"]);
+		Object.assign(Players, data["Ps"]);
 	}
-	HayaData["Ms"] = Missions;
-	HayaData["Ps"] = Players;
-	setSeasonHref(document.getElementById("NavMain"));
+	Filter.setHref(Menu.menu);
+	
+	SeasonKindImgs = (() => {
+		const ro = {};
+		const basesrc = SEASONS[seasons[0]].replace(/\/\d.+/, "");
+		for(const kind of Object.keys(EVENTPOINT_KIND_NAMES)){
+			for(const [src, key] of Object.entries(EVENTPOINT_KIND_IMAGE_HASHS)){
+				if(src.startsWith(basesrc) && key === kind){
+					ro[kind] = src;
+				}
+			}
+		}
+		return ro;
+	})();
+	{
+		/*絞り込み内の分類に画像をつける*/
+		const chks = document.querySelectorAll("#filterKind > label > input[type=checkbox]");
+		chks.forEach((chk) => {
+			const img = document.createElement("img");
+			img.src = SeasonKindImgs[chk.dataset.key];
+			chk.after(img);
+		});
+	}
+	
+	/*使わないデータ削除*/
+	const EliteFilters = Filter.nowFilter.filter((fil) => fil[0] === "E");
+	if(EliteFilters.length === document.querySelectorAll("#filterLevel > label > input[type=checkbox]").length){
+		
+	}else{
+		Object.entries(Missions).forEach(([id, data]) => {
+			if(data["L"].at(-1) === "E"){
+				if(!EliteFilters.includes("EON")){
+					delete Missions[id];
+					return;
+				}
+			}else{
+				if(!EliteFilters.includes("EOFF")){
+					delete Missions[id];
+					return;
+				}
+			}
+		});
+	}
+	const kindFilters = Filter.nowFilter.filter((fil) => !/[E|S]/.test(fil[0]));
+	if(kindFilters.length === document.querySelectorAll("#filterKind > label > input[type=checkbox]").length){
+	}else{
+		Object.entries(Missions).forEach(([id, data]) => {
+			const src = `${IMG_DOMAIN}${data["I"]}`;
+			const kind = EVENTPOINT_KIND_IMAGE_HASHS[src];
+			if(!kindFilters.includes(kind)){
+				delete Missions[id];
+				return;
+			}
+		});
+	}
+	Object.keys(SeasonKindImgs).forEach((kind) => {
+		if(!kindFilters.includes(kind)){
+			delete SeasonKindImgs[kind];
+		}
+	});
 }
-function getSeasons(){
-	return Array.from(document.querySelectorAll("#NavSeason > label > input:checked")).map((ele) => ele.dataset.season).join("-");
-}
-const Control = new class{
+
+//========================================
+const PageMove = new class{
 	constructor(){
 		this.before_page = null;
 		window.addEventListener("popstate", this.popstate);
@@ -570,6 +1207,8 @@ const Control = new class{
 			if(event?.type === "click"){
 				window.scroll({top: 0});
 			}
+		}else{
+			uniqueClassName("sc", document.getElementById("toppage"));
 		}
 	}
 }
@@ -579,23 +1218,21 @@ const Page = {};
 class PageData{
 	constructor(param){
 		this.id = param["id"];
+		this.Fields = param["setFields"];
 		this.headerText = param["headerText"];
-		this.addNavMain();
-		this.addMainContent(param["body"]);
+		this.addMenu();
+		this.addMainContent(param["createBody"].call(this));
 		for(const [key, value] of Object.entries(param["functions"])){
 			this[key] = value;
 		}
 		this.show_expansion = param["show_expansion"];
-		this.init_function = param["init_function"];
-		this.init_function();
-		delete this.init_function;
 		Page[this.id] = this;
 	}
-	addNavMain = () => {
+	addMenu = () => {
 		const a = document.createElement("a");
 		a.href = `?page=${this.id}`;
 		a.textContent = this.headerText;
-		document.getElementById("NavMain").append(a);
+		Menu.add(a);
 	}
 	addMainContent = (body) => {
 		const article = document.createElement("article");
@@ -605,14 +1242,14 @@ class PageData{
 	}
 	show = () => {
 		uniqueClassName("sc", document.getElementById(`Article${this.id}`));
-		uniqueClassName("active", document.querySelector(`#NavMain > a[href*="${this.id}"]`));
+		uniqueClassName("active", Menu.menu.querySelector(`:scope > a[href*="${this.id}"]`));
 	}
 }
 
 new PageData({
 	id: "PlayerData",
-	headerText: "プレイヤー挑戦データ",
-	body: (() => {
+	headerText: "👤 プレイヤー挑戦データ",
+	createBody: function(){
 		const fragment = document.createDocumentFragment();
 		const form = document.createElement("form");
 		form.setAttribute("onSubmit", "return false;");
@@ -633,9 +1270,12 @@ new PageData({
 		}
 		{
 			const button = document.createElement("button");
-			button.id = "FormPlayerDataSubmit";
+			button.id = `Form${this.id}Submit`;
 			button.type = "submit";
 			button.textContent = "探す";
+			button.addEventListener("click", () => {
+				this.click_search();
+			});
 			form.append(button);
 		}
 		{
@@ -644,13 +1284,13 @@ new PageData({
 			fragment.append(div);
 		}
 		return fragment;
-	})(),
+	},
 	functions: {
 		"click_search": function(){
 			const player_id = document.querySelector("#LabelPlayerID > input").value;
 			if(this.isExist(player_id)){
 				let url = IFURL.query.set("player_id", player_id);
-				url = IFURL.query.set("season", getSeasons(), url);
+				url = IFURL.query.set("season", Filter.getQuery(), url);
 				IFURL.pushHistory(url);
 				this.main_search();
 			}
@@ -671,12 +1311,12 @@ new PageData({
 				document.querySelector("#LabelPlayerID > input").value = player_id;
 				this.main_search();
 			}else{
-				document.querySelector("#ArticlePlayerData .sc2")?.classList.remove("sc2");
+				document.querySelector(`#Article${this.id} .sc2`)?.classList.remove("sc2");
 			}
 		},
 		"main_search": function(){
 			const player_id = document.querySelector("#LabelPlayerID > input").value;
-			const result_div = document.querySelector("#ArticlePlayerData .DivResults");
+			const result_div = document.querySelector(`#Article${this.id} .DivResults`);
 			{
 				const exist_data_section = result_div.querySelector(`.player${player_id}`);
 				if(exist_data_section){
@@ -685,15 +1325,16 @@ new PageData({
 				}
 			}
 			
-			this.datas = [];
-			{
+			this.datas = PlayerMissions[player_id];	/*全体のデータなどで事前集計しているのならそこを参照する*/
+			if(!this.datas){
+				this.datas = [];
 				const pi = Number(player_id);
 				for(const [mission_id, mission_data] of Object.entries(Missions)){
 					const index = mission_data["Ws"].indexOf(pi);
 					if(index === -1){
 						continue;
 					}
-					const windata = mission_data["Ws"][index];
+					
 					const o = {};
 					o["L"] = mission_data["L"];
 					o["level"] = getNumberLevel(o["L"]);
@@ -701,26 +1342,23 @@ new PageData({
 					o["I"] = mission_data["I"];
 					o["R"] = index + 1;
 					o["P"] = getEP(o["level"], o["R"]);
+					o["T"] = mission_data["T"];
 					o["MissionID"] = mission_id;
 					this.datas.push(o);
+				}
+				if(!this.datas.length){
+					alert("データがありません…\n絞り込みを変更してみてください。");
+					return;
 				}
 			}
 			
 			this.kind_sums = {};
-			{
-				const epkind = this.datas[0]["I"].replace(/\/\d.+/, "");
-				const basesrc = `https://minesweeper.online/img/candies/${epkind}`;
-				for(const kind of Object.keys(EVENTPOINT_KIND_NAMES)){
-					this.kind_sums[kind] = {};
-					this.kind_sums[kind]["levels"] = 0;
-					this.kind_sums[kind]["eps"] = 0;
-					this.kind_sums[kind]["count"] = 0;
-					for(const [src, key] of Object.entries(EVENTPOINT_KIND_IMAGE_HASHS)){
-						if(src.startsWith(basesrc) && key === kind){
-							this.kind_sums[kind]["img"] = src;
-						}
-					}
-				}
+			for(const [kind, src] of Object.entries(SeasonKindImgs)){
+				this.kind_sums[kind] = {};
+				this.kind_sums[kind]["levels"] = 0;
+				this.kind_sums[kind]["eps"] = 0;
+				this.kind_sums[kind]["count"] = 0;
+				this.kind_sums[kind]["img"] = src;
 			}
 			
 			const section = document.createElement("section");
@@ -730,7 +1368,8 @@ new PageData({
 			
 			section.append(createTable.call(this, {
 				"unityID": "PlayerChallengeData",
-				"caption_text": `<b>${Players[player_id]}</b>さんの挑戦データ`,
+				"caption_text": `<b>${Players[player_id]}</b>さんのクエストデータ`,
+				"isSortable": true,
 				"style": `
 				`,
 				"THS": [
@@ -752,13 +1391,12 @@ new PageData({
 						"style": `
 						`,
 						"makeTD": (td, data) => {
-							const param = data["D"].split("#");
 							const a = document.createElement("a");
 							a.href = `?page=MissionData&mission_id=${data["MissionID"]}`;
-							a.textContent = short_reconstructFuncs[param["0"]](param["1"], param["2"], param["3"]);
+							a.textContent = getDecodeMissionDetail(data["D"]);
 							td.append(a);
 /*
-							td.textContent = short_reconstructFuncs[param["0"]](param["1"], param["2"], param["3"]);
+							td.textContent = getDecodeMissionDetail(data["D"]);
 */
 						},
 					},
@@ -770,7 +1408,7 @@ new PageData({
 							text-align: center;
 						`,
 						"makeTD": (td, data) => {
-							const src = `https://minesweeper.online/img/candies/${data["I"]}`;
+							const src = `${IMG_DOMAIN}${data["I"]}`;
 							td.dataset.truenum = EVENTPOINT_KIND_IMAGE_HASHS[src];
 							const img = document.createElement("img");
 							img.src = src;
@@ -814,10 +1452,20 @@ new PageData({
 							[td.dataset.truenum, td.textContent] = getDivision(data["P"], data["level"]);
 						},
 					},
+					{
+						"name": "開催時刻",
+						"details": "クエストが開催された時刻です。",
+						"initShow": false,
+						"style": `
+						`,
+						"makeTD": (td, data) => {
+							td.textContent = getDateString(new Date(data["T"] * 48000));
+						},
+					},
 				],
 				"createTbodyFunction": (tbody, param) => {
 					this.datas.forEach((data) => {
-						const src = `https://minesweeper.online/img/candies/${data["I"]}`;
+						const src = `${IMG_DOMAIN}${data["I"]}`;
 						const kind = EVENTPOINT_KIND_IMAGE_HASHS[src];
 						this.kind_sums[kind]["levels"] += data["level"];
 						this.kind_sums[kind]["eps"] += Number(data["P"]);
@@ -838,6 +1486,7 @@ new PageData({
 			section.append(createTable.call(this, {
 				"unityID": "PlayerChallengeSummary",
 				"caption_text": `<b>${Players[player_id]}</b>さんのデータまとめ`,
+				"isSortable": true,
 				"style": `
 					order: -1;
 				`,
@@ -862,7 +1511,7 @@ new PageData({
 					},
 					{
 						"name": "mission🪧",
-						"details": "挑戦したクエスト数です。",
+						"details": "クリアしたクエスト数です。",
 						"initShow": true,
 						"style": `
 							text-align: right;
@@ -919,12 +1568,15 @@ new PageData({
 				"createTbodyFunction": (tbody, param) => {
 					const summaryDatas = [];
 					{
+						let s_levels = 0;
+						let s_eps = 0;
+						let s_count = 0;
 						for(const [key, value] of Object.entries(this.kind_sums)){
 							summaryDatas.push([EVENTPOINT_KIND_NAMES[key], value["img"], key, value["levels"], value["eps"], value["count"]]);
+							s_levels += value["levels"];
+							s_eps += value["eps"];
+							s_count += value["count"];
 						}
-						const s_levels = Object.values(this.kind_sums).reduce((sum, data) => sum + data["levels"], 0);
-						const s_eps = Object.values(this.kind_sums).reduce((sum, data) => sum + data["eps"], 0);
-						const s_count = Object.values(this.kind_sums).reduce((sum, data) => sum + data["count"], 0);
 						summaryDatas.push(["＊合計", "", "ZZ", s_levels, s_eps, s_count]);
 					}
 					summaryDatas.forEach((data) => {
@@ -938,39 +1590,500 @@ new PageData({
 					});
 				},
 			}));
-			setSeasonHref(section);
+			Filter.setHref(section);
 			
 		},
 	},
 	show_expansion: function(){
 		this.popstate_search();
 	},
-	init_function: function(){
-		document.getElementById("FormPlayerDataSubmit").addEventListener("click", this.click_search.bind(this));
-	},
 });
 new PageData({
-	id: "AllPlayerData",
-	headerText: "全体のデータ",
-	body: (() => {
+	id: "AllData",
+	headerText: "🗂️ 全体のデータ",
+	setFields: {
+		"summarys": {
+			"A0": {
+				"string": "ミッション内容ごとの平均人気度",
+				"create": function(){
+					this.datas = {};
+					Object.entries(Missions).forEach(([id, obj]) => {
+						if(!this.datas[obj["D"]]){
+							this.datas[obj["D"]] = {};
+							this.datas[obj["D"]]["ids"] = [];
+							this.datas[obj["D"]]["pops"] = [];
+							this.datas[obj["D"]]["s_pops"] = 0;
+						}
+						const level = getNumberLevel(obj["L"]);
+						this.datas[obj["D"]]["ids"].push(id);
+						const calc = getDivision(obj["Ws"].length * 100, RANK_EP[level].length)[0];
+						this.datas[obj["D"]]["pops"].push(calc);
+						this.datas[obj["D"]]["s_pops"] += Number(calc);
+					});
+					
+					if(!Object.keys(this.datas).length){
+						alert("データがありません…\n絞り込みを変更してみてください。");
+						return;
+					}
+					
+					const table = createTable.call(this, {
+						"unityID": "PopulalyPerMissionDetail",
+						"caption_text": `<b>${this.Fields["summarys"]["A0"]["string"]}</b>`,
+						"isSortable": true,
+						"style": `
+						`,
+						"THS": [
+							{
+								"name": "内容",
+								"details": "クエストの内容です。",
+								"initShow": true,
+								"style": `
+								`,
+								"makeTD": (td, key, data) => {
+									td.textContent = getDecodeMissionDetail(key);
+								},
+							},
+							{
+								"name": "ID",
+								"details": "クエストのIDです。\nソートは該当クエスト数で行われます。",
+								"initShow": true,
+								"style": `
+								`,
+								"makeTD": (td, key, data) => {
+									const ul = document.createElement("ul");
+									td.append(ul);
+									data["ids"].forEach((id) => {
+										const li = document.createElement("li");
+										ul.append(li);
+										const img = document.createElement("img");
+										img.src = `${IMG_DOMAIN}${Missions[id]["I"]}`;
+										li.append(img);
+										const a = document.createElement("a");
+										a.href = `?page=MissionData&mission_id=${id}`;
+										a.textContent = id;
+										li.append(a);
+									});
+									td.dataset.truenum = data["ids"].length;
+								},
+							},
+							{
+								"name": "人気度(%)",
+								"details": "1.0倍ラインに対するクリアしたプレイヤーの割合です。",
+								"initShow": false,
+								"style": `
+									text-align: right;
+								`,
+								"makeTD": (td, key, data) => {
+									const ul = document.createElement("ul");
+									td.append(ul);
+									data["pops"].forEach((pop) => {
+										const li = document.createElement("li");
+										ul.append(li);
+										const span = document.createElement("span");
+										span.textContent = pop;
+										li.append(span);
+									});
+									td.dataset.truenum = data["pops"].length;
+								},
+							},
+							{
+								"name": "平均人気度(%)",
+								"details": "1.0倍ラインに対するクリアしたプレイヤーの割合です。",
+								"initShow": true,
+								"style": `
+									text-align: right;
+								`,
+								"makeTD": (td, key, data) => {
+									[td.dataset.truenum, td.textContent] = getDivision(data["s_pops"], data["ids"].length);
+								},
+							},
+						],
+						"createTbodyFunction": (tbody, param) => {
+							Object.entries(this.datas).forEach(([key, data]) => {
+								const tr = document.createElement("tr");
+								tbody.append(tr);
+								param["THS"].forEach((TH) => {
+									const td = document.createElement("td");
+									TH["makeTD"](td, key, data);
+									tr.append(td);
+								});
+							});
+						},
+					});
+					return table;
+				}
+			},
+			
+			"B0": {
+//同率順位でブレイクしないバージョン
+				"string": "プレイヤーランキング（クリアクエスト数）",
+				"create": function(){
+					setPlayerMissions();
+					this.arrs = [];
+					Object.entries(PlayerMissions).forEach(([pid, mds]) => {
+						this.arrs.push([pid, mds.length]);
+					});
+					if(!this.arrs.length){
+						alert("データがありません…\n絞り込みを変更してみてください。");
+						return;
+					}
+					this.arrs.sort(function(a,b){
+						if(a[1] < b[1]){
+							return 1;
+						}else{
+							return -1;
+						}
+					});
+					
+					const maxMissions = Object.keys(Missions).length / document.querySelectorAll("#filterLevel input[type=checkbox]:checked").length;	/*エリートと通常のどちらかしかプレイできないので*/
+					
+					const table = createTable.call(this, {
+						"unityID": "RankingPlayerCompleteMissionCount",
+						"caption_text": `<b>${this.Fields["summarys"]["B0"]["string"]}</b>`,
+						"isSortable": false,
+						"style": `
+						`,
+						"THS": [
+							{
+								"name": "順位👑",
+								"details": "クリアしたクエスト数の多さ順です。",
+								"initShow": true,
+								"style": `
+									text-align: right;
+								`,
+								"makeTD": (td, key, data) => {
+									td.textContent = data["rank"];
+								},
+							},
+							{
+								"name": "プレイヤー",
+								"details": "プレイヤー名です。",
+								"initShow": true,
+								"style": `
+								`,
+								"makeTD": (td, key, data) => {
+									const a = document.createElement("a");
+									a.href = `?page=PlayerData&player_id=${key}`;
+									a.textContent = Players[key];
+									td.append(a);
+								},
+							},
+							{
+								"name": "mission🪧",
+								"details": "クリアしたクエスト数です。",
+								"initShow": true,
+								"style": `
+									text-align: right;
+								`,
+								"makeTD": (td, key, data) => {
+									td.textContent = data["count"];
+								},
+							},
+							{
+								"name": "クリア率(%)",
+								"details": "すべてのクエスト数に対するクリアしたクエスト数です。\nエリートと通常のクエストを両方抽出している場合は、その半分を総数としています（片方しか挑戦できないため）。",
+								"initShow": true,
+								"style": `
+									text-align: right;
+								`,
+								"makeTD": (td, key, data) => {
+									[td.dataset.truenum, td.textContent] = getDivision(data["count"]*100, maxMissions);
+								},
+							},
+						],
+						"createTbodyFunction": async(tbody, param) => {
+							let bcount = 0;
+							let rank = 0;
+							let add = 1;
+							let limitrank = 100;
+							const morereadId = "buttonMoreReadB0";
+							for(let i = 0; i < this.arrs.length; i++){
+								const arr = this.arrs[i];
+								const key = arr[0];
+								const count = arr[1];
+								if(bcount !== count){
+									bcount = count;
+									rank += add;
+									add = 1;
+								}else{
+									add++;
+								}
+								if(rank > limitrank){
+									if(!document.getElementById("isIgnoreMoreRead").checked){
+										if(rank - limitrank > 100){
+											limitrank = rank;
+										}else{
+											limitrank += 100;
+										}
+										let button = document.getElementById(morereadId);
+										if(!button){
+											const button = document.createElement("button");
+											button.type = "button";
+											button.id = morereadId;
+											button.classList.add("buttonMoreRead");
+											button.textContent = "さらに読み込む";
+											button.addEventListener("click", () => {
+												Wait.release(morereadId);
+											});
+											const caption = document.createElement("caption");
+											caption.append(button);
+											tbody.closest("table").append(caption);
+										}
+										await Wait.add(morereadId);
+									}
+								}
+								
+								const data = {
+									"rank": rank,
+									"count": count,
+								}
+								const tr = document.createElement("tr");
+								tbody.append(tr);
+								param["THS"].forEach((TH) => {
+									const td = document.createElement("td");
+									TH["makeTD"](td, key, data);
+									tr.append(td);
+								});
+							}
+							document.getElementById(morereadId)?.remove();
+						},
+						
+					});
+					return table;
+				}
+			},
+			"B01": {
+//同率順位でブレイクするバージョン
+				"string": "プレイヤーランキング（クリアクエスト数_break）",
+				"create": function(){
+					setPlayerMissions();
+					this.arrs = [];
+					Object.entries(PlayerMissions).forEach(([pid, mds]) => {
+						this.arrs.push([pid, mds.length]);
+					});
+					if(!this.arrs.length){
+						alert("データがありません…\n絞り込みを変更してみてください。");
+						return;
+					}
+					this.arrs.sort(function(a,b){
+						if(a[1] < b[1]){
+							return 1;
+						}else{
+							return -1;
+						}
+					});
+					
+					const maxMissions = Object.keys(Missions).length / document.querySelectorAll("#filterLevel input[type=checkbox]:checked").length;
+					
+					const table = createTable.call(this, {
+						"unityID": "RankingPlayerCompleteMissionCount_break",
+						"caption_text": `<b>${this.Fields["summarys"]["B01"]["string"]}</b>`,
+						"isSortable": false,
+						"style": `
+						`,
+						"THS": [
+							{
+								"name": "順位👑",
+								"details": "クリアしたクエスト数の多さ順です。",
+								"initShow": true,
+								"style": `
+									text-align: right;
+								`,
+								"makeTD": (td, key, data) => {
+									const span = document.createElement("span");
+									span.textContent = data["rank"];
+									td.append(span);
+								},
+							},
+							{
+								"name": "プレイヤー",
+								"details": "プレイヤー名です。",
+								"initShow": true,
+								"style": `
+								`,
+								"makeTD": (td, pids, data) => {
+									const ul = document.createElement("ul");
+									td.append(ul);
+									pids.forEach((pid) => {
+										const li = document.createElement("li");
+										ul.append(li);
+										const a = document.createElement("a");
+										a.href = `?page=PlayerData&player_id=${pid}`;
+										a.textContent = Players[pid];
+										li.append(a);
+									});
+									td.dataset.truenum = pids.length;
+								},
+							},
+							{
+								"name": "mission🪧",
+								"details": "クリアしたクエスト数です。",
+								"initShow": true,
+								"style": `
+									text-align: right;
+								`,
+								"makeTD": (td, pids, data) => {
+									const span = document.createElement("span");
+									span.textContent = data["count"];
+									td.append(span);
+								},
+							},
+							{
+								"name": "クリア率(%)",
+								"details": "すべてのクエスト数に対するクリアしたクエスト数です。\nエリートと通常のクエストを両方抽出している場合は、その半分を総数としています（片方しか挑戦できないため）。",
+								"initShow": true,
+								"style": `
+									text-align: right;
+								`,
+								"makeTD": (td, pids, data) => {
+									const span = document.createElement("span");
+									[td.dataset.truenum, span.textContent] = getDivision(data["count"]*100, maxMissions);
+									td.append(span);
+								},
+							},
+						],
+						"createTbodyFunction": async(tbody, param) => {
+							const putFunc = function(){
+								const data = {
+									"rank": rank,
+									"count": bcount,
+								}
+								const tr = document.createElement("tr");
+								tbody.append(tr);
+								param["THS"].forEach((TH) => {
+									const td = document.createElement("td");
+									TH["makeTD"](td, pids, data);
+									tr.append(td);
+								});
+							};
+							let pids = [];
+							let bcount = this.arrs[0][1];
+							let rank = 1;
+							let add = 0;
+							const morereadId = "buttonMoreReadB01";
+							let limitrank = 100;
+							for(let i = 0; i < this.arrs.length; i++){
+								const arr = this.arrs[i];
+								const pid = arr[0];
+								const count = arr[1];
+								if(bcount !== count){
+									putFunc();
+									bcount = count;
+									rank += add;
+									add = 0;
+									pids = [];
+									
+									if(rank > limitrank){
+										if(!document.getElementById("isIgnoreMoreRead").checked){
+											if(rank - limitrank > 100){
+												limitrank = rank;
+											}else{
+												limitrank += 100;
+											}
+											let button = document.getElementById(morereadId);
+											if(!button){
+												const button = document.createElement("button");
+												button.type = "button";
+												button.id = morereadId;
+												button.classList.add("buttonMoreRead");
+												button.textContent = "さらに読み込む";
+												button.addEventListener("click", () => {
+													Wait.release(morereadId);
+												});
+												const caption = document.createElement("caption");
+												caption.append(button);
+												tbody.closest("table").append(caption);
+											}
+											await Wait.add(morereadId);
+										}
+									}
+									
+								}
+								add++;
+								pids.push(pid);
+							}
+							putFunc();
+							document.getElementById(morereadId)?.remove();
+						}
+						
+					});
+					return table;
+				}
+			},
+		},
+	},
+	createBody: function(){
 		const fragment = document.createDocumentFragment();
-		const span = document.createElement("span");
-		span.textContent = "まだ作っていません。";
-		fragment.append(span);
+		{
+			const div = document.createElement("div");
+			div.classList.add("DivResults");
+			fragment.append(div);
+		}
 		return fragment;
-	})(),
+	},
 	functions: {
+		"popstate": function(){
+			const id = IFURL.query.get("summary_id");
+			if(!id){
+				this.showList();
+				return;
+			}
+			if(this.Fields["summarys"][id]){
+				this.showTargetSummary(id);
+				return;
+			}else{
+				this.showList();
+				return;
+			}
+		},
+		"showList": function(){
+			const sectionId = `section${this.id}List`;
+			let section = document.getElementById(sectionId);
+			if(!section){
+				section = document.createElement("section");
+				section.id = sectionId;
+				document.querySelector(`#Article${this.id} > .DivResults`).append(section);
+				const ul = document.createElement("ul");
+				section.append(ul);
+				Object.entries(this.Fields["summarys"]).forEach(([id, obj]) => {
+					const li = document.createElement("li");
+					ul.append(li);
+					const a = document.createElement("a");
+					a.textContent = obj["string"];
+					a.href = `?page=${this.id}&summary_id=${id}`;
+					li.append(a);
+				});
+				Filter.setHref(ul);
+			}
+			uniqueClassName("sc2", section);
+		},
+		"showTargetSummary": function(id){
+			const sectionId = `${this.id}_${id}`;
+			let section = document.getElementById(sectionId);
+			if(section){
+			
+			}else{
+				const dom = this.Fields["summarys"][id]["create"].call(this);
+				if(!dom){
+					return;
+				}
+				section = document.createElement("section");
+				section.id = sectionId;
+				document.querySelector(`#Article${this.id} > .DivResults`).append(section);
+				section.append(dom);
+				Filter.setHref(dom);
+			}
+			uniqueClassName("sc2", section);
+		}
 	},
 	show_expansion: function(){
-	
-	},
-	init_function: function(){
+		this.popstate();
 	},
 });
 new PageData({
 	id: "MissionData",
-	headerText: "ミッションデータ",
-	body: (() => {
+	headerText: "🪧 ミッションデータ",
+	createBody: function(){
 		const fragment = document.createDocumentFragment();
 		const form = document.createElement("form");
 		form.setAttribute("onSubmit", "return false;");
@@ -994,6 +2107,9 @@ new PageData({
 			button.id = "FormMissionDataSubmit";
 			button.type = "submit";
 			button.textContent = "探す";
+			button.addEventListener("click", () => {
+				this.click_target_search();
+			});
 			form.append(button);
 		}
 		{
@@ -1001,6 +2117,9 @@ new PageData({
 			button.id = "FormAllMissionDataSubmit";
 			button.type = "submit";
 			button.textContent = "全部見る";
+			button.addEventListener("click", () => {
+				this.click_all_search();
+			});
 			form.append(button);
 		}
 		{
@@ -1009,13 +2128,13 @@ new PageData({
 			fragment.append(div);
 		}
 		return fragment;
-	})(),
+	},
 	functions: {
 		"click_target_search": function(){
 			const mission_id = document.querySelector("#LabelMissionID > input").value;
 			if(this.isExist(mission_id)){
 				let url = IFURL.query.set("mission_id", mission_id);
-				url = IFURL.query.set("season", getSeasons(), url);
+				url = IFURL.query.set("season", Filter.getQuery(), url);
 				IFURL.pushHistory(url);
 				this.search_mission_detail();
 			}
@@ -1023,7 +2142,7 @@ new PageData({
 		"click_all_search": function(){
 			let url = IFURL.query.set("page", this.id);
 			url = IFURL.query.delete("mission_id", url);
-			url = IFURL.query.set("season", getSeasons(), url);
+			url = IFURL.query.set("season", Filter.getQuery(), url);
 			IFURL.pushHistory(url);
 			this.search_all_mission();
 		},
@@ -1073,22 +2192,18 @@ new PageData({
 				o["Ws"] = value["Ws"];
 				this.datas.push(o);
 			}
+			if(!this.datas.length){
+				alert("データがありません…\n絞り込みを変更してみてください。");
+				return;
+			}
 			
 			this.kind_sums = {};
-			{
-				const epkind = this.datas[0]["I"].replace(/\/\d.+/, "");
-				const basesrc = `https://minesweeper.online/img/candies/${epkind}`;
-				for(const kind of Object.keys(EVENTPOINT_KIND_NAMES)){
-					this.kind_sums[kind] = {};
-					this.kind_sums[kind]["levels"] = 0;
-					this.kind_sums[kind]["winners"] = 0;
-					this.kind_sums[kind]["count"] = 0;
-					for(const [src, key] of Object.entries(EVENTPOINT_KIND_IMAGE_HASHS)){
-						if(src.startsWith(basesrc) && key === kind){
-							this.kind_sums[kind]["img"] = src;
-						}
-					}
-				}
+			for(const [kind, src] of Object.entries(SeasonKindImgs)){
+				this.kind_sums[kind] = {};
+				this.kind_sums[kind]["levels"] = 0;
+				this.kind_sums[kind]["winners"] = 0;
+				this.kind_sums[kind]["count"] = 0;
+				this.kind_sums[kind]["img"] = src;
 			}
 			
 			const section = document.createElement("section");
@@ -1099,6 +2214,7 @@ new PageData({
 			section.append(createTable.call(this, {
 				"unityID": "AllMissionData",
 				"caption_text": "ミッションデータ一覧",
+				"isSortable": true,
 				"style": `
 				`,
 				"THS": [
@@ -1133,13 +2249,12 @@ new PageData({
 						"style": `
 						`,
 						"makeTD": (td, data) => {
-							const param = data["D"].split("#");
 							const a = document.createElement("a");
 							a.href = `?page=MissionData&mission_id=${data["ID"]}`;
-							a.textContent = short_reconstructFuncs[param["0"]](param["1"], param["2"], param["3"]);
+							a.textContent = getDecodeMissionDetail(data["D"]);
 							td.append(a);
 /*
-							td.textContent = short_reconstructFuncs[param["0"]](param["1"], param["2"], param["3"]);
+							td.textContent = getDecodeMissionDetail(data["D"]);
 */
 						},
 					},
@@ -1151,7 +2266,7 @@ new PageData({
 							text-align: center;
 						`,
 						"makeTD": (td, data) => {
-							const src = `https://minesweeper.online/img/candies/${data["I"]}`;
+							const src = `${IMG_DOMAIN}${data["I"]}`;
 							td.dataset.truenum = EVENTPOINT_KIND_IMAGE_HASHS[src];
 							const img = document.createElement("img");
 							img.src = src;
@@ -1178,7 +2293,7 @@ new PageData({
 					},
 					{
 						"name": "1.0倍ライン",
-						"details": "EP/EVENTが1.0となる順位です。",
+						"details": "EP/LEVELが1.0となる順位です。",
 						"initShow": false,
 						"style": `
 							text-align: right;
@@ -1189,7 +2304,7 @@ new PageData({
 					},
 					{
 						"name": "人気度(%)",
-						"details": "1.0倍ラインに対する挑戦したプレイヤーの割合です。",
+						"details": "1.0倍ラインに対するクリアしたプレイヤーの割合です。",
 						"initShow": true,
 						"style": `
 							text-align: right;
@@ -1232,7 +2347,7 @@ new PageData({
 				],
 				"createTbodyFunction": (tbody, param) => {
 					this.datas.forEach((data) => {
-						const src = `https://minesweeper.online/img/candies/${data["I"]}`;
+						const src = `${IMG_DOMAIN}${data["I"]}`;
 						const kind = EVENTPOINT_KIND_IMAGE_HASHS[src];
 						this.kind_sums[kind]["levels"] += data["level"];
 						this.kind_sums[kind]["winners"] += data["Ws"].length;
@@ -1253,6 +2368,7 @@ new PageData({
 			section.append(createTable.call(this, {
 				"unityID": "AllMissionSummary",
 				"caption_text": "ミッションデータまとめ",
+				"isSortable": true,
 				"style": `
 					order: -1;
 				`,
@@ -1312,12 +2428,15 @@ new PageData({
 				"createTbodyFunction": (tbody, param) => {
 					const summaryDatas = [];
 					{
+						let s_levels = 0;
+						let s_winners = 0;
+						let s_count = 0;
 						for(const [key, value] of Object.entries(this.kind_sums)){
 							summaryDatas.push([EVENTPOINT_KIND_NAMES[key], value["img"], key, value["levels"], value["winners"], value["count"]]);
+							s_levels += value["levels"];
+							s_winners += value["winners"];
+							s_count += value["count"];
 						}
-						const s_levels = Object.values(this.kind_sums).reduce((sum, data) => sum + data["levels"], 0);
-						const s_winners = Object.values(this.kind_sums).reduce((sum, data) => sum + data["winners"], 0);
-						const s_count = Object.values(this.kind_sums).reduce((sum, data) => sum + data["count"], 0);
 						summaryDatas.push(["＊合計", "", "ZZ", s_levels, s_winners, s_count]);
 					}
 					summaryDatas.forEach((data) => {
@@ -1331,7 +2450,7 @@ new PageData({
 					});
 				},
 			}));
-			setSeasonHref(section);
+			Filter.setHref(section);
 			
 		},
 		
@@ -1358,6 +2477,7 @@ new PageData({
 			section.append(createTable.call(this, {
 				"unityID": "TargetMissionDetail",
 				"caption_text": `ミッション「<b>${mission_id}</b>」のデータ`,
+				"isSortable": false,
 				"style": `
 				`,
 				"THS": [
@@ -1397,7 +2517,7 @@ new PageData({
 							text-align: center;
 						`,
 						"makeTD": (td, data) => {
-							const src = `https://minesweeper.online/img/candies/${data["I"]}`;
+							const src = `${IMG_DOMAIN}${data["I"]}`;
 							td.dataset.truenum = EVENTPOINT_KIND_IMAGE_HASHS[src];
 							const img = document.createElement("img");
 							img.src = src;
@@ -1452,6 +2572,7 @@ new PageData({
 			section.append(createTable.call(this, {
 				"unityID": "TargetMissionWinners",
 				"caption_text": `ミッション「<b>${mission_id}</b>」の勝者データ`,
+				"isSortable": false,
 				"style": `
 				`,
 				"THS": [
@@ -1462,8 +2583,8 @@ new PageData({
 						"style": `
 							text-align: right;
 						`,
-						"makeTD": (td, data) => {
-							td.textContent = this.rank;
+						"makeTD": (td, data, rank) => {
+							td.textContent = rank;
 						},
 					},
 					{
@@ -1471,13 +2592,8 @@ new PageData({
 						"details": "プレイヤー名です。",
 						"initShow": true,
 						"style": `
-							/*半透明となるプレイヤー対策*/
-							a{
-								display: inline-block;
-								min-width: 3ch;
-							}
 						`,
-						"makeTD": (td, pid) => {
+						"makeTD": (td, pid, rank) => {
 							const a = document.createElement("a");
 							a.href = `?page=PlayerData&player_id=${pid}`;
 							a.textContent = Players[pid];
@@ -1491,8 +2607,8 @@ new PageData({
 						"style": `
 							text-align: right;
 						`,
-						"makeTD": (td, pid) => {
-							td.textContent = getEP(data["level"], this.rank);
+						"makeTD": (td, pid, rank) => {
+							td.textContent = getEP(data["level"], rank);
 						},
 					},
 					{
@@ -1502,354 +2618,68 @@ new PageData({
 						"style": `
 							text-align: right;
 						`,
-						"makeTD": (td, pid) => {
-							[td.dataset.truenum, td.textContent] = getDivision(getEP(data["level"], this.rank), data["level"]);
+						"makeTD": (td, pid, rank) => {
+							[td.dataset.truenum, td.textContent] = getDivision(getEP(data["level"], rank), data["level"]);
 						},
 					},
 				],
-				"createTbodyFunction": (tbody, param) => {
-					this.rank = 0;
-					data["Ws"].forEach((pid) => {
-						this.rank++;
-						const tr = document.createElement("tr");
-						tbody.append(tr);
-						param["THS"].forEach((TH) => {
-							const td = document.createElement("td");
-							TH["makeTD"](td, pid);
-							tr.append(td);
+				"createTbodyFunction": async(tbody, param) => {
+					const newMap = splitArray(data["Ws"], 100);
+					const morereadId = `buttonMoreRead${this.id}${mission_id}`;
+					let rank = 0;
+					for(let i = 0; i < newMap.length; i++){
+						newMap[i].forEach((pid) => {
+							rank++;
+							const tr = document.createElement("tr");
+							tbody.append(tr);
+							param["THS"].forEach((TH) => {
+								const td = document.createElement("td");
+								TH["makeTD"](td, pid, rank);
+								tr.append(td);
+							});
 						});
-					});
+						
+						if(i === newMap.length - 1){
+							break;
+						}
+						if(!document.getElementById("isIgnoreMoreRead").checked){
+							let button = document.getElementById(morereadId);
+							if(!button){
+								const button = document.createElement("button");
+								button.type = "button";
+								button.id = morereadId;
+								button.classList.add("buttonMoreRead");
+								button.textContent = "さらに読み込む";
+								button.addEventListener("click", () => {
+									Wait.release(morereadId);
+								});
+								const caption = document.createElement("caption");
+								caption.append(button);
+								tbody.closest("table").append(caption);
+							}
+							await Wait.add(morereadId);
+						}
+						
+					}
+					document.getElementById(morereadId)?.remove();
 				},
 			}));
-			setSeasonHref(section);
+			Filter.setHref(section);
 			
 		},
 	},
 	show_expansion: function(){
 		this.popstate_search();
 	},
-	init_function: function(){
-		document.getElementById("FormMissionDataSubmit").addEventListener("click", this.click_target_search.bind(this));
-		document.getElementById("FormAllMissionDataSubmit").addEventListener("click", this.click_all_search.bind(this));
-
-	},
 });
 
-function createTable(param){
-	const tableClassName = `table${param["unityID"]}`;
-	const dialogID = `dialog${param["unityID"]}`;
-	
-	if(!document.getElementById(dialogID)){
-		const dialog = document.createElement("dialog");
-		dialog.id = dialogID;
-		document.body.append(dialog);
-		const style = document.createElement("style");
-		document.body.append(style);
-		let style_innerHTML = `
-			.${tableClassName}{
-				${param["style"]}
-			}
-		`;
-		{
-			const article = document.createElement("article");
-			dialog.append(article);
-			const ul = document.createElement("ul");
-			article.append(ul);
-			param["THS"].forEach((TH, index) => {
-				const li = document.createElement("li");
-				ul.append(li);
-				const label = document.createElement("label");
-				li.append(label);
-				const input = document.createElement("input");
-				input.type = "checkbox";
-				input.checked = TH["initShow"];
-				label.append(input);
-				const strong = document.createElement("strong");
-				strong.textContent = TH["name"];
-				label.append(strong);
-				const span = document.createElement("span");
-				span.textContent = TH["details"];
-				label.append(span);
-				
-				style_innerHTML += `
-					body:has(#${dialogID} > article > ul > li:nth-of-type(${index + 1}) > label > input:not(:checked)) .${tableClassName} > :is(thead, tbody) > tr > :is(th, td):nth-of-type(${index + 1}){
-						display: none;
-					}
-					.${tableClassName} > :is(thead, tbody) > tr > td:nth-of-type(${index + 1}) {
-						${TH["style"]}
-					}
-				`;
-			});
-			style.innerHTML = style_innerHTML;
-		}
-		{
-			const footer = document.createElement("footer");
-			dialog.append(footer);
-			const button = document.createElement("button");
-			button.type = "button";
-			button.textContent = "閉じる";
-			footer.append(button);
-			button.addEventListener("click", () => {
-				document.getElementById(dialogID).close();
-			});
-		}
-	}
-	
-	const table = document.createElement("table");
-	table.classList.add(tableClassName);
-	table.addEventListener("click", sortTable);
-	table.classList.add("sortTable");
-	{
-		const caption = document.createElement("caption");
-		caption.innerHTML = param["caption_text"];
-		table.append(caption);
-		{
-			const button = document.createElement("button");
-			button.type = "button";
-			button.textContent = "⚙️";
-			caption.append(button);
-			button.addEventListener("click", () => {
-				document.getElementById(dialogID).showModal();
-			});
-		}
-	}
-	{
-		const thead = document.createElement("thead");
-		table.append(thead);
-		{
-			const tr = document.createElement("tr");
-			thead.append(tr);
-			param["THS"].forEach((TH) => {
-				const th = document.createElement("th");
-				th.textContent = TH["name"];
-				tr.append(th);
-			});
-		}
-	}
-	{
-		const tbody = document.createElement("tbody");
-		param["createTbodyFunction"](tbody, param);
-		table.append(tbody);
-	}
-	return table;
-}
-function getNumberLevel(level){
-	if(level.includes("E")){
-		level = level.replace("E", "");
-		level = Number(level) * 3;
-	}else{
-		level = Number(level);
-	}
-	return level;
-}
-function getDivision(num1, num2){
-	const n1 = Number(num1);
-	const n2 = Number(num2);
-	const num = Number.parseFloat(n1 / n2);
-	if(Number.isNaN(num)){
-		return [0, ""];
-	}else{
-		const n = num.toFixed(2);
-		return [n, n];
-	}
-}
 
 
 async function startUp(){
-	const getSeasons = IFURL.query.get("season")?.split("-");
-	if(getSeasons?.length && getSeasons[0]){
-		getSeasons.forEach((season) => {
-			document.getElementById(`selectSeason${season}`).checked = true;
-		});
-	}else{
-		document.querySelector("#NavSeason > label:last-child > input").checked = true;
-	}
-	await changeSeasonData();
-	Control.popstate();
+	await setUseData();
+	PageMove.popstate();
 }
 startUp();
-
-
-
-
-
-
-/*
-//件数チェック用
-{
-	const textarea = document.createElement("textarea");
-	let putData = [];
-	for(const [mission_id, mission_data] of Object.entries(Missions)){
-		putData.push(mission_id);
-	}
-	putData = putData.sort();
-	textarea.value = putData.join("\n");
-	document.body.append(textarea);
-}
-*/
-/*
-//開催時刻セット用
-{
-	const button = document.createElement("button");
-	button.type = "button";
-	button.textContent = "開催時刻セット";
-	document.body.append(button);
-	button.addEventListener("click", () => {
-		const day = new Date('2025-04-04 9:00');
-		let i = 0;
-		for(const [mission_id, mission_data] of Object.entries(Missions)){
-			i++;
-			mission_data["T"] = day.getTime() / 48000;
-			if(i === 2){
-				day.setHours(day.getHours() + 1);
-				i = 0;
-			}
-		}
-		const textarea = document.createElement("textarea");
-		textarea.value = JSON.stringify(HayaData);
-		document.body.append(textarea);
-	});
-}
-*/
-/*
-//クエストの内容を出力する
-let arr = [];
-const trs = document.querySelectorAll("table")[1].querySelectorAll("tbody > tr");
-Array.from(trs).forEach((tr) => {
-	const td = tr.querySelector(":scope > td:nth-child(2)");
-	arr.push(td.textContent);
-});
-
-arr = [...new Set(arr)];
-console.log(arr.join("\n"));
-*/
-
-/*
-//クエストを圧縮する
-{
-function traceObject(obj){
-	return Object.fromEntries(Object.entries(obj).map(([key, value]) => [value, key]));
-}
-const RE_JEMS = traceObject(JEMS);
-const RE_ARENAS = traceObject(ARENAS);
-const RE_MODES = traceObject(MODES);
-
-const compactFuncs = [
-	function(str){
-		for(const [key, value] of Object.entries(RE_JEMS)){
-			if(str.includes(key)){
-				const num = str.match(/\d+/)
-				return ["J0", value, num];
-			}
-		}
-	},
-	function(str){
-		if(/宝石/.test(str)){
-			const num = str.match(/\d+/) ?? 1;
-			if(/ゲームの報酬で/.test(str)){
-				return ["J1", num];
-			}
-			return ["J2", num];
-		}
-	},
-	function(str){
-		if(/アリーナチケット/.test(str)){
-			const num = str.match(/\d+/) ?? 1;
-			return ["A0", num];
-		}
-	},
-	function(str){
-		if(/アリーナコイン/.test(str)){
-			const num = str.match(/\d+/) ?? 1;
-			return ["A1", num];
-		}
-	},
-	function(str){
-		if(!/アリーナ/.test(str)){
-			return;
-		}
-		const num = str.match(/\d+/);
-		for(const [key, value] of Object.entries(RE_ARENAS)){
-			if(str.includes(key)){
-				return ["A2", value, num];
-			}
-		}
-		return ["A3", num];
-	},
-	function(str){
-		if(/カスタム/.test(str)){
-			const nums = str.match(/\d+/g);
-			return ["K0", nums[0], nums[1], nums[2]];
-		}
-	},
-	function(str){
-		for(const [key, value] of Object.entries(RE_MODES)){
-			if(str.includes(key)){
-				const num = str.match(/\d+/) ?? 1;
-				if(/ヒントなし/.test(str)){
-					return ["H0", value, num];
-				}
-				if(/秒以内/.test(str)){
-					return ["H1", value, num];
-				}
-				if(/フラグなし/.test(str)){
-					return ["H2", value, num];
-				}
-				if(/連続/.test(str)){
-					return ["H3", value, num];
-				}
-				const num2 = str.match(/\d+/g);
-				if(/効率/.test(str)){
-					return ["H4", value, num2[0], num2[1] ?? 1];
-				}
-				if(/回中/.test(str)){
-					return ["H5", value, num2[1]];
-				}
-				if(/24時間/.test(str)){
-					return ["H6", value, num2[1]];
-				}
-				return ["H7", value, num];
-			}
-		}
-	},
-	function(str){
-		if(/名誉ポイント/.test(str)){
-			const num = str.match(/\d+/) ?? 1;
-			return ["M0", num];
-		}
-	},
-	function(str){
-		if(/コイン/.test(str)){
-			const num = str.match(/\d+/) ?? 1;
-			if(/ゲームの報酬で/.test(str)){
-				return ["M1", num];
-			}
-			return ["M2", num];
-		}
-	},
-	function(str){
-		if(/イベントポイント/.test(str)){
-			const num = str.match(/\d+/) ?? 1;
-			return ["M3", num];
-		}
-	},
-];
-
-//圧縮
-for(const [mission_id, mission_data] of Object.entries(Missions)){
-	for(let i = 0; i < compactFuncs.length; i++){
-		const rs = compactFuncs[i](mission_data["D"]);
-		if(rs){
-			mission_data["D"] = rs.join("#");
-			break;
-		}
-	}
-}
-	const textarea = document.createElement("textarea");
-	textarea.value = JSON.stringify(HayaData);
-	document.body.append(textarea);
-}
-*/
 
 })();
 
