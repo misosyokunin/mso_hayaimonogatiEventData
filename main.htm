@@ -94,11 +94,11 @@ table > caption:nth-of-type(2){
 main > article:not(.sc){
 	display: none;
 }
-.DivResults > section{
+main > article:not([id=toppage]) > section{
 	display: flex;
 	flex-direction: column;
 }
-.DivResults > section:not(.sc2){
+main > article:not([id=toppage]) > section:not(.sc2){
 	display: none;
 }
 .active {
@@ -111,7 +111,7 @@ main > article:not(.sc){
 .sortTable th:active {
 	border-style: inset;
 }
-.DivResults table > tbody{
+main > article > section > table > tbody{
 	vertical-align: baseline;
 }
 .buttonOpenConfigShowTableCol{
@@ -160,7 +160,6 @@ dialog > footer > button{
 }
 a[target=_blank]:after {
 	content: "↗️ ";
-	display: inline-flex;
 	justify-content: center;
 	align-items: center;
 	margin: 0px 0.5ch;
@@ -224,6 +223,7 @@ a[target=_blank]:after {
 	border: none;
 	border-bottom: solid 2px #444;
 	text-align: left;
+	line-height: 1.75;
 }
 #menucontent > *:first-child{
 	border-top: solid 2px #444;
@@ -250,7 +250,7 @@ a[target=_blank]:after {
 }
 #AllData_B01 td > span{
 	position: sticky;
-	top: calc(var(--headerHeight) + 4ch);
+	top: calc(var(--headerHeight) + 5ch);
 }
 #NavSiteHeader_shortcuts{
 	margin-left: auto;
@@ -266,6 +266,9 @@ a[target=_blank]:after {
 }
 #buttonSiteConfig{
 	order: 3;
+}
+#buttonSiteTips{
+	order: 4;
 }
 
 :where(dialog)::backdrop {
@@ -288,7 +291,44 @@ a[target=_blank]:after {
 	}
 }
 */
-
+#SiteTips > article > ul > li {
+	padding: 1ch 3vw;
+	margin-left: 2em;
+	text-indent: -2em;
+}
+#SiteTips > article > ul > li > dl{
+	margin-left: 1em;
+	text-indent: -1em;
+}
+#toppage {
+	margin: 0px 3vw;
+}
+#toppage hr{
+	margin: 2em 0em;
+}
+#toppage > section p {
+	text-indent: -2em;
+	margin-left: 2em;
+}
+.tableDetail {
+	margin: 0px;
+	margin-left: auto;
+	grid-template-columns: [key] 1fr [value] minmax(7ch, min-content);
+	gap: 0px;
+	display: grid;
+}
+.tableDetail > dt:after {
+	content: "：";
+}
+.tableDetail > dt {
+	grid-column: key;
+	text-align: right;
+}
+.tableDetail > dd {
+	grid-column: value;
+	margin-left: 0px;
+	text-align: right;
+}
 	</style>
 	<body>
 		<header>
@@ -296,8 +336,8 @@ a[target=_blank]:after {
 				<button id="menuopener" type="button">≡</button>
 				<h1><a href="./main.htm" target>MSO_早い者勝ちデータ</a></h1>
 				<div id="NavSiteHeader_shortcuts">
-					<button type="button" onClick="document.getElementById('buttonSiteConfig').click();">⚙️ </button>
 					<button type="button" onClick="document.getElementById('buttonOpenDataFilter').click();">🧽 </button>
+					<button type="button" onClick="document.getElementById('buttonSiteConfig').click();">⚙️ </button>
 				</div>
 			</nav>
 		</header>
@@ -306,6 +346,7 @@ a[target=_blank]:after {
 				<a href="./main.htm" target>🏠️トップ</a>
 				<button type="button" id="buttonOpenDataFilter">🧽 絞り込み</button>
 				<button type="button" id="buttonSiteConfig">⚙️ 設定</button>
+				<button type="button" id="buttonSiteTips">💡 Tips</button>
 			</div>
 			<div id="menuback">
 			</div>
@@ -314,18 +355,18 @@ a[target=_blank]:after {
 			<article id="toppage">
 				<section>
 					<h2>ℹ️当サイトについて</h2>
-					<p>🟡<a href="https://minesweeper.online/ja/" target="_blank" rel="noopener noreferrer">Minesweeper.Online</a>さんの早い者勝ちイベントのデータを集めたものです。</p>
-					<p>🟡当コンテンツはMSO様より公認を受けていない非公認のものです。</p>
-					<p>🟡当コンテンツについてMSO様にお問い合わせを絶対にしないでください。</p>
-					<p>🟡問題などありましたら直ちに公開を取りやめいたします。</p>
+					<p>🟡　<a href="https://minesweeper.online/ja/" target="_blank" rel="noopener noreferrer">Minesweeper.Online</a>さんの早い者勝ちイベントのデータを集めたものです。</p>
+					<p>🟡　当コンテンツはMSO様より公認を受けていない非公認のものです。</p>
+					<p>🟡　当コンテンツについてMSO様にお問い合わせを絶対にしないでください。</p>
+					<p>🟡　問題などありましたら直ちに公開を取りやめいたします。</p>
 				</section>
 				<hr>
 				<section>
 					<h2>🗂️ 表示内容について</h2>
-					<p>🔵データを取得した最終時刻は08:50辺りなので、それ以降にクリアしたプレイヤーはデータに含まれていません。</p>
-					<p>🔵プレイヤー名は各シーズン最終日当時のものです。</p>
-					<p>🔵獲得EPは補正値無しのものです。</p>
-					<p>🔵小数は小数点2位未満を四捨五入しています。</p>
+					<p>🔵　データを取得した最終時刻は08:50辺りなので、それ以降にクリアしたプレイヤーはデータに含まれていません。</p>
+					<p>🔵　プレイヤー名は各シーズン最終日当時のものです。</p>
+					<p>🔵　獲得EPは補正値無しのものです。</p>
+					<p>🔵　小数は小数点2位未満を四捨五入しています。</p>
 				</section>
 				<hr>
 				<address>
@@ -338,29 +379,43 @@ a[target=_blank]:after {
 				</address>
 				<hr>
 				<section>
+					<h2>✨️ 展望</h2>
+					<p>🔵　ページをブクマする（当サイト内で）。</p>
+					<p>🔵　ページを共有しやすくする。</p>
+					<p>🔵　匿名化する。</p>
+					<p>🔵　全体のデータの拡充。</p>
+				</section>
+				<hr>
+				<section>
 					<h2>🆙更新履歴</h2>
 					<aside>
 						<h3>2025/05/21</h3>
-						<p>🟢コンテンツをメニューから選ぶように変更しました。<br/>（コンテンツを替えようと思った場合に元の位置にスクロールし直すのが面倒くさく感じたのがきっかけです。）</p>
-						<p>🔵<a href="./main.htm?page=AllData">全体のデータ</a>にコンテンツを追加しました。</p>
-						<p>🔵分類などを絞り込めるようにしました。<br/><button onClick='document.getElementById("buttonOpenDataFilter").click();'>🧽 絞り込み</button>より変更できます。</p>
-						<p>🔵ソート中に読み込み中である旨を表示するようにしました。</p>
-						<p>🔵絞り込み内のそれぞれの設定のタイトル（「分類🎁」など）をタップするとチェックを反転するようにしました。</p>
-						<p>🔵ランキングなどのソートをあまりしないような表に関して、「さらに読み込む」ボタンを押して行を徐々に読み込む方式にしました。<br/>描画速度が上がります。<br/>なお、従来のように一気に読み込みたい場合は、<button onClick='document.getElementById("buttonSiteConfig").click();'>⚙️ 設定</button>より変更できます。</p>
+						<p>🟢　コンテンツをメニューから選ぶように変更しました。<br/>（コンテンツを替えようと思った場合に元の位置にスクロールし直すのが面倒くさく感じたのがきっかけです。）</p>
+						<p>🔵　<a href="./main.htm?page=AllData">全体のデータ</a>にコンテンツを追加しました。</p>
+						<p>🔵　分類などを絞り込めるようにしました。<br/><button onClick='document.getElementById("buttonOpenDataFilter").click();'>🧽 絞り込み</button>より変更できます。</p>
+						<p>🔵　ソート中に読み込み中である旨を表示するようにしました。</p>
+						<p>🔵　ランキングなどのソートをあまりしないような表に関して、「さらに読み込む」ボタンを押して行を徐々に読み込む方式にしました。<br/>描画速度が上がります。<br/>なお、従来のように一気に読み込みたい場合は、<button onClick='document.getElementById("buttonSiteConfig").click();'>⚙️ 設定</button>より変更できます。</p>
+						<p>🟢　クエスト内容の省略表記を一部変更しました。
+							<ul>
+								<li>コイン：300コイン → コイン300枚</li>
+								<li>宝石：1サファイア → サファイア1個</li>
+								<li>アリーナ：L4以上の速度アリーナ → 速度アリーナL4以上</li>
+							</ul>
+						</p>
 					</aside>
 					<aside>
 						<h3>2025/05/10</h3>
-						<p>🔵ミッションデータに人気度を追加しました。</p>
-						<p>🔵注意書きを🔰READMEに変更し、内容を追記しました。</p>
-						<p>🔵ミッション詳細からカスタム盤面へ飛べるようにしました。<br/><a href="./main.htm?page=MissionData&mission_id=7168&season=S112">こんな感じ</a>です。</p>
-						<p>🔵クエストの内容からミッション詳細へ飛べるようにしました。</p>
-						<p>🟢訪問済みのリンクを区別するようにデザインを変更しました。</p>
-						<p>🔴表をコピーしたときに、分類がコピーできていなかったのを修正しました。</p>
-						<p>🟡3156さんのマスタを導入しました。</p>
+						<p>🔵　ミッションデータに人気度を追加しました。</p>
+						<p>🔵　注意書きを🔰READMEに変更し、内容を追記しました。</p>
+						<p>🔵　ミッション詳細からカスタム盤面へ飛べるようにしました。<br/><a href="./main.htm?page=MissionData&mission_id=7168">こんな感じ</a>です。</p>
+						<p>🔵　クエストの内容からミッション詳細へ飛べるようにしました。</p>
+						<p>🟢　訪問済みのリンクを区別するようにデザインを変更しました。</p>
+						<p>🔴　表をコピーしたときに、分類がコピーできていなかったのを修正しました。</p>
+						<p>🟡　3156さんのマスタを導入しました。</p>
 					</aside>
 					<aside>
 						<h3>2025/05/01</h3>
-						<p>公開しました。<br/>でも宣伝を全然していないので限定公開です。</p>
+						<p>🔵　公開しました。<br/>でも宣伝を全然していないので限定公開です。</p>
 					</aside>
 				</section>
 			</article>
@@ -379,6 +434,47 @@ const SEASONS = {
 */
 };
 
+const SessionStorage = new class{
+	#storagename;
+	#datas;
+	constructor(){
+		this.#storagename = "_魚頭男_S004_datas";
+/*
+		window.addEventListener("beforeunload", this.save);
+*/
+		this.load();
+	}
+	get(key){
+		return this.#datas[key];
+	}
+	set(key, value){
+		return this.#datas[key] = value;
+	}
+	has(key){
+		return !!this.#datas[key];
+	}
+	remove(key){
+		delete this.#datas[key];
+	}
+	delete(){
+		sessionStorage.removeItem(this.#storagename);
+	}
+	save(){
+		const savedata = JSON.stringify(this.#datas);
+		sessionStorage.setItem(this.#storagename, savedata);
+	}
+	load(){
+		const loaddata = sessionStorage.getItem(this.#storagename);
+		if(loaddata){
+			this.#datas = JSON.parse(loaddata);
+		}else{
+			this.clear();
+		}
+	}
+	clear(){
+		this.#datas = {};
+	}
+};
 const Wait = {
 	waits : {},
 	add(key){
@@ -484,10 +580,8 @@ class Dialog{
 }
 function uniqueClassName(className, addDOM){
 	const tars = document.querySelectorAll(`.${className}`);
-	for(let i = tars.length - 1; i >= 0; i--){
-		tars[i].classList.remove(className);
-	}
-	addDOM.classList.add(className);
+	tars.forEach((tar) => tar.classList.remove(className));
+	addDOM?.classList.add(className);
 }
 function getDateString(date){
 	var YYYY = date.getFullYear().toString().padStart(4, '0');
@@ -497,6 +591,9 @@ function getDateString(date){
 	var HH = date.getHours().toString().padStart(2, '0');
 	var mm = date.getMinutes().toString().padStart(2, '0');
   return `${YYYY}-${MM}-${DD} ${HH}:${mm}`;
+}
+function getHayaimogatiDate(date){
+	return getDateString(new Date(date * 48000));
 }
 
 function sortTable(tar){
@@ -645,25 +742,25 @@ const full_reconstructFuncs = {
 }
 const short_reconstructFuncs = {
 	"J0": function(x, y){
-		return `${y}${JEMS[x]}`;
+		return `${JEMS[x]}${y}個`;
 	},
 	"J1": function(x){
-		return `${x}宝石（ゲーム報酬）`;
+		return `宝石${x}個（ゲーム報酬）`;
 	},
 	"J2": function(x){
-		return `${x}宝石`;
+		return `宝石${x}個`;
 	},
 	"A0": function(x){
-		return `${x}アリーナチケット`;
+		return `アリーナチケット${x}枚`;
 	},
 	"A1": function(x){
-		return `${x}アリーナコイン`;
+		return `アリーナコイン${x}枚`;
 	},
 	"A2": function(x, y){
-		return `L${y}以上の${ARENAS[x]}アリーナ`;
+		return `${ARENAS[x]}アリーナL${y}以上`;
 	},
 	"A3": function(x){
-		return `L${x}以上アリーナ`;
+		return `任意のアリーナL${x}以上`;
 	},
 	"K0": function(x, y, z){
 		return `カスタム${x}x${y}/${z}`;
@@ -693,16 +790,16 @@ const short_reconstructFuncs = {
 		return `${MODES[x]}${y}回`;
 	},
 	"M0": function(x){
-		return `${x}名誉`;
+		return `名誉${x}つ`;
 	},
 	"M1": function(x){
-		return `${x}コイン（ゲーム報酬）`;
+		return `コイン${x}枚（ゲーム報酬）`;
 	},
 	"M2": function(x){
-		return `${x}コイン`;
+		return `コイン${x}枚`;
 	},
 	"M3": function(x){
-		return `${x}イベントポイント`;
+		return `イベントポイント${x}つ`;
 	},
 }
 function getDecodeMissionDetail(code){
@@ -874,8 +971,15 @@ const Config = new class extends Dialog{
 	#dialogAppend(){
 		const dialog = this.dialog;
 		dialog.id = "configSiteViewing";
+		dialog.addEventListener("close", () => {
+			const inputs = dialog.querySelectorAll("input");
+			inputs.forEach((input) => {
+				SessionStorage.set(input.id, input.checked ?? input.value);
+			});
+			SessionStorage.save();
+		});
 		{
-			const article = this.dialog.querySelector(":scope > article");
+			const article = dialog.querySelector(":scope > article");
 			{
 				const fieldset = document.createElement("fieldset");
 				fieldset.id = "filterSeason";
@@ -889,7 +993,7 @@ const Config = new class extends Dialog{
 					const input = document.createElement("input");
 					input.type = "checkbox";
 					input.id = "isIgnoreMoreRead";
-					input.checked = false;
+					input.checked = SessionStorage.get(input.id) ?? false;
 					label.append(input);
 					const span = document.createElement("span");
 					span.textContent = "「さらに読み込む」を無視して一気に読み込む";
@@ -898,7 +1002,40 @@ const Config = new class extends Dialog{
 			}
 		}
 		{
-			const footer = this.dialog.querySelector(":scope > footer");
+			const footer = dialog.querySelector(":scope > footer");
+		}
+	}
+}
+const Tips = new class extends Dialog{
+	constructor(){
+		super({
+			"opener": document.getElementById("buttonSiteTips"),
+		});
+		this.#dialogAppend();
+	}
+	#dialogAppend(){
+		const dialog = this.dialog;
+		dialog.id = "SiteTips";
+		{
+			const article = dialog.querySelector(":scope > article");
+			article.innerHTML = `
+<ul>
+	<li>🟢　表の見出しをタップすると並び替えできます。</li>
+	<li>🟢　<button onClick='document.getElementById("buttonOpenDataFilter").click();'>🧽 絞り込み</button>内のそれぞれの設定のタイトル（「分類🎁」など）をタップするとすべてのチェックを反転します。</li>
+	<li>🟡　<button onClick='document.getElementById("buttonOpenDataFilter").click();'>🧽 絞り込み</button>内でそれぞれの設定を全くチェックしなかった場合、次のようなチェックがされます。
+		<dl>
+			<dt>シーズン🗓️</dt><dd>最新のシーズンだけチェックされます。</dd>
+			<dt>分類🎁</dt><dd>すべての分類がチェックされます。</dd>
+			<dt>クエストのレベル⚡️</dt><dd>通常とエリートの両方がチェックされます。</dd>
+		</dl>
+	</li>
+	<li>🟡　<button onClick='document.getElementById("buttonSiteConfig").click();'>⚙️ 設定</button>内の各設定は、そのタブを閉じるまで記憶されます<br/>（sessionStorage）。</li>
+</ul>
+				
+			`;
+		}
+		{
+			const footer = dialog.querySelector(":scope > footer");
 		}
 	}
 }
@@ -1209,6 +1346,7 @@ const PageMove = new class{
 			}
 		}else{
 			uniqueClassName("sc", document.getElementById("toppage"));
+			uniqueClassName("active", Menu.menu.querySelector(":scope > a:nth-of-type(1)"));
 		}
 	}
 }
@@ -1219,36 +1357,42 @@ class PageData{
 	constructor(param){
 		this.id = param["id"];
 		this.Fields = param["setFields"];
-		this.headerText = param["headerText"];
-		this.addMenu();
-		this.addMainContent(param["createBody"].call(this));
+		this.createBody = param["createBody"];
+		this.menu = this.#createMenu(param["headerText"]);
+		this.article = null;
 		for(const [key, value] of Object.entries(param["functions"])){
 			this[key] = value;
 		}
 		this.show_expansion = param["show_expansion"];
 		Page[this.id] = this;
 	}
-	addMenu = () => {
+	#createMenu = (headerText) => {
 		const a = document.createElement("a");
 		a.href = `?page=${this.id}`;
-		a.textContent = this.headerText;
+		a.textContent = headerText;
 		Menu.add(a);
+		return a;
 	}
-	addMainContent = (body) => {
+	#createArticle = () => {
+		if(this.article){
+			return;
+		}
 		const article = document.createElement("article");
 		article.id = `Article${this.id}`;
-		article.append(body);
 		document.getElementById("MainContent").append(article);
+		article.append(this.createBody());
+		this.article = article;
 	}
 	show = () => {
-		uniqueClassName("sc", document.getElementById(`Article${this.id}`));
-		uniqueClassName("active", Menu.menu.querySelector(`:scope > a[href*="${this.id}"]`));
+		this.#createArticle();
+		uniqueClassName("sc", this.article);
+		uniqueClassName("active", this.menu);
 	}
 }
 
 new PageData({
 	id: "PlayerData",
-	headerText: "👤 プレイヤー挑戦データ",
+	headerText: "💪 プレイヤー挑戦データ",
 	createBody: function(){
 		const fragment = document.createDocumentFragment();
 		const form = document.createElement("form");
@@ -1256,12 +1400,12 @@ new PageData({
 		fragment.append(form);
 		{
 			const label = document.createElement("label");
-			label.id = "LabelPlayerID";
 			form.append(label);
 			const span = document.createElement("span");
 			span.textContent = "プレイヤーＩＤ";
 			label.append(span);
 			const input = document.createElement("input");
+			input.id = "inputPlayerID";
 			input.type = "number";
 			input.min = "0";
 			input.step = "1";
@@ -1270,30 +1414,26 @@ new PageData({
 		}
 		{
 			const button = document.createElement("button");
-			button.id = `Form${this.id}Submit`;
 			button.type = "submit";
 			button.textContent = "探す";
 			button.addEventListener("click", () => {
-				this.click_search();
+				this.main_search();
+				const player_id = document.querySelector("#inputPlayerID").value;
+				let url = IFURL.query.set("player_id", player_id);
+				IFURL.pushHistory(url);
 			});
 			form.append(button);
-		}
-		{
-			const div = document.createElement("div");
-			div.classList.add("DivResults");
-			fragment.append(div);
 		}
 		return fragment;
 	},
 	functions: {
-		"click_search": function(){
-			const player_id = document.querySelector("#LabelPlayerID > input").value;
+		"main_search": function(){
+			const player_id = document.querySelector("#inputPlayerID").value;
+			let section;
 			if(this.isExist(player_id)){
-				let url = IFURL.query.set("player_id", player_id);
-				url = IFURL.query.set("season", Filter.getQuery(), url);
-				IFURL.pushHistory(url);
-				this.main_search();
+				section = this.createSection();
 			}
+			uniqueClassName("sc2", section);
 		},
 		"isExist": function(player_id){
 			if(!player_id){
@@ -1307,22 +1447,17 @@ new PageData({
 		},
 		"popstate_search": function(){
 			const player_id = IFURL.query.get("player_id");
-			if(this.isExist(player_id)){
-				document.querySelector("#LabelPlayerID > input").value = player_id;
+			if(player_id){
+				document.querySelector("#inputPlayerID").value = player_id;
 				this.main_search();
-			}else{
-				document.querySelector(`#Article${this.id} .sc2`)?.classList.remove("sc2");
 			}
 		},
-		"main_search": function(){
-			const player_id = document.querySelector("#LabelPlayerID > input").value;
-			const result_div = document.querySelector(`#Article${this.id} .DivResults`);
-			{
-				const exist_data_section = result_div.querySelector(`.player${player_id}`);
-				if(exist_data_section){
-					uniqueClassName("sc2", exist_data_section);
-					return;
-				}
+		"createSection": function(){
+			const player_id = document.querySelector("#inputPlayerID").value;
+			const sectionId = `${this.id}${player_id}`;
+			let section = document.getElementById(sectionId);
+			if(section){
+				return section;
 			}
 			
 			this.datas = PlayerMissions[player_id];	/*全体のデータなどで事前集計しているのならそこを参照する*/
@@ -1346,10 +1481,10 @@ new PageData({
 					o["MissionID"] = mission_id;
 					this.datas.push(o);
 				}
-				if(!this.datas.length){
-					alert("データがありません…\n絞り込みを変更してみてください。");
-					return;
-				}
+			}
+			if(!this.datas.length){
+				alert("データがありません…\n絞り込みを変更してみてください。");
+				return null;
 			}
 			
 			this.kind_sums = {};
@@ -1361,10 +1496,9 @@ new PageData({
 				this.kind_sums[kind]["img"] = src;
 			}
 			
-			const section = document.createElement("section");
-			section.classList.add(`player${player_id}`);
-			uniqueClassName("sc2", section);
-			result_div.append(section);
+			section = document.createElement("section");
+			section.id = sectionId;
+			this.article.append(section);
 			
 			section.append(createTable.call(this, {
 				"unityID": "PlayerChallengeData",
@@ -1409,10 +1543,11 @@ new PageData({
 						`,
 						"makeTD": (td, data) => {
 							const src = `${IMG_DOMAIN}${data["I"]}`;
-							td.dataset.truenum = EVENTPOINT_KIND_IMAGE_HASHS[src];
+							const kind = EVENTPOINT_KIND_IMAGE_HASHS[src]
+							td.dataset.truenum = kind;
 							const img = document.createElement("img");
 							img.src = src;
-							img.setAttribute("alt", EVENTPOINT_KIND_NAMES[td.dataset.truenum]);
+							img.setAttribute("alt", EVENTPOINT_KIND_NAMES[kind]);
 							td.append(img);
 						},
 					},
@@ -1459,7 +1594,7 @@ new PageData({
 						"style": `
 						`,
 						"makeTD": (td, data) => {
-							td.textContent = getDateString(new Date(data["T"] * 48000));
+							td.textContent = getHayaimogatiDate(data["T"]);
 						},
 					},
 				],
@@ -1591,7 +1726,584 @@ new PageData({
 				},
 			}));
 			Filter.setHref(section);
+			return section;
+		},
+	},
+	show_expansion: function(){
+		this.popstate_search();
+	},
+});
+new PageData({
+	id: "MissionData",
+	headerText: "🪧 ミッションデータ",
+	createBody: function(){
+		const fragment = document.createDocumentFragment();
+		const form = document.createElement("form");
+		form.setAttribute("onSubmit", "return false;");
+		fragment.append(form);
+		{
+			const label = document.createElement("label");
+			form.append(label);
+			const span = document.createElement("span");
+			span.textContent = "ミッションＩＤ";
+			label.append(span);
+			const input = document.createElement("input");
+			input.id = "inputMissionID";
+			input.type = "number";
+			input.min = "0";
+			input.step = "1";
+			input.value = Object.keys(Missions)[0];
+			label.append(input);
+		}
+		{
+			const button = document.createElement("button");
+			button.type = "submit";
+			button.textContent = "探す";
+			button.addEventListener("click", () => {
+				this.mainSearch_target();
+				const mission_id = document.querySelector("#inputMissionID").value;
+				let url = IFURL.query.set("mission_id", mission_id);
+				IFURL.pushHistory(url);
+			});
+			form.append(button);
+		}
+		{
+			const button = document.createElement("button");
+			button.type = "submit";
+			button.textContent = "全部見る";
+			button.addEventListener("click", () => {
+				this.mainSearch_all();
+				const mission_id = document.querySelector("#inputMissionID").value;
+				let url = IFURL.query.set("page", this.id);
+				url = IFURL.query.delete("mission_id", url);
+				IFURL.pushHistory(url);
+			});
+			form.append(button);
+		}
+		return fragment;
+	},
+	functions: {
+		"mainSearch_target": function(){
+			const mission_id = document.querySelector("#inputMissionID").value;
+			let section = null;
+			if(this.isExist(mission_id)){
+				section = this.createSection_target();
+			}
+			uniqueClassName("sc2", section);
+		},
+		"mainSearch_all": function(){
+			const section = this.createSection_all();
+			uniqueClassName("sc2", section);
+		},
+		"isExist": function(mission_id){
+			if(!mission_id){
+				return false;
+			}
+			if(!Missions[mission_id]){
+				alert(`ミッションＩＤ「${mission_id}」はありません。`);
+				return false;
+			}
+			return true;
+		},
+		"popstate_search": function(){
+			const mission_id = IFURL.query.get("mission_id");
+			if(mission_id){
+				document.querySelector("#inputMissionID").value = mission_id;
+				this.mainSearch_target();
+			}else{
+				this.mainSearch_all();
+			}
+		},
+		"createSection_all": function(){
+			const sectionId = `${this.id}AllMission`;
+			let section = document.getElementById(sectionId);
+			if(section){
+				return section;
+			}
 			
+			this.datas = [];
+			for(const [key, value] of Object.entries(Missions)){
+				const o = {};
+				o["ID"] = key;
+				o["L"] = value["L"];
+				o["level"] = getNumberLevel(o["L"]);
+				o["D"] = value["D"];
+				o["I"] = value["I"];
+				o["S"] = value["S"];
+				o["T"] = value["T"];
+				o["Ws"] = value["Ws"];
+				this.datas.push(o);
+			}
+			if(!this.datas.length){
+				alert("データがありません…\n絞り込みを変更してみてください。");
+				return null;
+			}
+			
+			this.kind_sums = {};
+			for(const [kind, src] of Object.entries(SeasonKindImgs)){
+				this.kind_sums[kind] = {};
+				this.kind_sums[kind]["levels"] = 0;
+				this.kind_sums[kind]["winners"] = 0;
+				this.kind_sums[kind]["count"] = 0;
+				this.kind_sums[kind]["img"] = src;
+			}
+			
+			section = document.createElement("section");
+			section.id = sectionId;
+			this.article.append(section);
+			
+			section.append(createTable.call(this, {
+				"unityID": "AllMissionData",
+				"caption_text": "ミッションデータ一覧",
+				"isSortable": true,
+				"style": `
+				`,
+				"THS": [
+					{
+						"name": "ID",
+						"details": "クエストのIDです。",
+						"initShow": false,
+						"style": `
+						`,
+						"makeTD": (td, data) => {
+							const a = document.createElement("a");
+							a.href = `?page=${this.id}&mission_id=${data["ID"]}`;
+							a.textContent = data["ID"];
+							td.append(a);
+						},
+					},
+					{
+						"name": "レベル⚡️",
+						"details": "クエストのレベル（＝挑戦するのに必要なアクティビティ数）です。",
+						"initShow": true,
+						"style": `
+						`,
+						"makeTD": (td, data) => {
+							td.textContent = `L${data["L"]}`;
+							td.dataset.truenum = data["level"];
+						},
+					},
+					{
+						"name": "内容",
+						"details": "クエストの内容です。",
+						"initShow": true,
+						"style": `
+						`,
+						"makeTD": (td, data) => {
+							const a = document.createElement("a");
+							a.href = `?page=${this.id}&mission_id=${data["ID"]}`;
+							a.textContent = getDecodeMissionDetail(data["D"]);
+							td.append(a);
+/*
+							td.textContent = getDecodeMissionDetail(data["D"]);
+*/
+						},
+					},
+					{
+						"name": "分類",
+						"details": "クエストで得られるEPの分類です。",
+						"initShow": true,
+						"style": `
+							text-align: center;
+						`,
+						"makeTD": (td, data) => {
+							const src = `${IMG_DOMAIN}${data["I"]}`;
+							td.dataset.truenum = EVENTPOINT_KIND_IMAGE_HASHS[src];
+							const img = document.createElement("img");
+							img.src = src;
+							img.setAttribute("alt", EVENTPOINT_KIND_NAMES[td.dataset.truenum]);
+							td.append(img);
+						},
+					},
+					{
+						"name": "勝者",
+						"details": "クエストの勝者数です。",
+						"initShow": false,
+						"style": `
+							text-align: right;
+						`,
+						"makeTD": (td, data) => {
+							td.textContent = data["Ws"].length;
+/*
+							const a = document.createElement("a");
+							a.href = `?page=MissionData&mission_id=${data["ID"]}`;
+							a.textContent = data["Ws"].length;
+							td.append(a);
+*/
+						},
+					},
+					{
+						"name": "1.0倍ライン",
+						"details": "EP/LEVELが1.0となる順位です。",
+						"initShow": false,
+						"style": `
+							text-align: right;
+						`,
+						"makeTD": (td, data) => {
+							td.textContent = RANK_EP[data["level"]].length;
+						},
+					},
+					{
+						"name": "人気度(%)",
+						"details": "1.0倍ラインに対するクリアしたプレイヤーの割合です。",
+						"initShow": true,
+						"style": `
+							text-align: right;
+						`,
+						"makeTD": (td, data) => {
+							[td.dataset.truenum, td.textContent] = getDivision(data["Ws"].length * 100, RANK_EP[data["level"]].length);
+						},
+					},
+					{
+						"name": "最終🍬/⚡️",
+						"details": "最後にクリアしたプレイヤーのEP/LEVELです。",
+						"initShow": false,
+						"style": `
+							text-align: right;
+						`,
+						"makeTD": (td, data) => {
+							[td.dataset.truenum, td.textContent] = getDivision(getEP(data["level"], data["Ws"].length), data["level"]);
+						},
+					},
+					{
+						"name": "開催時刻",
+						"details": "クエストが開催された時刻です。",
+						"initShow": false,
+						"style": `
+						`,
+						"makeTD": (td, data) => {
+							td.textContent = getHayaimogatiDate(data["T"]);
+						},
+					},
+					{
+						"name": "シーズン",
+						"details": "クエストが開催されたシーズンです。",
+						"initShow": false,
+						"style": `
+						`,
+						"makeTD": (td, data) => {
+							td.textContent = `S${data["S"]}`;
+						},
+					},
+				],
+				"createTbodyFunction": (tbody, param) => {
+					this.datas.forEach((data) => {
+						const src = `${IMG_DOMAIN}${data["I"]}`;
+						const kind = EVENTPOINT_KIND_IMAGE_HASHS[src];
+						this.kind_sums[kind]["levels"] += data["level"];
+						this.kind_sums[kind]["winners"] += data["Ws"].length;
+						this.kind_sums[kind]["count"] += 1;
+						
+						const tr = document.createElement("tr");
+						tbody.append(tr);
+						param["THS"].forEach((TH) => {
+							const td = document.createElement("td");
+							TH["makeTD"](td, data);
+							tr.append(td);
+						});
+					});
+				},
+			}));
+
+			/*まとめテーブル作成*/
+			section.append(createTable.call(this, {
+				"unityID": "AllMissionSummary",
+				"caption_text": "ミッションデータまとめ",
+				"isSortable": true,
+				"style": `
+					order: -1;
+				`,
+				"THS": [
+					{
+						"name": "分類",
+						"details": "クエストで得られるEPの分類です。",
+						"initShow": true,
+						"style": `
+						`,
+						"makeTD": (td, data) => {
+							td.dataset.truenum = data[2]
+							if(data[1]){
+								const img = document.createElement("img");
+								img.src = data[1];
+								td.append(img);
+							}
+							const span = document.createElement("span");
+							span.textContent = data[0];
+							td.append(span);
+						},
+					},
+					{
+						"name": "mission🪧",
+						"details": "公開されたクエスト数です。",
+						"initShow": true,
+						"style": `
+							text-align: right;
+						`,
+						"makeTD": (td, data) => {
+							td.textContent = data[5];
+						},
+					},
+					{
+						"name": "レベル⚡️",
+						"details": "クエストのレベル（＝挑戦するのに必要なアクティビティ数）です。",
+						"initShow": true,
+						"style": `
+							text-align: right;
+						`,
+						"makeTD": (td, data) => {
+							td.textContent = data[3];
+						},
+					},
+					{
+						"name": "勝者",
+						"details": "クエストの勝者数です。",
+						"initShow": true,
+						"style": `
+							text-align: right;
+						`,
+						"makeTD": (td, data) => {
+							td.textContent = data[4];
+						},
+					},
+				],
+				"createTbodyFunction": (tbody, param) => {
+					const summaryDatas = [];
+					{
+						let s_levels = 0;
+						let s_winners = 0;
+						let s_count = 0;
+						for(const [key, value] of Object.entries(this.kind_sums)){
+							summaryDatas.push([EVENTPOINT_KIND_NAMES[key], value["img"], key, value["levels"], value["winners"], value["count"]]);
+							s_levels += value["levels"];
+							s_winners += value["winners"];
+							s_count += value["count"];
+						}
+						summaryDatas.push(["＊合計", "", "ZZ", s_levels, s_winners, s_count]);
+					}
+					summaryDatas.forEach((data) => {
+						const tr = document.createElement("tr");
+						tbody.append(tr);
+						param["THS"].forEach((TH) => {
+							const td = document.createElement("td");
+							TH["makeTD"](td, data);
+							tr.append(td);
+						});
+					});
+				},
+			}));
+			Filter.setHref(section);
+			return section;
+		},
+		
+		
+		"createSection_target": function(){
+			const mission_id = document.querySelector("#inputMissionID").value;
+			const sectionId = `${this.id}${mission_id}`;
+			let section = document.getElementById(sectionId);
+			if(section){
+				return section;
+			}
+			
+			const data = Missions[mission_id];
+			data["level"] = getNumberLevel(data["L"]);
+			
+			section = document.createElement("section");
+			section.id = sectionId;
+			this.article.append(section);
+			
+			section.append(createTable.call(this, {
+				"unityID": "TargetMissionDetail",
+				"caption_text": `ミッション「<b>${mission_id}</b>」のデータ`,
+				"isSortable": false,
+				"style": `
+				`,
+				"THS": [
+					{
+						"name": "レベル⚡️",
+						"details": "クエストのレベル（＝挑戦するのに必要なアクティビティ数）です。",
+						"initShow": true,
+						"style": `
+						`,
+						"makeTD": (td, data) => {
+							td.textContent = `L${data["L"]}`;
+							td.dataset.truenum = data["level"];
+						},
+					},
+					{
+						"name": "内容",
+						"details": "クエストの内容です。",
+						"initShow": true,
+						"style": `
+						`,
+						"makeTD": (td, data) => {
+							const param = data["D"].split("#");
+							let text = full_reconstructFuncs[param["0"]](param["1"], param["2"], param["3"]);
+							if(text.includes("カスタム")){
+								const mat = text.match(/\d+x\d+\/\d+/)[0];
+								text = text.replace(mat, `<a href="https://minesweeper.online/ja/start/${mat}" target="_blank" rel="noopener noreferrer">${mat}</a>`);
+							}
+							td.innerHTML = text;
+							
+						},
+					},
+					{
+						"name": "分類",
+						"details": "クエストで得られるEPの分類です。",
+						"initShow": true,
+						"style": `
+							text-align: center;
+						`,
+						"makeTD": (td, data) => {
+							const src = `${IMG_DOMAIN}${data["I"]}`;
+							const kind = EVENTPOINT_KIND_IMAGE_HASHS[src]
+							td.dataset.truenum = kind;
+							const img = document.createElement("img");
+							img.src = src;
+							img.setAttribute("alt", EVENTPOINT_KIND_NAMES[kind]);
+							td.append(img);
+						},
+					},
+					{
+						"name": "勝者",
+						"details": "クエストの勝者数です。",
+						"initShow": true,
+						"style": `
+							text-align: right;
+						`,
+						"makeTD": (td, data) => {
+							td.textContent = data["Ws"].length;
+						},
+					},
+					{
+						"name": "シーズン",
+						"details": "クエストが開催されたシーズンです。",
+						"initShow": true,
+						"style": `
+						`,
+						"makeTD": (td, data) => {
+							td.textContent = `S${data["S"]}`;
+						},
+					},
+					{
+						"name": "開催時刻",
+						"details": "クエストが開催された時刻です。",
+						"initShow": true,
+						"style": `
+						`,
+						"makeTD": (td, data) => {
+							td.textContent = getHayaimogatiDate(data["T"]);
+						},
+					},
+				],
+				"createTbodyFunction": (tbody, param) => {
+					const tr = document.createElement("tr");
+					tbody.append(tr);
+					param["THS"].forEach((TH) => {
+						const td = document.createElement("td");
+						TH["makeTD"](td, data);
+						tr.append(td);
+					});
+				},
+			}));
+			
+			
+			section.append(createTable.call(this, {
+				"unityID": "TargetMissionWinners",
+				"caption_text": `ミッション「<b>${mission_id}</b>」の勝者データ`,
+				"isSortable": false,
+				"style": `
+				`,
+				"THS": [
+					{
+						"name": "順位👑",
+						"details": "クエストをクリアした順位です。",
+						"initShow": true,
+						"style": `
+							text-align: right;
+						`,
+						"makeTD": (td, data, rank) => {
+							td.textContent = rank;
+						},
+					},
+					{
+						"name": "プレイヤー",
+						"details": "プレイヤー名です。",
+						"initShow": true,
+						"style": `
+						`,
+						"makeTD": (td, pid, rank) => {
+							const a = document.createElement("a");
+							a.href = `?page=PlayerData&player_id=${pid}`;
+							a.textContent = Players[pid];
+							td.append(a);
+						},
+					},
+					{
+						"name": "EP🍬",
+						"details": "獲得したEPです。",
+						"initShow": true,
+						"style": `
+							text-align: right;
+						`,
+						"makeTD": (td, pid, rank) => {
+							td.textContent = getEP(data["level"], rank);
+						},
+					},
+					{
+						"name": "🍬/⚡️",
+						"details": "1レベルあたりの獲得EPです。",
+						"initShow": true,
+						"style": `
+							text-align: right;
+						`,
+						"makeTD": (td, pid, rank) => {
+							[td.dataset.truenum, td.textContent] = getDivision(getEP(data["level"], rank), data["level"]);
+						},
+					},
+				],
+				"createTbodyFunction": async(tbody, param) => {
+					const newMap = splitArray(data["Ws"], 100);
+					const morereadId = `buttonMoreRead${this.id}${mission_id}`;
+					let rank = 0;
+					for(let i = 0; i < newMap.length; i++){
+						newMap[i].forEach((pid) => {
+							rank++;
+							const tr = document.createElement("tr");
+							tbody.append(tr);
+							param["THS"].forEach((TH) => {
+								const td = document.createElement("td");
+								TH["makeTD"](td, pid, rank);
+								tr.append(td);
+							});
+						});
+						
+						if(i === newMap.length - 1){
+							break;
+						}
+						if(!document.getElementById("isIgnoreMoreRead").checked){
+							let button = document.getElementById(morereadId);
+							if(!button){
+								const button = document.createElement("button");
+								button.type = "button";
+								button.id = morereadId;
+								button.classList.add("buttonMoreRead");
+								button.textContent = "さらに読み込む";
+								button.addEventListener("click", () => {
+									Wait.release(morereadId);
+								});
+								const caption = document.createElement("caption");
+								caption.append(button);
+								tbody.closest("table").append(caption);
+							}
+							await Wait.add(morereadId);
+						}
+						
+					}
+					document.getElementById(morereadId)?.remove();
+				},
+			}));
+			Filter.setHref(section);
+			return section;
 		},
 	},
 	show_expansion: function(){
@@ -1718,7 +2430,6 @@ new PageData({
 //同率順位でブレイクしないバージョン
 				"string": "プレイヤーランキング（クリアクエスト数）",
 				"create": function(){
-					setPlayerMissions();
 					this.arrs = [];
 					Object.entries(PlayerMissions).forEach(([pid, mds]) => {
 						this.arrs.push([pid, mds.length]);
@@ -1734,8 +2445,6 @@ new PageData({
 							return -1;
 						}
 					});
-					
-					const maxMissions = Object.keys(Missions).length / document.querySelectorAll("#filterLevel input[type=checkbox]:checked").length;	/*エリートと通常のどちらかしかプレイできないので*/
 					
 					const table = createTable.call(this, {
 						"unityID": "RankingPlayerCompleteMissionCount",
@@ -1787,7 +2496,7 @@ new PageData({
 									text-align: right;
 								`,
 								"makeTD": (td, key, data) => {
-									[td.dataset.truenum, td.textContent] = getDivision(data["count"]*100, maxMissions);
+									[td.dataset.truenum, td.textContent] = getDivision(data["count"]*100, this.challengableMissions);
 								},
 							},
 						],
@@ -1856,11 +2565,11 @@ new PageData({
 //同率順位でブレイクするバージョン
 				"string": "プレイヤーランキング（クリアクエスト数_break）",
 				"create": function(){
-					setPlayerMissions();
 					this.arrs = [];
 					Object.entries(PlayerMissions).forEach(([pid, mds]) => {
 						this.arrs.push([pid, mds.length]);
 					});
+					
 					if(!this.arrs.length){
 						alert("データがありません…\n絞り込みを変更してみてください。");
 						return;
@@ -1873,7 +2582,6 @@ new PageData({
 						}
 					});
 					
-					const maxMissions = Object.keys(Missions).length / document.querySelectorAll("#filterLevel input[type=checkbox]:checked").length;
 					
 					const table = createTable.call(this, {
 						"unityID": "RankingPlayerCompleteMissionCount_break",
@@ -1937,7 +2645,7 @@ new PageData({
 								`,
 								"makeTD": (td, pids, data) => {
 									const span = document.createElement("span");
-									[td.dataset.truenum, span.textContent] = getDivision(data["count"]*100, maxMissions);
+									[td.dataset.truenum, span.textContent] = getDivision(data["count"]*100, this.challengableMissions);
 									td.append(span);
 								},
 							},
@@ -2015,661 +2723,73 @@ new PageData({
 	createBody: function(){
 		const fragment = document.createDocumentFragment();
 		{
-			const div = document.createElement("div");
-			div.classList.add("DivResults");
-			fragment.append(div);
+			const aside = document.createElement("aside");
+			aside.id = `aside${this.id}List`;
+			fragment.append(aside);
+			const ul = document.createElement("ul");
+			aside.append(ul);
+			Object.entries(this.Fields["summarys"]).forEach(([id, obj]) => {
+				const li = document.createElement("li");
+				ul.append(li);
+				const a = document.createElement("a");
+				a.textContent = obj["string"];
+				a.href = `?page=${this.id}&summary_id=${id}`;
+				li.append(a);
+			});
+			Filter.setHref(ul);
+		}
+		{
+			setPlayerMissions();
+			this.maxMissions = Object.keys(Missions).length;
+			this.challengableMissions = this.maxMissions / document.querySelectorAll("#filterLevel input[type=checkbox]:checked").length;
+			
+			const dl = document.createElement("dl");
+			dl.classList.add("tableDetail");
+			fragment.append(dl);
+			const dls = [
+				["プレイヤー数", Object.keys(PlayerMissions).length],
+				["ミッション数", this.maxMissions],
+				["挑戦可能なミッション数", this.challengableMissions],
+			];
+			dls.forEach((ele) => {
+				const dt = document.createElement("dt");
+				dt.textContent = ele[0];
+				dl.append(dt);
+				const dd = document.createElement("dd");
+				dd.textContent = ele[1];
+				dl.append(dd);
+			});
 		}
 		return fragment;
 	},
 	functions: {
 		"popstate": function(){
 			const id = IFURL.query.get("summary_id");
-			if(!id){
-				this.showList();
-				return;
-			}
+			let section = null;
 			if(this.Fields["summarys"][id]){
-				this.showTargetSummary(id);
-				return;
-			}else{
-				this.showList();
-				return;
-			}
-		},
-		"showList": function(){
-			const sectionId = `section${this.id}List`;
-			let section = document.getElementById(sectionId);
-			if(!section){
-				section = document.createElement("section");
-				section.id = sectionId;
-				document.querySelector(`#Article${this.id} > .DivResults`).append(section);
-				const ul = document.createElement("ul");
-				section.append(ul);
-				Object.entries(this.Fields["summarys"]).forEach(([id, obj]) => {
-					const li = document.createElement("li");
-					ul.append(li);
-					const a = document.createElement("a");
-					a.textContent = obj["string"];
-					a.href = `?page=${this.id}&summary_id=${id}`;
-					li.append(a);
-				});
-				Filter.setHref(ul);
+				section = this.createTargetSummary(id);
 			}
 			uniqueClassName("sc2", section);
 		},
-		"showTargetSummary": function(id){
+		"createTargetSummary": function(id){
 			const sectionId = `${this.id}_${id}`;
 			let section = document.getElementById(sectionId);
-			if(section){
-			
-			}else{
+			if(!section){
 				const dom = this.Fields["summarys"][id]["create"].call(this);
 				if(!dom){
 					return;
 				}
 				section = document.createElement("section");
 				section.id = sectionId;
-				document.querySelector(`#Article${this.id} > .DivResults`).append(section);
+				this.article.append(section);
 				section.append(dom);
 				Filter.setHref(dom);
 			}
-			uniqueClassName("sc2", section);
+			return section;
 		}
 	},
 	show_expansion: function(){
 		this.popstate();
-	},
-});
-new PageData({
-	id: "MissionData",
-	headerText: "🪧 ミッションデータ",
-	createBody: function(){
-		const fragment = document.createDocumentFragment();
-		const form = document.createElement("form");
-		form.setAttribute("onSubmit", "return false;");
-		fragment.append(form);
-		{
-			const label = document.createElement("label");
-			label.id = "LabelMissionID";
-			form.append(label);
-			const span = document.createElement("span");
-			span.textContent = "ミッションＩＤ";
-			label.append(span);
-			const input = document.createElement("input");
-			input.type = "number";
-			input.min = "0";
-			input.step = "1";
-			input.value = "5819";
-			label.append(input);
-		}
-		{
-			const button = document.createElement("button");
-			button.id = "FormMissionDataSubmit";
-			button.type = "submit";
-			button.textContent = "探す";
-			button.addEventListener("click", () => {
-				this.click_target_search();
-			});
-			form.append(button);
-		}
-		{
-			const button = document.createElement("button");
-			button.id = "FormAllMissionDataSubmit";
-			button.type = "submit";
-			button.textContent = "全部見る";
-			button.addEventListener("click", () => {
-				this.click_all_search();
-			});
-			form.append(button);
-		}
-		{
-			const div = document.createElement("div");
-			div.classList.add("DivResults");
-			fragment.append(div);
-		}
-		return fragment;
-	},
-	functions: {
-		"click_target_search": function(){
-			const mission_id = document.querySelector("#LabelMissionID > input").value;
-			if(this.isExist(mission_id)){
-				let url = IFURL.query.set("mission_id", mission_id);
-				url = IFURL.query.set("season", Filter.getQuery(), url);
-				IFURL.pushHistory(url);
-				this.search_mission_detail();
-			}
-		},
-		"click_all_search": function(){
-			let url = IFURL.query.set("page", this.id);
-			url = IFURL.query.delete("mission_id", url);
-			url = IFURL.query.set("season", Filter.getQuery(), url);
-			IFURL.pushHistory(url);
-			this.search_all_mission();
-		},
-		"isExist": function(mission_id){
-			if(!mission_id){
-				return false;
-			}
-			if(!Missions[mission_id]){
-				alert(`ミッションＩＤ「${mission_id}」はありません。`);
-				return false;
-			}
-			return true;
-		},
-		"popstate_search": function(){
-			const mission_id = IFURL.query.get("mission_id");
-			if(!mission_id){
-				this.search_all_mission();
-				return;
-			}
-			if(this.isExist(mission_id)){
-				document.querySelector("#LabelMissionID > input").value = mission_id;
-				this.search_mission_detail();
-				return;
-			}
-			document.querySelector("#ArticleMissionData .sc2")?.classList.remove("sc2");
-		},
-		"search_all_mission": function(){
-			const result_div = document.querySelector("#ArticleMissionData .DivResults");
-			{
-				const exist_data_section = result_div.querySelector(".all_mission");
-				if(exist_data_section){
-					uniqueClassName("sc2", exist_data_section);
-					return;
-				}
-			}
-			
-			this.datas = [];
-			for(const [key, value] of Object.entries(Missions)){
-				const o = {};
-				o["ID"] = key;
-				o["L"] = value["L"];
-				o["level"] = getNumberLevel(o["L"]);
-				o["D"] = value["D"];
-				o["I"] = value["I"];
-				o["S"] = value["S"];
-				o["T"] = value["T"];
-				o["Ws"] = value["Ws"];
-				this.datas.push(o);
-			}
-			if(!this.datas.length){
-				alert("データがありません…\n絞り込みを変更してみてください。");
-				return;
-			}
-			
-			this.kind_sums = {};
-			for(const [kind, src] of Object.entries(SeasonKindImgs)){
-				this.kind_sums[kind] = {};
-				this.kind_sums[kind]["levels"] = 0;
-				this.kind_sums[kind]["winners"] = 0;
-				this.kind_sums[kind]["count"] = 0;
-				this.kind_sums[kind]["img"] = src;
-			}
-			
-			const section = document.createElement("section");
-			section.classList.add("all_mission");
-			uniqueClassName("sc2", section);
-			result_div.append(section);
-			
-			section.append(createTable.call(this, {
-				"unityID": "AllMissionData",
-				"caption_text": "ミッションデータ一覧",
-				"isSortable": true,
-				"style": `
-				`,
-				"THS": [
-					{
-						"name": "ID",
-						"details": "クエストのIDです。",
-						"initShow": false,
-						"style": `
-						`,
-						"makeTD": (td, data) => {
-							const a = document.createElement("a");
-							a.href = `?page=MissionData&mission_id=${data["ID"]}`;
-							a.textContent = data["ID"];
-							td.append(a);
-						},
-					},
-					{
-						"name": "レベル⚡️",
-						"details": "クエストのレベル（＝挑戦するのに必要なアクティビティ数）です。",
-						"initShow": true,
-						"style": `
-						`,
-						"makeTD": (td, data) => {
-							td.textContent = `L${data["L"]}`;
-							td.dataset.truenum = data["level"];
-						},
-					},
-					{
-						"name": "内容",
-						"details": "クエストの内容です。",
-						"initShow": true,
-						"style": `
-						`,
-						"makeTD": (td, data) => {
-							const a = document.createElement("a");
-							a.href = `?page=MissionData&mission_id=${data["ID"]}`;
-							a.textContent = getDecodeMissionDetail(data["D"]);
-							td.append(a);
-/*
-							td.textContent = getDecodeMissionDetail(data["D"]);
-*/
-						},
-					},
-					{
-						"name": "分類",
-						"details": "クエストで得られるEPの分類です。",
-						"initShow": true,
-						"style": `
-							text-align: center;
-						`,
-						"makeTD": (td, data) => {
-							const src = `${IMG_DOMAIN}${data["I"]}`;
-							td.dataset.truenum = EVENTPOINT_KIND_IMAGE_HASHS[src];
-							const img = document.createElement("img");
-							img.src = src;
-							img.setAttribute("alt", EVENTPOINT_KIND_NAMES[td.dataset.truenum]);
-							td.append(img);
-						},
-					},
-					{
-						"name": "勝者",
-						"details": "クエストの勝者数です。",
-						"initShow": false,
-						"style": `
-							text-align: right;
-						`,
-						"makeTD": (td, data) => {
-							td.textContent = data["Ws"].length;
-/*
-							const a = document.createElement("a");
-							a.href = `?page=MissionData&mission_id=${data["ID"]}`;
-							a.textContent = data["Ws"].length;
-							td.append(a);
-*/
-						},
-					},
-					{
-						"name": "1.0倍ライン",
-						"details": "EP/LEVELが1.0となる順位です。",
-						"initShow": false,
-						"style": `
-							text-align: right;
-						`,
-						"makeTD": (td, data) => {
-							td.textContent = RANK_EP[data["level"]].length;
-						},
-					},
-					{
-						"name": "人気度(%)",
-						"details": "1.0倍ラインに対するクリアしたプレイヤーの割合です。",
-						"initShow": true,
-						"style": `
-							text-align: right;
-						`,
-						"makeTD": (td, data) => {
-							[td.dataset.truenum, td.textContent] = getDivision(data["Ws"].length * 100, RANK_EP[data["level"]].length);
-						},
-					},
-					{
-						"name": "最終🍬/⚡️",
-						"details": "最後にクリアしたプレイヤーのEP/LEVELです。",
-						"initShow": false,
-						"style": `
-							text-align: right;
-						`,
-						"makeTD": (td, data) => {
-							[td.dataset.truenum, td.textContent] = getDivision(getEP(data["level"], data["Ws"].length), data["level"]);
-						},
-					},
-					{
-						"name": "開催時刻",
-						"details": "クエストが開催された時刻です。",
-						"initShow": false,
-						"style": `
-						`,
-						"makeTD": (td, data) => {
-							td.textContent = getDateString(new Date(data["T"] * 48000));
-						},
-					},
-					{
-						"name": "シーズン",
-						"details": "クエストが開催されたシーズンです。",
-						"initShow": false,
-						"style": `
-						`,
-						"makeTD": (td, data) => {
-							td.textContent = `S${data["S"]}`;
-						},
-					},
-				],
-				"createTbodyFunction": (tbody, param) => {
-					this.datas.forEach((data) => {
-						const src = `${IMG_DOMAIN}${data["I"]}`;
-						const kind = EVENTPOINT_KIND_IMAGE_HASHS[src];
-						this.kind_sums[kind]["levels"] += data["level"];
-						this.kind_sums[kind]["winners"] += data["Ws"].length;
-						this.kind_sums[kind]["count"] += 1;
-						
-						const tr = document.createElement("tr");
-						tbody.append(tr);
-						param["THS"].forEach((TH) => {
-							const td = document.createElement("td");
-							TH["makeTD"](td, data);
-							tr.append(td);
-						});
-					});
-				},
-			}));
-
-			/*まとめテーブル作成*/
-			section.append(createTable.call(this, {
-				"unityID": "AllMissionSummary",
-				"caption_text": "ミッションデータまとめ",
-				"isSortable": true,
-				"style": `
-					order: -1;
-				`,
-				"THS": [
-					{
-						"name": "分類",
-						"details": "クエストで得られるEPの分類です。",
-						"initShow": true,
-						"style": `
-						`,
-						"makeTD": (td, data) => {
-							td.dataset.truenum = data[2]
-							if(data[1]){
-								const img = document.createElement("img");
-								img.src = data[1];
-								td.append(img);
-							}
-							const span = document.createElement("span");
-							span.textContent = data[0];
-							td.append(span);
-						},
-					},
-					{
-						"name": "mission🪧",
-						"details": "公開されたクエスト数です。",
-						"initShow": true,
-						"style": `
-							text-align: right;
-						`,
-						"makeTD": (td, data) => {
-							td.textContent = data[5];
-						},
-					},
-					{
-						"name": "レベル⚡️",
-						"details": "クエストのレベル（＝挑戦するのに必要なアクティビティ数）です。",
-						"initShow": true,
-						"style": `
-							text-align: right;
-						`,
-						"makeTD": (td, data) => {
-							td.textContent = data[3];
-						},
-					},
-					{
-						"name": "勝者",
-						"details": "クエストの勝者数です。",
-						"initShow": true,
-						"style": `
-							text-align: right;
-						`,
-						"makeTD": (td, data) => {
-							td.textContent = data[4];
-						},
-					},
-				],
-				"createTbodyFunction": (tbody, param) => {
-					const summaryDatas = [];
-					{
-						let s_levels = 0;
-						let s_winners = 0;
-						let s_count = 0;
-						for(const [key, value] of Object.entries(this.kind_sums)){
-							summaryDatas.push([EVENTPOINT_KIND_NAMES[key], value["img"], key, value["levels"], value["winners"], value["count"]]);
-							s_levels += value["levels"];
-							s_winners += value["winners"];
-							s_count += value["count"];
-						}
-						summaryDatas.push(["＊合計", "", "ZZ", s_levels, s_winners, s_count]);
-					}
-					summaryDatas.forEach((data) => {
-						const tr = document.createElement("tr");
-						tbody.append(tr);
-						param["THS"].forEach((TH) => {
-							const td = document.createElement("td");
-							TH["makeTD"](td, data);
-							tr.append(td);
-						});
-					});
-				},
-			}));
-			Filter.setHref(section);
-			
-		},
-		
-		
-		"search_mission_detail": function(){
-			const mission_id = document.querySelector("#LabelMissionID > input").value;
-			const result_div = document.querySelector("#ArticleMissionData .DivResults");
-			{
-				const exist_data_section = result_div.querySelector(`.mission${mission_id}`);
-				if(exist_data_section){
-					uniqueClassName("sc2", exist_data_section);
-					return;
-				}
-			}
-			
-			const data = Missions[mission_id];
-			data["level"] = getNumberLevel(data["L"]);
-			
-			const section = document.createElement("section");
-			section.classList.add(`mission${mission_id}`);
-			uniqueClassName("sc2", section);
-			result_div.append(section);
-			
-			section.append(createTable.call(this, {
-				"unityID": "TargetMissionDetail",
-				"caption_text": `ミッション「<b>${mission_id}</b>」のデータ`,
-				"isSortable": false,
-				"style": `
-				`,
-				"THS": [
-					{
-						"name": "レベル⚡️",
-						"details": "クエストのレベル（＝挑戦するのに必要なアクティビティ数）です。",
-						"initShow": true,
-						"style": `
-						`,
-						"makeTD": (td, data) => {
-							td.textContent = `L${data["L"]}`;
-							td.dataset.truenum = data["level"];
-						},
-					},
-					{
-						"name": "内容",
-						"details": "クエストの内容です。",
-						"initShow": true,
-						"style": `
-						`,
-						"makeTD": (td, data) => {
-							const param = data["D"].split("#");
-							let text = full_reconstructFuncs[param["0"]](param["1"], param["2"], param["3"]);
-							if(text.includes("カスタム")){
-								const mat = text.match(/\d+x\d+\/\d+/)[0];
-								text = text.replace(mat, `<a href="https://minesweeper.online/ja/start/${mat}" target="_blank" rel="noopener noreferrer">${mat}</a>`);
-							}
-							td.innerHTML = text;
-							
-						},
-					},
-					{
-						"name": "分類",
-						"details": "クエストで得られるEPの分類です。",
-						"initShow": true,
-						"style": `
-							text-align: center;
-						`,
-						"makeTD": (td, data) => {
-							const src = `${IMG_DOMAIN}${data["I"]}`;
-							td.dataset.truenum = EVENTPOINT_KIND_IMAGE_HASHS[src];
-							const img = document.createElement("img");
-							img.src = src;
-							img.setAttribute("alt", EVENTPOINT_KIND_NAMES[td.dataset.truenum]);
-							td.append(img);
-						},
-					},
-					{
-						"name": "勝者",
-						"details": "クエストの勝者数です。",
-						"initShow": true,
-						"style": `
-							text-align: right;
-						`,
-						"makeTD": (td, data) => {
-							td.textContent = data["Ws"].length;
-						},
-					},
-					{
-						"name": "シーズン",
-						"details": "クエストが開催されたシーズンです。",
-						"initShow": true,
-						"style": `
-						`,
-						"makeTD": (td, data) => {
-							td.textContent = `S${data["S"]}`;
-						},
-					},
-					{
-						"name": "開催時刻",
-						"details": "クエストが開催された時刻です。",
-						"initShow": true,
-						"style": `
-						`,
-						"makeTD": (td, data) => {
-							td.textContent = getDateString(new Date(data["T"] * 48000));
-						},
-					},
-				],
-				"createTbodyFunction": (tbody, param) => {
-					const tr = document.createElement("tr");
-					tbody.append(tr);
-					param["THS"].forEach((TH) => {
-						const td = document.createElement("td");
-						TH["makeTD"](td, data);
-						tr.append(td);
-					});
-				},
-			}));
-			
-			
-			section.append(createTable.call(this, {
-				"unityID": "TargetMissionWinners",
-				"caption_text": `ミッション「<b>${mission_id}</b>」の勝者データ`,
-				"isSortable": false,
-				"style": `
-				`,
-				"THS": [
-					{
-						"name": "順位👑",
-						"details": "クエストをクリアした順位です。",
-						"initShow": true,
-						"style": `
-							text-align: right;
-						`,
-						"makeTD": (td, data, rank) => {
-							td.textContent = rank;
-						},
-					},
-					{
-						"name": "プレイヤー",
-						"details": "プレイヤー名です。",
-						"initShow": true,
-						"style": `
-						`,
-						"makeTD": (td, pid, rank) => {
-							const a = document.createElement("a");
-							a.href = `?page=PlayerData&player_id=${pid}`;
-							a.textContent = Players[pid];
-							td.append(a);
-						},
-					},
-					{
-						"name": "EP🍬",
-						"details": "獲得したEPです。",
-						"initShow": true,
-						"style": `
-							text-align: right;
-						`,
-						"makeTD": (td, pid, rank) => {
-							td.textContent = getEP(data["level"], rank);
-						},
-					},
-					{
-						"name": "🍬/⚡️",
-						"details": "1レベルあたりの獲得EPです。",
-						"initShow": true,
-						"style": `
-							text-align: right;
-						`,
-						"makeTD": (td, pid, rank) => {
-							[td.dataset.truenum, td.textContent] = getDivision(getEP(data["level"], rank), data["level"]);
-						},
-					},
-				],
-				"createTbodyFunction": async(tbody, param) => {
-					const newMap = splitArray(data["Ws"], 100);
-					const morereadId = `buttonMoreRead${this.id}${mission_id}`;
-					let rank = 0;
-					for(let i = 0; i < newMap.length; i++){
-						newMap[i].forEach((pid) => {
-							rank++;
-							const tr = document.createElement("tr");
-							tbody.append(tr);
-							param["THS"].forEach((TH) => {
-								const td = document.createElement("td");
-								TH["makeTD"](td, pid, rank);
-								tr.append(td);
-							});
-						});
-						
-						if(i === newMap.length - 1){
-							break;
-						}
-						if(!document.getElementById("isIgnoreMoreRead").checked){
-							let button = document.getElementById(morereadId);
-							if(!button){
-								const button = document.createElement("button");
-								button.type = "button";
-								button.id = morereadId;
-								button.classList.add("buttonMoreRead");
-								button.textContent = "さらに読み込む";
-								button.addEventListener("click", () => {
-									Wait.release(morereadId);
-								});
-								const caption = document.createElement("caption");
-								caption.append(button);
-								tbody.closest("table").append(caption);
-							}
-							await Wait.add(morereadId);
-						}
-						
-					}
-					document.getElementById(morereadId)?.remove();
-				},
-			}));
-			Filter.setHref(section);
-			
-		},
-	},
-	show_expansion: function(){
-		this.popstate_search();
 	},
 });
 
