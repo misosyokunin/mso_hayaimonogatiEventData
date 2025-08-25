@@ -2,6 +2,8 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width">
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 		<title>MSO_早い者勝ちイベントデータ</title>
 	</head>
 	<style>
@@ -54,6 +56,9 @@ body > header{
 }
 main{
 	padding: 0em 1em 3em 1em;
+/*
+	overflow-x: auto;
+*/
 }
 a{
 	text-decoration: none;
@@ -90,6 +95,11 @@ table > caption:nth-of-type(1){
 }
 table > caption:nth-of-type(2){
 	caption-side: bottom;
+}
+table > caption:nth-of-type(2) > button{
+/*captionをflexにするとうまくいかない…*/
+	width: 50%;
+	margin: 0px;
 }
 main > article:not(.sc){
 	display: none;
@@ -136,21 +146,23 @@ dialog > article > ul > li > label > strong {
 	display: inline-block;
 	flex: none;
 }
-
+:where(#ArticlePlayerData, #ArticleMissionData) > form{
+	display: flex;
+}
 dialog {
 	margin: auto;
 	height: 80vh;
 	padding: 0px;
 }
 dialog > article {
-	height: 90%;
+	height: 85%;
 	overflow-y: scroll;
 	padding: 2ch;
 	margin: 0px;
 	box-sizing: border-box;
 }
 dialog > footer {
-	height: 10%;
+	height: 15%;
 	padding: 1ch;
 	box-sizing: border-box;
 	display: flex;
@@ -167,6 +179,7 @@ a[target=_blank]:after {
 }
 #sorting_bg{
 	position: fixed;
+	z-index: 100;
 	top: 0px;
 	left: 0px;
 	background-color: rgba(0, 0, 0, 0.2);
@@ -189,27 +202,25 @@ a[target=_blank]:after {
 	white-space: pre;
 	height: 2.5ch;
 }
-#menu:has(> #menucontent.open) {
-	width: 100%;
-}
+
 #menu {
 	position: fixed;
 	transition: width 0.5s;
-	top: var(--HeaderHeight);
 	left: 0px;
-	height: calc(100% - var(--HeaderHeight));
+	height: 100%;
 	width: 0px;
 	display: flex;
 	background-color: transparent;
 	z-index: 10;
 }
+#menu:has(> #menucontent.open) {
+	width: 100%;
+}
 #menucontent {
-	min-height: 100vh;
 	padding-bottom: 10em;
 	
 	transition: grid-template-columns 0.3s ease-out;
 	grid-template-columns: 0fr;
-	overflow-y: scroll;
 	overflow-x: hidden;
 	white-space: nowrap;
 	display: flex;
@@ -238,15 +249,31 @@ a[target=_blank]:after {
 	padding: 0px;
 	padding: 0px 16px;
 }
+/*
+@media screen and (min-width: 1000px) {
+	#menu{
+		width: 100% !important;
+	}
+	#menucontent {
+	  grid-template-columns: 1fr !important;
+	}
+	#menuback{
+		display: none;
+	}
+	#menuopener{
+		display: none;
+	}
+	body{
+		margin-right: 0px;
+	}
+}
+*/
+
 #configDataFilter fieldset{
 	column-count: 2;
 }
 #configDataFilter fieldset > label{
 	display: block;
-}
-.buttonMoreRead{
-	width: 100%;
-	margin: 0px;
 }
 #AllData_B01 td > span{
 	position: sticky;
@@ -260,15 +287,6 @@ a[target=_blank]:after {
 }
 #NavSiteHeader_shortcuts > button{
 	padding: 1ch;
-}
-#buttonOpenDataFilter{
-	order: 2;
-}
-#buttonSiteConfig{
-	order: 3;
-}
-#buttonSiteTips{
-	order: 4;
 }
 
 :where(dialog)::backdrop {
@@ -291,17 +309,27 @@ a[target=_blank]:after {
 	}
 }
 */
-#SiteTips > article > ul > li {
+#SiteTips ul{
+	list-style: none;
+}
+#SiteTips ul > li {
 	padding: 1ch 3vw;
-	margin-left: 2em;
 	text-indent: -2em;
 }
-#SiteTips > article > ul > li > dl{
+#SiteTips ul > li > dl{
 	margin-left: 1em;
 	text-indent: -1em;
 }
+#SiteLinks dt{
+	text-indent: -2em;
+	margin-left: 2em;
+}
+#SiteLinks dl{
+	margin-bottom: 2em;
+}
 #toppage {
 	margin: 0px 3vw;
+	margin-top: 10vh;
 }
 #toppage hr{
 	margin: 2em 0em;
@@ -329,6 +357,10 @@ a[target=_blank]:after {
 	margin-left: 0px;
 	text-align: right;
 }
+u{
+	color: #F00;
+	cursor: pointer;
+}
 	</style>
 	<body>
 		<header>
@@ -343,10 +375,15 @@ a[target=_blank]:after {
 		</header>
 		<nav id="menu">
 			<div id="menucontent">
+<!--
+リロードするならこっち
 				<a href="./main.htm" target>🏠️トップ</a>
+-->
+				<a href="./main.htm">🏠️トップ</a>
 				<button type="button" id="buttonOpenDataFilter">🧽 絞り込み</button>
 				<button type="button" id="buttonSiteConfig">⚙️ 設定</button>
 				<button type="button" id="buttonSiteTips">💡 Tips</button>
+				<button type="button" id="buttonSiteLinks">🔗 リンク集</button>
 			</div>
 			<div id="menuback">
 			</div>
@@ -355,29 +392,13 @@ a[target=_blank]:after {
 			<article id="toppage">
 				<section>
 					<h2>ℹ️当サイトについて</h2>
-					<p>🟡　<a href="https://minesweeper.online/ja/" target="_blank" rel="noopener noreferrer">Minesweeper.Online</a>さんの早い者勝ちイベントのデータを集めたものです。</p>
+					<p>🔵　<a href="https://minesweeper.online/ja/" target="_blank" rel="noopener noreferrer">Minesweeper.Online</a>さんの早い者勝ちイベントのデータを集めたものです。</p>
 					<p>🟡　当コンテンツはMSO様より公認を受けていない非公認のものです。</p>
-					<p>🟡　当コンテンツについてMSO様にお問い合わせを絶対にしないでください。</p>
+					<p>🟡　当コンテンツについてMSO様にお問い合わせを絶対にしないでください。<br/>お問い合わせは<a href="https://minesweeper.online/ja/player/16842796" target="_blank" rel="noopener noreferrer">魚頭男</a>へお願いします。</p>
 					<p>🟡　問題などありましたら直ちに公開を取りやめいたします。</p>
 				</section>
 				<hr>
-				<section>
-					<h2>🗂️ 表示内容について</h2>
-					<p>🔵　データを取得した最終時刻は08:50辺りなので、それ以降にクリアしたプレイヤーはデータに含まれていません。</p>
-					<p>🔵　プレイヤー名は各シーズン最終日当時のものです。</p>
-					<p>🔵　獲得EPは補正値無しのものです。</p>
-					<p>🔵　小数は小数点2位未満を四捨五入しています。</p>
-				</section>
-				<hr>
-				<address>
-					<h2>👥クレジット</h2>
-					<p>🐟️作った人：<a href="https://minesweeper.online/ja/player/16842796" target="_blank" rel="noopener noreferrer">魚頭男</a></p>
-					<p>🎲マスタご提供：<a href="https://minesweeper.online/ja/player/11151489" target="_blank" rel="noopener noreferrer">3156(Shima)</a></p>
-					<ul>
-						<li><a href="https://docs.google.com/spreadsheets/d/1qk5b1yZ7NBL2jD9-RtUVFMSyEVRhDyIpJXTGfR6a1go/edit?gid=2078390436#gid=2078390436" target="_blank" rel="noopener noreferrer">EPと順位</a></li>
-					</ul>
-				</address>
-				<hr>
+<!--
 				<section>
 					<h2>✨️ 展望</h2>
 					<p>🔵　ページをブクマする（当サイト内で）。</p>
@@ -386,8 +407,29 @@ a[target=_blank]:after {
 					<p>🔵　全体のデータの拡充。</p>
 				</section>
 				<hr>
+-->
 				<section>
 					<h2>🆙更新履歴</h2>
+					<aside>
+						<h3>2025/08/25</h3>
+						<p>🔵　S116に対応しました（プレ）。
+							<ul>
+								<li>レベルが「☠」であるクエスト</li>
+								<li>PvPのクエスト</li>
+							</ul>
+						</p>
+					</aside>
+					<aside>
+						<h3>2025/05/29</h3>
+						<p>🔵　メニューに<button onClick='document.getElementById("buttonSiteLinks").click();'>🔗リンク集</button>を追加しました。<br/>クレジットはこちらへ移行しました。</p>
+						<p>🟢　サイトの表示内容の詳細を<button onClick='document.getElementById("buttonSiteTips").click();'>💡 Tips</button>へ転記しました。</p>
+						<p>🔵　「さらに読み込む」の隣に「ぜんぶ読み込む」を置きました。<br/>それに伴って設定のさらに読み込む関連を削除しました。</p>
+						<p>🔵　<a href="./main.htm?page=MissionData">ミッションデータ</a>のまとめに「平均人気度」の列を追加しました。</p>
+						<p>🔵　表のソートを改良しました。<br/>以前よりも速くなりました。</p>
+						<p>🔵　クエスト内容のソートを最適化しました。<br/>おおまかな種目ごとにソートされる、数字がちゃんとソートされる、といった具合です。</p>
+						<p>🔵　タップした時に機能のある項目について、見た目をボタンに変更しました。</p>
+						<p>🔴　それぞれの表の列の表示/非表示の設定が記憶されていなかったのを修正しました。</p>
+					</aside>
 					<aside>
 						<h3>2025/05/21</h3>
 						<p>🟢　コンテンツをメニューから選ぶように変更しました。<br/>（コンテンツを替えようと思った場合に元の位置にスクロールし直すのが面倒くさく感じたのがきっかけです。）</p>
@@ -426,12 +468,11 @@ a[target=_blank]:after {
 (async()=> {
 "use strict";
 
+
 const SEASONS = {
 	"S108": "https://minesweeper.online/img/candies/candy/528.svg?v4",
 	"S112": "https://minesweeper.online/img/candies/egg/408.svg?v5",
-/*
-	"S116": "https://minesweeper.online/img/candies/drink/468.svg?v4",
-*/
+	"S116": "https://minesweeper.online/img/candies/drink/468.svg?v5",
 };
 
 const SessionStorage = new class{
@@ -513,7 +554,11 @@ const Menu = new class{
 		this.menu.classList.toggle("open");
 	}
 	add(dom){
+		//絞り込みの前に追加する
+		document.getElementById("buttonOpenDataFilter").before(dom);
+/*
 		this.menu.append(dom);
+*/
 	}
 }
 
@@ -543,7 +588,7 @@ const IFURL = new class{	//InterFaceURL
 }
 class Dialog{
 	constructor(param){
-		param["opener"].addEventListener("click", () => {
+		param["opener"]?.addEventListener("click", () => {
 			this.open();
 		});
 		this.dialog = this.#create();
@@ -606,48 +651,36 @@ function sortTable(tar){
 	if(!tar.textContent){
 		return;
 	}
-	let func;
-	if(tar.dataset.sorted === "1"){
-		tar.dataset.sorted = "2";
-		func = function(td1, td2){
-			if(!(isNaN(td1) && isNaN(td2))){
-				td1 = Number(td1);
-				td2 = Number(td2);
-			}
-			return td1 < td2;
-		}
-	}else{
-		tar.dataset.sorted = "1";
-		func = function(td1, td2){
-			if(!(isNaN(td1) && isNaN(td2))){
-				td1 = Number(td1);
-				td2 = Number(td2);
-			}
-			return td1 > td2;
-		}
-	}
 	
 	const table = tar.closest("table");
-	const ths = table.querySelectorAll("th");
+	const ths = table.querySelectorAll(":scope > thead > tr > th");
 	const thnum = Array.from(ths).findIndex((th) => th === tar) + 1;
 	
-	const tbody = table.querySelector("tbody");
-	const trs = tbody.getElementsByTagName("tr");
-	for(let i = 0; i < trs.length; i++){
-		let td1 = trs[i].querySelector(`td:nth-child(${thnum})`);
-		for(let j = i + 1; j < trs.length; j++){
-			const td2 = trs[j].querySelector(`td:nth-child(${thnum})`);
-			const ptd1 = td1.dataset.truenum ?? td1.textContent;
-			const ptd2 = td2.dataset.truenum ?? td2.textContent;
-			if(func(ptd1, ptd2)){
-				td1 = td2;
-			}
+	const tbody = table.querySelector(":scope > tbody");
+	const tds = tbody.querySelectorAll(`:scope > tr > td:nth-child(${thnum})`);
+	const datas = Array.from(tds).map((td, index) => {
+		const str = td.dataset.truenum ?? td.textContent;
+		const compstr = isNaN(str) ? str : Number(str);
+		return [compstr, index];
+	});
+	tar.dataset.sorted = tar.dataset.sorted === "1" ? "-1" : "1";
+	const kei = Number(tar.dataset.sorted);
+	datas.sort((a, b) => {
+		let s = 0;
+		if(a[0] > b[0]){
+			s = 1;
+		}else if(a[0] < b[0]){
+			s = -1;
+		}else{
+			s = 0;
 		}
-		const tr = td1.closest("tr");
-		if(tr !== trs[i]){
-			trs[i].insertAdjacentElement("beforebegin", tr);
-		}
-	}
+		return s * kei;
+	});
+	
+	const trs = tbody.querySelectorAll(":scope > tr");
+	datas.forEach((data) => {
+		tbody.append(trs[data[1]]);
+	});
 }
 function splitArray(arr, add){
 /*
@@ -702,6 +735,9 @@ const full_reconstructFuncs = {
 	},
 	"K0": function(x, y, z){
 		return `サイズ ${x}x${y}/${z} のカスタムをクリアする`;
+	},
+	"P0": function(x){
+		return `PvPモードで ${x} 回ゲームをクリアする`;
 	},
 	"H0": function(x, y){
 		return `レベル  ${MODES[x]} のゲームをヒントなしで ${y} 回クリアする`;
@@ -765,6 +801,9 @@ const short_reconstructFuncs = {
 	"K0": function(x, y, z){
 		return `カスタム${x}x${y}/${z}`;
 	},
+	"P0": function(x){
+		return `PvP${x}回`;
+	},
 	"H0": function(x, y){
 		return `${MODES[x]}ヒントなし${y}回`;
 	},
@@ -804,11 +843,86 @@ const short_reconstructFuncs = {
 }
 function getDecodeMissionDetail(code){
 	const param = code.split("#");
-	return short_reconstructFuncs[param["0"]](param["1"], param["2"], param["3"])
+	const codes = [param[0]];
+	for(let i = 1; i <= 3; i++){
+		let code = param[i] ?? "";
+		code = code.padStart(4, "0");
+		codes.push(code);
+	}
+	
+	return [codes.join(""), short_reconstructFuncs[param["0"]](param["1"], param["2"], param["3"])];
 }
 function createTable(param){
 	const tableClassName = `table${param["unityID"]}`;
 	
+	/*TABLEの列フィルターとなるDIALOG*/
+	const dialogID = `dialog${param["unityID"]}`;
+	let dialog = document.getElementById(dialogID);
+	if(!dialog){
+		const od = new class extends Dialog{
+			constructor(){
+				super({
+					"opener": null,	/*あとで定義*/
+				});
+				this.#dialogAppend();
+			}
+			#dialogAppend(){
+				const dialog = this.dialog;
+				dialog.id = dialogID;
+				dialog.addEventListener("close", () => {
+					const inputs = dialog.querySelectorAll("input");
+					inputs.forEach((input, index) => {
+						SessionStorage.set(`${dialogID}${index}`, input.checked ?? input.value);
+					});
+					SessionStorage.save();
+				});
+				const style = document.createElement("style");
+				document.body.append(style);
+				let style_innerHTML = `
+					.${tableClassName}{
+						${param["style"]}
+					}
+				`;
+				{
+					const article = this.dialog.querySelector(":scope > article");
+					const ul = document.createElement("ul");
+					article.append(ul);
+					param["THS"].forEach((TH, index) => {
+						const li = document.createElement("li");
+						ul.append(li);
+						const label = document.createElement("label");
+						li.append(label);
+						const input = document.createElement("input");
+						input.type = "checkbox";
+						input.checked = SessionStorage.get(`${dialogID}${index}`) ?? TH["initShow"];
+						label.append(input);
+						const strong = document.createElement("strong");
+						strong.textContent = TH["name"];
+						label.append(strong);
+						const span = document.createElement("span");
+						span.innerText = TH["details"];
+						label.append(span);
+						
+						style_innerHTML += `
+							body:has(#${dialogID} > article > ul > li:nth-of-type(${index + 1}) > label > input:not(:checked)) .${tableClassName} > :is(thead, tbody) > tr > :is(th, td):nth-of-type(${index + 1}){
+								display: none;
+							}
+							.${tableClassName} > :is(thead, tbody) > tr > td:nth-of-type(${index + 1}) {
+								${TH["style"]}
+							}
+						`;
+					});
+					style.innerHTML = style_innerHTML;
+				}
+				{
+					const footer = this.dialog.querySelector(":scope > footer");
+				}
+			}
+		};
+		dialog = od.dialog;
+	}
+	
+	/*TABLE*/
 	const table = document.createElement("table");
 	table.classList.add(tableClassName);
 	{
@@ -820,6 +934,9 @@ function createTable(param){
 			button.type = "button";
 			button.textContent = "⚙️";
 			button.classList.add("buttonOpenConfigShowTableCol");
+			button.addEventListener("click", () => {
+				dialog.showModal();
+			});
 			caption.append(button);
 		}
 	}
@@ -857,77 +974,24 @@ function createTable(param){
 		param["createTbodyFunction"](tbody, param);
 	}
 	
-	const dialogID = `dialog${param["unityID"]}`;
-	if(!document.getElementById(dialogID)){
-		const od = new class extends Dialog{
-			constructor(){
-				super({
-					"opener": table.querySelector(".buttonOpenConfigShowTableCol"),
-				});
-				this.#dialogAppend();
-			}
-			#dialogAppend(){
-				const dialog = this.dialog;
-				dialog.id = dialogID;
-				const style = document.createElement("style");
-				document.body.append(style);
-				let style_innerHTML = `
-					.${tableClassName}{
-						${param["style"]}
-					}
-				`;
-				{
-					const article = this.dialog.querySelector(":scope > article");
-					const ul = document.createElement("ul");
-					article.append(ul);
-					param["THS"].forEach((TH, index) => {
-						const li = document.createElement("li");
-						ul.append(li);
-						const label = document.createElement("label");
-						li.append(label);
-						const input = document.createElement("input");
-						input.type = "checkbox";
-						input.checked = TH["initShow"];
-						label.append(input);
-						const strong = document.createElement("strong");
-						strong.textContent = TH["name"];
-						label.append(strong);
-						const span = document.createElement("span");
-						span.innerText = TH["details"];
-						label.append(span);
-						
-						style_innerHTML += `
-							body:has(#${dialogID} > article > ul > li:nth-of-type(${index + 1}) > label > input:not(:checked)) .${tableClassName} > :is(thead, tbody) > tr > :is(th, td):nth-of-type(${index + 1}){
-								display: none;
-							}
-							.${tableClassName} > :is(thead, tbody) > tr > td:nth-of-type(${index + 1}) {
-								${TH["style"]}
-							}
-						`;
-					});
-					style.innerHTML = style_innerHTML;
-				}
-				{
-					const footer = this.dialog.querySelector(":scope > footer");
-				}
-			}
-		};
-	}
-	
 	return table;
 }
 function getNumberLevel(level){
+	const lev = Number(level.match(/\d+/)[0]);
 	if(level.includes("E")){
-		level = level.replace("E", "");
-		level = Number(level) * 3;
-	}else{
-		level = Number(level);
+		return lev * 3;
 	}
-	return level;
+	if(level.includes("☠")){
+		return lev * 9;
+	}
+	return lev;
 }
 function getDivision(num1, num2){
 	const n1 = Number(num1);
 	const n2 = Number(num2);
+	if(isNaN(n2)){
+		return [NaN, ""];
+	}
 	const num = Number.parseFloat(n1 / n2);
 	if(Number.isNaN(num)){
 		return [0, ""];
@@ -936,6 +1000,48 @@ function getDivision(num1, num2){
 		return [n, n];
 	}
 }
+function calcTrimAverage(arr, per = 5){
+	const nums = arr.concat();
+	const tcount = Math.floor(nums.length / Math.floor(100 / per));
+	if(tcount > 0){
+		nums.sort();
+		for(let i = 0; i < tcount; i++){
+			nums.pop();
+			nums.shift();
+		}
+	}
+	const sum = nums.reduce((sum, num) => sum + num, 0);
+	const len = nums.length;
+	return getDivision(sum, len);
+}
+function appendMoreReadCaption(morereadId, table){
+	if(document.getElementById(morereadId)){
+		return;
+	}
+	const caption = document.createElement("caption");
+	caption.id = morereadId;
+	table.append(caption);
+	{
+		const button = document.createElement("button");
+		button.type = "button";
+		button.textContent = "さらに読み込む";
+		button.addEventListener("click", () => {
+			Wait.release(morereadId);
+		});
+		caption.append(button);
+	}
+	{
+		const button = document.createElement("button");
+		button.type = "button";
+		button.textContent = "ぜんぶ読み込む";
+		button.addEventListener("click", () => {
+			this[morereadId] = true;
+			Wait.release(morereadId);
+		});
+		caption.append(button);
+	}
+}
+
 function setPlayerMissions(){
 	if(Object.keys(PlayerMissions).length){
 		return;
@@ -958,6 +1064,156 @@ function setPlayerMissions(){
 		});
 		
 	});
+}
+function getChallengableMissions(){
+	const MissionLevelFilters = Filter.nowFilter.filter((fil) => fil[0] === "E");
+	let f = 0;
+	const fils = [
+		MissionLevelFilters.includes("EOFF"),
+		MissionLevelFilters.includes("EON"),
+		MissionLevelFilters.includes("EDON"),
+	];
+	if(fils[0] && fils[1] && fils[2]){
+		f = 2;
+	}
+	if(!fils[0] && fils[1] && fils[2]){
+		f = 1;
+	}
+	if(fils[0] && !fils[1] && !fils[2]){
+		f = 1;
+	}
+	if(f === 0){
+		return NaN;
+	}
+	const maxMissions = Object.keys(Missions).length;
+	return maxMissions / f
+}
+function getToubaiLine(level){
+	if(RANK_EP[level].at(-1) === level){
+		return RANK_EP[level].length
+	}else{
+		return NaN;
+	}
+}
+function createPie(param){
+	const canvas = document.createElement("canvas");
+	const config = {
+//		type: "doughnut",
+		type: "pie",
+		data: {
+			labels: param["data_labels"],
+			datasets: [
+				{
+//					label: "プレイヤー数",
+					data: param["data_datasets_data"],
+					backgroundColor: param["data_datasets_backgroundColor"],
+					borderColor: param["data_datasets_borderColor"],
+					borderWidth: 8,
+					hoverOffset: 30,
+				},
+			],
+		},
+		/*
+		円グラフのそれぞれのパイに割合を表示する
+		https://nerino.seesaa.net/article/chart6.html
+		Chart.js(v4) 円グラフに値と割合、中心に合計値を表示: Nerinoのブログ
+		*/
+		plugins: [{
+			afterDatasetsDraw: function(chart, args, options) {
+				const metas = chart.getSortedVisibleDatasetMetas();
+				// グラフごとの処理
+				metas.forEach((meta, i) => {
+					if(meta.data.length && 
+					  (meta.type === 'pie' || meta.type === 'doughnut')){
+						const dataset = chart.data.datasets[meta.index];
+						const dataKey = dataset.parsing?.key ?? chart.options.parsing?.key;
+						const elements = meta.data;
+						// フォント設定
+						const ctx = chart.ctx;
+						ctx.save();
+						ctx.font = Chart.defaults.font;
+						ctx.fillStyle = Chart.defaults.color;
+						ctx.strokeStyle = 'white';
+						ctx.lineWidth = 4;
+						ctx.textAlign = 'center';
+						ctx.textBaseline = 'middle';
+						// 円グラフの円弧ごとに値を表示
+						elements.forEach((el, i) => {
+							if(el.circumference){
+								const data = dataset?.data[i][dataKey] ?? dataset.data[i];
+								const par = Math.floor(data / meta.total * 100);
+								const rdist = el.innerRadius + (el.outerRadius - el.innerRadius) * 0.8;
+								const eangle = (el.startAngle + el.endAngle) / 2;
+								const pos = {
+									x: el.x + rdist * Math.cos(eangle),
+									y: el.y + rdist * Math.sin(eangle),
+								};
+								const dataLabel = [data, `(${par}%)`];
+								ctx.strokeText(dataLabel[0], pos.x, pos.y);
+								ctx.strokeText(dataLabel[1], pos.x, pos.y + 16);
+								ctx.fillText(dataLabel[0], pos.x, pos.y);
+								ctx.fillText(dataLabel[1], pos.x, pos.y + 16);
+							}
+						});
+		/*
+						const dataValue = `${meta.label}\n　${meta.total}`;
+						ctx.fillText(dataValue, elements[0].x, elements[0].y - ((metas.length - 1) / 2 - i) * 20);
+		*/
+						ctx.restore();
+					}
+				})
+			}
+		}],
+		options: {
+			layout: {
+				padding: {
+					left: 0,
+					right: 0,
+					top: 0,
+					bottom: 0,
+				}
+			},
+			plugins: {
+				legend: {
+					labels: {
+						font: {
+							size: 16,
+						},
+					},
+					onClick: function(){
+						return;	//デフォルトだと、クリック時にフィルターが掛かるが、その機能を消す
+					},
+				},
+				title: {
+					display: true,
+					text: param["options_plugins_title_text"],
+					font: {
+						size: 16,
+					},
+				},
+			},
+//			cutout: "30%",
+			cutout: 0,
+			animation: {
+//				animateRotate: false,	/*回転アニメーション*/
+			},
+		},
+	};
+	const chart = new Chart(canvas, config);
+	/*
+			lineChart.data.datasets[0].data[0] = 50;
+			lineChart.update();
+	*/
+	/*
+	lineChart.render({
+		duration: 800,
+		lazy: false,
+		easing: 'easeOutBounce'
+	});
+	*/
+
+	//		lineChart.destroy();
+	return canvas;
 }
 
 
@@ -987,18 +1243,6 @@ const Config = new class extends Dialog{
 				const legend = document.createElement("legend");
 				legend.textContent = "設定";
 				fieldset.append(legend);
-				{
-					const label = document.createElement("label");
-					fieldset.append(label);
-					const input = document.createElement("input");
-					input.type = "checkbox";
-					input.id = "isIgnoreMoreRead";
-					input.checked = SessionStorage.get(input.id) ?? false;
-					label.append(input);
-					const span = document.createElement("span");
-					span.textContent = "「さらに読み込む」を無視して一気に読み込む";
-					label.append(span);
-				}
 			}
 		}
 		{
@@ -1019,19 +1263,75 @@ const Tips = new class extends Dialog{
 		{
 			const article = dialog.querySelector(":scope > article");
 			article.innerHTML = `
-<ul>
-	<li>🟢　表の見出しをタップすると並び替えできます。</li>
-	<li>🟢　<button onClick='document.getElementById("buttonOpenDataFilter").click();'>🧽 絞り込み</button>内のそれぞれの設定のタイトル（「分類🎁」など）をタップするとすべてのチェックを反転します。</li>
-	<li>🟡　<button onClick='document.getElementById("buttonOpenDataFilter").click();'>🧽 絞り込み</button>内でそれぞれの設定を全くチェックしなかった場合、次のようなチェックがされます。
-		<dl>
-			<dt>シーズン🗓️</dt><dd>最新のシーズンだけチェックされます。</dd>
-			<dt>分類🎁</dt><dd>すべての分類がチェックされます。</dd>
-			<dt>クエストのレベル⚡️</dt><dd>通常とエリートの両方がチェックされます。</dd>
-		</dl>
-	</li>
-	<li>🟡　<button onClick='document.getElementById("buttonSiteConfig").click();'>⚙️ 設定</button>内の各設定は、そのタブを閉じるまで記憶されます<br/>（sessionStorage）。</li>
-</ul>
+<section>
+	<h2>🗂️ 取得元のデータについて</h2>
+	<ul>
+		<li>🔵　S116の20250805 21:00～20250805 23:00のミッションはありません<br>（MSOのサーバーダウンによるものです）。</li>
+	</ul>
+</section>
+
+<section>
+	<h2>🗂️ 表示内容について</h2>
+	<ul>
+		<li>🔵　データを取得した最終時刻は08:50辺りなので、それ以降にクリアしたプレイヤーはデータに含まれていません。</li>
+		<li>🔵　プレイヤー名は各シーズン最終日当時のものです。</li>
+		<li>🔵　獲得EPは補正値無しのものです。</li>
+		<li>🔵　小数は小数点2位未満を四捨五入しています。</li>
+		<li>🔵　☠のクエストのレベルは、大元は「L☠」となっていますが、本サイトでは「挑戦アクティビティ÷9」の数値を入れています。</li>
+	</ul>
+</section>
+
+<section>
+	<h2>🗂️ サイトの機能について</h2>
+	<ul>
+		<li>🟢　表の見出しをタップすると並び替えできます。</li>
+		<li>🟢　<button onClick='document.getElementById("buttonOpenDataFilter").click();'>🧽 絞り込み</button>内のそれぞれの設定のタイトル（「分類🎁」など）をタップするとすべてのチェックを反転します。</li>
+		<li>🟡　<button onClick='document.getElementById("buttonOpenDataFilter").click();'>🧽 絞り込み</button>内でそれぞれの設定を全くチェックしなかった場合、次のようなチェックがされます。
+			<dl>
+				<dt>シーズン🗓️</dt><dd>最新のシーズンだけチェックされます。</dd>
+				<dt>分類🎁</dt><dd>すべての分類がチェックされます。</dd>
+				<dt>クエストのレベル⚡️</dt><dd>通常・エリート・☠のすべてがチェックされます。</dd>
+			</dl>
+		</li>
+		<li>🟡　<button onClick='document.getElementById("buttonSiteConfig").click();'>⚙️ 設定</button>内の各設定は、そのタブを閉じるまで記憶されます<br/>（sessionStorage）。</li>
+	</ul>
+</section>
 				
+			`;
+		}
+		{
+			const footer = dialog.querySelector(":scope > footer");
+		}
+	}
+}
+const Links = new class extends Dialog{
+	constructor(){
+		super({
+			"opener": document.getElementById("buttonSiteLinks"),
+		});
+		this.#dialogAppend();
+	}
+	#dialogAppend(){
+		const dialog = this.dialog;
+		dialog.id = "SiteLinks";
+		{
+			const article = dialog.querySelector(":scope > article");
+			article.innerHTML = `
+<address>
+	<dl>
+		<dt>🐟️　<a href="https://minesweeper.online/ja/player/16842796" target="_blank" rel="noopener noreferrer">魚頭男</a></dt>
+		<dd>当ページを作りました。お問い合わせはこちらまでお願いします。</dd>
+		<dt>🎲　<a href="https://minesweeper.online/ja/player/11151489" target="_blank" rel="noopener noreferrer">3156(Shima)</a></dt>
+		<dd>マスタのご提供ありがとうございます！（<a href="https://docs.google.com/spreadsheets/d/1qk5b1yZ7NBL2jD9-RtUVFMSyEVRhDyIpJXTGfR6a1go/edit?gid=2078390436#gid=2078390436" target="_blank" rel="noopener noreferrer">EPと順位</a>）</dd>
+	</dl>
+	
+	<dl>
+		<dt>💣️　<a href="https://minesweeper.online/ja/" target="_blank" rel="noopener noreferrer">マインスイーパー｜Minesweeper Online</a></dt>
+		<dd>いつも楽しくプレイしています。</dd>
+		<dt>📈　<a href="https://www.chartjs.org/docs/latest/" target="_blank" rel="noopener noreferrer">Chart.js | Chart.js</a></dt>
+		<dd>グラフはこのモジュールを使って描画しています。</dd>
+	</dl>
+</address>
 			`;
 		}
 		{
@@ -1086,13 +1386,17 @@ const Filter = new class extends Dialog{
 				fieldset.id = "filterSeason";
 				article.append(fieldset);
 				const legend = document.createElement("legend");
-				legend.textContent = "シーズン🗓️";
-				legend.addEventListener("click", () => {
+				fieldset.append(legend);
+				const button = document.createElement("button");
+				button.type = "button";
+				button.textContent = "シーズン🗓️";
+				button.addEventListener("click", () => {
 					fieldset.querySelectorAll("input[type=checkbox]").forEach((chk) => {
 						chk.checked = !chk.checked;
 					});
 				});
-				fieldset.append(legend);
+				legend.append(button);
+				
 				Object.entries(SEASONS).forEach(([season, src]) => {
 					const label = document.createElement("label");
 					fieldset.append(label);
@@ -1109,10 +1413,11 @@ const Filter = new class extends Dialog{
 					label.append(span);
 				});
 				/*何も✓されていない場合は最新シーズンをあらかじめ選択する*/
-				if(fieldset.querySelectorAll("input:checked").length === 0){
-					const las = fieldset.querySelector(":scope > label:last-of-type > input");
-					las.checked = true;
-					this.nowFilter.push(las.dataset.key);
+				const chks = fieldset.querySelectorAll("input[type=checkbox]");
+				if(!Array.from(chks).some((chk) => chk.checked)){
+					const chk = Array.from(chks).at(-1);
+					chk.checked = true;
+					this.nowFilter.push(chk.dataset.key);
 				}
 			}
 			{
@@ -1120,13 +1425,17 @@ const Filter = new class extends Dialog{
 				fieldset.id = "filterKind";
 				article.append(fieldset);
 				const legend = document.createElement("legend");
-				legend.textContent = "分類🎁";
-				legend.addEventListener("click", () => {
+				fieldset.append(legend);
+				const button = document.createElement("button");
+				button.type = "button";
+				button.textContent = "分類🎁";
+				button.addEventListener("click", () => {
 					fieldset.querySelectorAll("input[type=checkbox]").forEach((chk) => {
 						chk.checked = !chk.checked;
 					});
 				});
-				fieldset.append(legend);
+				legend.append(button);
+				
 				Object.entries(EVENTPOINT_KIND_NAMES).forEach(([key, value]) => {
 					const label = document.createElement("label");
 					fieldset.append(label);
@@ -1140,8 +1449,8 @@ const Filter = new class extends Dialog{
 					label.append(span);
 				});
 				/*何も✓されていない場合はすべての種別をあらかじめ選択する*/
-				if(fieldset.querySelectorAll("input:checked").length === 0){
-					const chks = fieldset.querySelectorAll("input");
+				const chks = fieldset.querySelectorAll("input[type=checkbox]");
+				if(!Array.from(chks).some((chk) => chk.checked)){
 					chks.forEach((chk) => {
 						chk.checked = true;
 						this.nowFilter.push(chk.dataset.key);
@@ -1153,8 +1462,11 @@ const Filter = new class extends Dialog{
 				fieldset.id = "filterLevel";
 				article.append(fieldset);
 				const legend = document.createElement("legend");
-				legend.textContent = "クエストのレベル⚡️";
-				legend.addEventListener("click", () => {
+				fieldset.append(legend);
+				const button = document.createElement("button");
+				button.type = "button";
+				button.textContent = "クエストのレベル⚡️";
+				button.addEventListener("click", () => {
 					fieldset.querySelectorAll("input[type=checkbox]").forEach((chk) => {
 						chk.checked = !chk.checked;
 					});
@@ -1163,6 +1475,7 @@ const Filter = new class extends Dialog{
 				const levels = {
 					"EOFF": "通常",
 					"EON": "エリート",
+					"EDON": "☠",
 				};
 				Object.entries(levels).forEach(([key, value]) => {
 					const label = document.createElement("label");
@@ -1176,9 +1489,11 @@ const Filter = new class extends Dialog{
 					span.textContent = value;
 					label.append(span);
 				});
+				legend.append(button);
+				
 				/*何も✓されていない場合はすべてのレベルをあらかじめ選択する*/
-				if(fieldset.querySelectorAll("input:checked").length === 0){
-					const chks = fieldset.querySelectorAll("input");
+				const chks = fieldset.querySelectorAll("input[type=checkbox]");
+				if(!Array.from(chks).some((chk) => chk.checked)){
 					chks.forEach((chk) => {
 						chk.checked = true;
 						this.nowFilter.push(chk.dataset.key);
@@ -1278,21 +1593,32 @@ async function setUseData(){
 	}
 	
 	/*使わないデータ削除*/
-	const EliteFilters = Filter.nowFilter.filter((fil) => fil[0] === "E");
-	if(EliteFilters.length === document.querySelectorAll("#filterLevel > label > input[type=checkbox]").length){
+	const MissionLevelFilters = Filter.nowFilter.filter((fil) => fil[0] === "E");
+	if(MissionLevelFilters.length === document.querySelectorAll("#filterLevel > label > input[type=checkbox]").length){
 		
 	}else{
+		const fils = [
+			MissionLevelFilters.includes("EOFF"),
+			MissionLevelFilters.includes("EON"),
+			MissionLevelFilters.includes("EDON"),
+		];
 		Object.entries(Missions).forEach(([id, data]) => {
-			if(data["L"].at(-1) === "E"){
-				if(!EliteFilters.includes("EON")){
+			const cha = data["L"].at(-1);
+			if(cha === "E"){
+				if(!fils[1]){
 					delete Missions[id];
-					return;
 				}
-			}else{
-				if(!EliteFilters.includes("EOFF")){
+				return;
+			}
+			if(cha === "☠"){
+				if(!fils[2]){
 					delete Missions[id];
-					return;
 				}
+				return;
+			}
+			if(!fils[0]){
+				delete Missions[id];
+				return;
 			}
 		});
 	}
@@ -1318,7 +1644,7 @@ async function setUseData(){
 //========================================
 const PageMove = new class{
 	constructor(){
-		this.before_page = null;
+		this.nowPage = null;
 		window.addEventListener("popstate", this.popstate);
 		document.addEventListener("click", () => {
 			const tar = event.target;
@@ -1336,17 +1662,17 @@ const PageMove = new class{
 	popstate = () => {
 		const page = IFURL.query.get("page");
 		if(Page[page]){
-			if(this.before_page !== page){
+			if(this.nowPage !== page){
 				Page[page].show();
 			}
-			this.before_page = page;
+			this.nowPage = page;
 			Page[page].show_expansion();
-			if(event?.type === "click"){
-				window.scroll({top: 0});
-			}
 		}else{
 			uniqueClassName("sc", document.getElementById("toppage"));
 			uniqueClassName("active", Menu.menu.querySelector(":scope > a:nth-of-type(1)"));
+		}
+		if(event?.type === "click"){
+			window.scroll({top: 0});
 		}
 	}
 }
@@ -1490,10 +1816,11 @@ new PageData({
 			this.kind_sums = {};
 			for(const [kind, src] of Object.entries(SeasonKindImgs)){
 				this.kind_sums[kind] = {};
-				this.kind_sums[kind]["levels"] = 0;
-				this.kind_sums[kind]["eps"] = 0;
-				this.kind_sums[kind]["count"] = 0;
 				this.kind_sums[kind]["img"] = src;
+				this.kind_sums[kind]["sum"] = {};
+				this.kind_sums[kind]["sum"]["levels"] = 0;
+				this.kind_sums[kind]["sum"]["eps"] = 0;
+				this.kind_sums[kind]["sum"]["count"] = 0;
 			}
 			
 			section = document.createElement("section");
@@ -1527,10 +1854,10 @@ new PageData({
 						"makeTD": (td, data) => {
 							const a = document.createElement("a");
 							a.href = `?page=MissionData&mission_id=${data["MissionID"]}`;
-							a.textContent = getDecodeMissionDetail(data["D"]);
+							[td.dataset.truenum, a.textContent] = getDecodeMissionDetail(data["D"]);
 							td.append(a);
 /*
-							td.textContent = getDecodeMissionDetail(data["D"]);
+							[td.dataset.truenum, td.textContent] = getDecodeMissionDetail(data["D"]);
 */
 						},
 					},
@@ -1602,9 +1929,9 @@ new PageData({
 					this.datas.forEach((data) => {
 						const src = `${IMG_DOMAIN}${data["I"]}`;
 						const kind = EVENTPOINT_KIND_IMAGE_HASHS[src];
-						this.kind_sums[kind]["levels"] += data["level"];
-						this.kind_sums[kind]["eps"] += Number(data["P"]);
-						this.kind_sums[kind]["count"] += 1;
+						this.kind_sums[kind]["sum"]["levels"] += data["level"];
+						this.kind_sums[kind]["sum"]["eps"] += Number(data["P"]);
+						this.kind_sums[kind]["sum"]["count"] += 1;
 						
 						const tr = document.createElement("tr");
 						tbody.append(tr);
@@ -1652,7 +1979,7 @@ new PageData({
 							text-align: right;
 						`,
 						"makeTD": (td, data) => {
-							td.textContent = data[5];
+							td.textContent = data[3]["count"];
 						},
 					},
 					{
@@ -1663,7 +1990,7 @@ new PageData({
 							text-align: right;
 						`,
 						"makeTD": (td, data) => {
-							td.textContent = data[3];
+							td.textContent = data[3]["levels"];
 						},
 					},
 					{
@@ -1674,7 +2001,7 @@ new PageData({
 							text-align: right;
 						`,
 						"makeTD": (td, data) => {
-							td.textContent = data[4];
+							td.textContent = data[3]["eps"];
 						},
 					},
 					{
@@ -1685,7 +2012,7 @@ new PageData({
 							text-align: right;
 						`,
 						"makeTD": (td, data) => {
-							[td.dataset.truenum, td.textContent] = getDivision(data[4], data[3]);
+							[td.dataset.truenum, td.textContent] = getDivision(data[3]["eps"], data[3]["levels"]);
 						},
 					},
 					{
@@ -1696,23 +2023,24 @@ new PageData({
 							text-align: right;
 						`,
 						"makeTD": (td, data) => {
-							[td.dataset.truenum, td.textContent] = getDivision(data[4], data[5]);
+							[td.dataset.truenum, td.textContent] = getDivision(data[3]["eps"], data[3]["count"]);
 						},
 					},
 				],
 				"createTbodyFunction": (tbody, param) => {
 					const summaryDatas = [];
 					{
-						let s_levels = 0;
-						let s_eps = 0;
-						let s_count = 0;
-						for(const [key, value] of Object.entries(this.kind_sums)){
-							summaryDatas.push([EVENTPOINT_KIND_NAMES[key], value["img"], key, value["levels"], value["eps"], value["count"]]);
-							s_levels += value["levels"];
-							s_eps += value["eps"];
-							s_count += value["count"];
+						const sumdata = {};
+						sumdata["levels"] = 0;
+						sumdata["eps"] = 0;
+						sumdata["count"] = 0;
+						for(const [kind, value] of Object.entries(this.kind_sums)){
+							summaryDatas.push([EVENTPOINT_KIND_NAMES[kind], value["img"], kind, value["sum"]]);
+							sumdata["levels"] += value["sum"]["levels"];
+							sumdata["eps"] += value["sum"]["eps"];
+							sumdata["count"] += value["sum"]["count"];
 						}
-						summaryDatas.push(["＊合計", "", "ZZ", s_levels, s_eps, s_count]);
+						summaryDatas.push(["＊合計", "", "ZZ", sumdata]);
 					}
 					summaryDatas.forEach((data) => {
 						const tr = document.createElement("tr");
@@ -1832,6 +2160,7 @@ new PageData({
 				o["S"] = value["S"];
 				o["T"] = value["T"];
 				o["Ws"] = value["Ws"];
+				o["pop"] = getDivision(o["Ws"].length * 100, getToubaiLine(o["level"]));
 				this.datas.push(o);
 			}
 			if(!this.datas.length){
@@ -1842,10 +2171,11 @@ new PageData({
 			this.kind_sums = {};
 			for(const [kind, src] of Object.entries(SeasonKindImgs)){
 				this.kind_sums[kind] = {};
-				this.kind_sums[kind]["levels"] = 0;
-				this.kind_sums[kind]["winners"] = 0;
-				this.kind_sums[kind]["count"] = 0;
 				this.kind_sums[kind]["img"] = src;
+				this.kind_sums[kind]["sum"] = {};
+				this.kind_sums[kind]["sum"]["levels"] = 0;
+				this.kind_sums[kind]["sum"]["winners"] = 0;
+				this.kind_sums[kind]["sum"]["popa"] = [];
 			}
 			
 			section = document.createElement("section");
@@ -1892,10 +2222,10 @@ new PageData({
 						"makeTD": (td, data) => {
 							const a = document.createElement("a");
 							a.href = `?page=${this.id}&mission_id=${data["ID"]}`;
-							a.textContent = getDecodeMissionDetail(data["D"]);
+							[td.dataset.truenum, a.textContent] = getDecodeMissionDetail(data["D"]);
 							td.append(a);
 /*
-							td.textContent = getDecodeMissionDetail(data["D"]);
+							[td.dataset.truenum, td.textContent] = getDecodeMissionDetail(data["D"]);
 */
 						},
 					},
@@ -1940,7 +2270,7 @@ new PageData({
 							text-align: right;
 						`,
 						"makeTD": (td, data) => {
-							td.textContent = RANK_EP[data["level"]].length;
+							td.textContent = getToubaiLine(data["level"]);
 						},
 					},
 					{
@@ -1951,7 +2281,21 @@ new PageData({
 							text-align: right;
 						`,
 						"makeTD": (td, data) => {
-							[td.dataset.truenum, td.textContent] = getDivision(data["Ws"].length * 100, RANK_EP[data["level"]].length);
+							if(isNaN(data["pop"][0])){
+								td.dataset.truenum = 0;
+								const u = document.createElement("u");
+								u.textContent = NaN;
+								u.addEventListener("click", () => {
+									const text = `
+										マスタの設定がまだ不十分なため、この値は正しく表示されていません。
+										（レベル：${data["level"]}）
+									`;
+									alert(text.replace(/\t/g, ""));
+								})
+								td.append(u);
+							}else{
+								[td.dataset.truenum, td.textContent] = data["pop"];
+							}
 						},
 					},
 					{
@@ -1990,10 +2334,9 @@ new PageData({
 					this.datas.forEach((data) => {
 						const src = `${IMG_DOMAIN}${data["I"]}`;
 						const kind = EVENTPOINT_KIND_IMAGE_HASHS[src];
-						this.kind_sums[kind]["levels"] += data["level"];
-						this.kind_sums[kind]["winners"] += data["Ws"].length;
-						this.kind_sums[kind]["count"] += 1;
-						
+						this.kind_sums[kind]["sum"]["levels"] += data["level"];
+						this.kind_sums[kind]["sum"]["winners"] += data["Ws"].length;
+						this.kind_sums[kind]["sum"]["popa"].push(Number(data["pop"][0]));
 						const tr = document.createElement("tr");
 						tbody.append(tr);
 						param["THS"].forEach((TH) => {
@@ -2040,7 +2383,7 @@ new PageData({
 							text-align: right;
 						`,
 						"makeTD": (td, data) => {
-							td.textContent = data[5];
+							td.textContent = data[3]["popa"].length;
 						},
 					},
 					{
@@ -2051,34 +2394,60 @@ new PageData({
 							text-align: right;
 						`,
 						"makeTD": (td, data) => {
-							td.textContent = data[3];
+							td.textContent = data[3]["levels"];
 						},
 					},
 					{
 						"name": "勝者",
 						"details": "クエストの勝者数です。",
+						"initShow": false,
+						"style": `
+							text-align: right;
+						`,
+						"makeTD": (td, data) => {
+							td.textContent = data[3]["winners"];
+						},
+					},
+					{
+						"name": "平均人気度(%)",
+						"details": "1.0倍ラインに対するクリアしたプレイヤーの割合です。",
 						"initShow": true,
 						"style": `
 							text-align: right;
 						`,
 						"makeTD": (td, data) => {
-							td.textContent = data[4];
+							if(data[3]["popa"].includes(NaN)){
+								td.dataset.truenum = 0;
+								const u = document.createElement("u");
+								u.textContent = NaN;
+								u.addEventListener("click", () => {
+									const text = `
+										マスタの設定がまだ不十分なため、この値は正しく表示されていません。
+									`;
+									alert(text.replace(/\t/g, ""));
+								})
+								td.append(u);
+							}else{
+								[td.dataset.truenum, td.textContent] = calcTrimAverage(data[3]["popa"], 0);
+							}
 						},
 					},
 				],
+				
 				"createTbodyFunction": (tbody, param) => {
 					const summaryDatas = [];
 					{
-						let s_levels = 0;
-						let s_winners = 0;
-						let s_count = 0;
-						for(const [key, value] of Object.entries(this.kind_sums)){
-							summaryDatas.push([EVENTPOINT_KIND_NAMES[key], value["img"], key, value["levels"], value["winners"], value["count"]]);
-							s_levels += value["levels"];
-							s_winners += value["winners"];
-							s_count += value["count"];
+						const sumdata = {};
+							sumdata["levels"] = 0;
+							sumdata["winners"] = 0;
+							sumdata["popa"] = [];
+						for(const [kind, value] of Object.entries(this.kind_sums)){
+							summaryDatas.push([EVENTPOINT_KIND_NAMES[kind], value["img"], kind, value["sum"]]);
+							sumdata["levels"] += value["sum"]["levels"];
+							sumdata["winners"] += value["sum"]["winners"];
+							sumdata["popa"] = sumdata["popa"].concat(value["sum"]["popa"]);
 						}
-						summaryDatas.push(["＊合計", "", "ZZ", s_levels, s_winners, s_count]);
+						summaryDatas.push(["＊合計", "", "ZZ", sumdata]);
 					}
 					summaryDatas.forEach((data) => {
 						const tr = document.createElement("tr");
@@ -2264,6 +2633,7 @@ new PageData({
 				"createTbodyFunction": async(tbody, param) => {
 					const newMap = splitArray(data["Ws"], 100);
 					const morereadId = `buttonMoreRead${this.id}${mission_id}`;
+					const func = appendMoreReadCaption.bind(this, morereadId, tbody.closest("table"));
 					let rank = 0;
 					for(let i = 0; i < newMap.length; i++){
 						newMap[i].forEach((pid) => {
@@ -2280,26 +2650,13 @@ new PageData({
 						if(i === newMap.length - 1){
 							break;
 						}
-						if(!document.getElementById("isIgnoreMoreRead").checked){
-							let button = document.getElementById(morereadId);
-							if(!button){
-								const button = document.createElement("button");
-								button.type = "button";
-								button.id = morereadId;
-								button.classList.add("buttonMoreRead");
-								button.textContent = "さらに読み込む";
-								button.addEventListener("click", () => {
-									Wait.release(morereadId);
-								});
-								const caption = document.createElement("caption");
-								caption.append(button);
-								tbody.closest("table").append(caption);
-							}
+						if(!this[morereadId]){
+							func();
 							await Wait.add(morereadId);
 						}
-						
 					}
 					document.getElementById(morereadId)?.remove();
+					delete this[morereadId];
 				},
 			}));
 			Filter.setHref(section);
@@ -2323,12 +2680,14 @@ new PageData({
 						if(!this.datas[obj["D"]]){
 							this.datas[obj["D"]] = {};
 							this.datas[obj["D"]]["ids"] = [];
+							this.datas[obj["D"]]["levels"] = [];
 							this.datas[obj["D"]]["pops"] = [];
 							this.datas[obj["D"]]["s_pops"] = 0;
 						}
 						const level = getNumberLevel(obj["L"]);
 						this.datas[obj["D"]]["ids"].push(id);
-						const calc = getDivision(obj["Ws"].length * 100, RANK_EP[level].length)[0];
+						this.datas[obj["D"]]["levels"].push(obj["L"]);
+						const calc = getDivision(obj["Ws"].length * 100, getToubaiLine(level))[0];
 						this.datas[obj["D"]]["pops"].push(calc);
 						this.datas[obj["D"]]["s_pops"] += Number(calc);
 					});
@@ -2352,7 +2711,26 @@ new PageData({
 								"style": `
 								`,
 								"makeTD": (td, key, data) => {
-									td.textContent = getDecodeMissionDetail(key);
+									[td.dataset.truenum, td.textContent] = getDecodeMissionDetail(key);
+								},
+							},
+							{
+								"name": "レベル",
+								"details": "クエストのレベルです。\nソートは該当クエスト数で行われます。",
+								"initShow": false,
+								"style": `
+								`,
+								"makeTD": (td, key, data) => {
+									const ul = document.createElement("ul");
+									td.append(ul);
+									data["levels"].forEach((level) => {
+										const li = document.createElement("li");
+										ul.append(li);
+										const span = document.createElement("span");
+										span.textContent = `L${level}`;
+										li.append(span);
+									});
+									td.dataset.truenum = data["levels"].length;
 								},
 							},
 							{
@@ -2388,11 +2766,25 @@ new PageData({
 								"makeTD": (td, key, data) => {
 									const ul = document.createElement("ul");
 									td.append(ul);
-									data["pops"].forEach((pop) => {
+									data["pops"].forEach((pop, ind) => {
 										const li = document.createElement("li");
 										ul.append(li);
 										const span = document.createElement("span");
-										span.textContent = pop;
+										if(isNaN(pop)){
+											td.dataset.truenum = 0;
+											const u = document.createElement("u");
+											u.textContent = NaN;
+											u.addEventListener("click", () => {
+												const text = `
+													マスタの設定がまだ不十分なため、この値は正しく表示されていません。
+													（レベル：${data["levels"][ind]}）
+												`;
+												alert(text.replace(/\t/g, ""));
+											})
+											span.append(u);
+										}else{
+											span.textContent = pop;
+										}
 										li.append(span);
 									});
 									td.dataset.truenum = data["pops"].length;
@@ -2400,13 +2792,26 @@ new PageData({
 							},
 							{
 								"name": "平均人気度(%)",
-								"details": "1.0倍ラインに対するクリアしたプレイヤーの割合です。",
+								"details": "各クエストの人気度の平均です。",
 								"initShow": true,
 								"style": `
 									text-align: right;
 								`,
 								"makeTD": (td, key, data) => {
-									[td.dataset.truenum, td.textContent] = getDivision(data["s_pops"], data["ids"].length);
+									if(isNaN(data["s_pops"])){
+										td.dataset.truenum = 0;
+										const u = document.createElement("u");
+										u.textContent = NaN;
+										u.addEventListener("click", () => {
+											const text = `
+												マスタの設定がまだ不十分なため、この値は正しく表示されていません。
+											`;
+											alert(text.replace(/\t/g, ""));
+										})
+										td.append(u);
+									}else{
+										[td.dataset.truenum, td.textContent] = getDivision(data["s_pops"], data["ids"].length);
+									}
 								},
 							},
 						],
@@ -2432,7 +2837,7 @@ new PageData({
 				"create": function(){
 					this.arrs = [];
 					Object.entries(PlayerMissions).forEach(([pid, mds]) => {
-						this.arrs.push([pid, mds.length]);
+						this.arrs.push([pid, mds.length, getDivision(mds.length*100, this.challengableMissions)[0]]);
 					});
 					if(!this.arrs.length){
 						alert("データがありません…\n絞り込みを変更してみてください。");
@@ -2496,7 +2901,8 @@ new PageData({
 									text-align: right;
 								`,
 								"makeTD": (td, key, data) => {
-									[td.dataset.truenum, td.textContent] = getDivision(data["count"]*100, this.challengableMissions);
+									td.dataset.truenum = data["percent"];
+									td.textContent = data["percent"];
 								},
 							},
 						],
@@ -2506,6 +2912,7 @@ new PageData({
 							let add = 1;
 							let limitrank = 100;
 							const morereadId = "buttonMoreReadB0";
+							const func = appendMoreReadCaption.bind(this, morereadId, tbody.closest("table"));
 							for(let i = 0; i < this.arrs.length; i++){
 								const arr = this.arrs[i];
 								const key = arr[0];
@@ -2518,26 +2925,13 @@ new PageData({
 									add++;
 								}
 								if(rank > limitrank){
-									if(!document.getElementById("isIgnoreMoreRead").checked){
+									if(!this[morereadId]){
 										if(rank - limitrank > 100){
 											limitrank = rank;
 										}else{
 											limitrank += 100;
 										}
-										let button = document.getElementById(morereadId);
-										if(!button){
-											const button = document.createElement("button");
-											button.type = "button";
-											button.id = morereadId;
-											button.classList.add("buttonMoreRead");
-											button.textContent = "さらに読み込む";
-											button.addEventListener("click", () => {
-												Wait.release(morereadId);
-											});
-											const caption = document.createElement("caption");
-											caption.append(button);
-											tbody.closest("table").append(caption);
-										}
+										func();
 										await Wait.add(morereadId);
 									}
 								}
@@ -2545,6 +2939,7 @@ new PageData({
 								const data = {
 									"rank": rank,
 									"count": count,
+									"percent": arr[2],
 								}
 								const tr = document.createElement("tr");
 								tbody.append(tr);
@@ -2555,10 +2950,78 @@ new PageData({
 								});
 							}
 							document.getElementById(morereadId)?.remove();
+							delete this[morereadId];
 						},
 						
 					});
-					return table;
+					const data_counts = new Array(6).fill(0);
+					this.arrs.forEach((arr) => {
+						const per = arr[2];
+						let num = 1;
+						switch(true){
+							case per >= 50.00:
+								num = 5;
+								break;
+							case per >= 25.00:
+								num = 4;
+								break;
+							case per >= 10.00:
+								num = 3;
+								break;
+							case per >= 5.00:
+								num = 2;
+								break;
+						}
+						data_counts[num]++;
+					});
+					data_counts[0] = Object.keys(Players).length - this.arrs.length;
+					
+					
+					const canvas = createPie({
+						"data_labels": ["0", "0%～", "5%～", "10%～", "25%～", "50%～"],
+						"data_datasets_data": data_counts,
+						"data_datasets_backgroundColor": ["#9d9488", "#8bc48c", "#6cb1dd", "#a953c6", "#ff863a", "#c26664"],
+						"data_datasets_borderColor": ["#777", "#3c763d", "#236a97", "#a040c0", "#d05000", "#a94442"],
+						"options_plugins_title_text": "ミッションクリア率ごとのプレイヤーの割合",
+					});
+/*
+					const data_counts = new Array(6).fill(0);
+					this.arrs.forEach((arr) => {
+						const per = arr[2];
+						let num = 0;
+						switch(true){
+							case per >= 75.00:
+								num = 5;
+								break;
+							case per >= 50.00:
+								num = 4;
+								break;
+							case per >= 25.00:
+								num = 3;
+								break;
+							case per >= 10.00:
+								num = 2;
+								break;
+							case per >= 5.00:
+								num = 1;
+								break;
+						}
+						data_counts[num]++;
+					});
+					
+					
+					const canvas = createPie({
+						"data_labels": ["0%～", "5%～", "10%～", "25%～", "50%～", "75%～"],
+						"data_datasets_data": data_counts,
+						"data_datasets_backgroundColor": ["#9d9488", "#8bc48c", "#6cb1dd", "#a953c6", "#ff863a", "#c26664"],
+						"data_datasets_borderColor": ["#777", "#3c763d", "#236a97", "#a040c0", "#d05000", "#a94442"],
+						"options_plugins_title_text": "ミッションクリア率ごとのプレイヤーの割合",
+					});
+*/
+					const fragment = document.createDocumentFragment();
+					fragment.append(canvas);
+					fragment.append(table);
+					return fragment;
 				}
 			},
 			"B01": {
@@ -2669,6 +3132,7 @@ new PageData({
 							let rank = 1;
 							let add = 0;
 							const morereadId = "buttonMoreReadB01";
+							const func = appendMoreReadCaption.bind(this, morereadId, tbody.closest("table"));
 							let limitrank = 100;
 							for(let i = 0; i < this.arrs.length; i++){
 								const arr = this.arrs[i];
@@ -2682,26 +3146,13 @@ new PageData({
 									pids = [];
 									
 									if(rank > limitrank){
-										if(!document.getElementById("isIgnoreMoreRead").checked){
+										if(!this[morereadId]){
 											if(rank - limitrank > 100){
 												limitrank = rank;
 											}else{
 												limitrank += 100;
 											}
-											let button = document.getElementById(morereadId);
-											if(!button){
-												const button = document.createElement("button");
-												button.type = "button";
-												button.id = morereadId;
-												button.classList.add("buttonMoreRead");
-												button.textContent = "さらに読み込む";
-												button.addEventListener("click", () => {
-													Wait.release(morereadId);
-												});
-												const caption = document.createElement("caption");
-												caption.append(button);
-												tbody.closest("table").append(caption);
-											}
+											func();
 											await Wait.add(morereadId);
 										}
 									}
@@ -2712,12 +3163,165 @@ new PageData({
 							}
 							putFunc();
 							document.getElementById(morereadId)?.remove();
+							delete this[morereadId];
 						}
 						
 					});
 					return table;
 				}
 			},
+			
+			"B1": {
+//同率順位でブレイクしないバージョン
+				"string": "プレイヤーランキング（獲得EP数）",
+				"create": function(){
+					this.arrs = [];
+					Object.entries(PlayerMissions).forEach(([pid, mds]) => {
+						const sum = mds.reduce((sum, md) => md["P"] + sum, 0);
+						this.arrs.push([pid, sum]);
+					});
+					if(!this.arrs.length){
+						alert("データがありません…\n絞り込みを変更してみてください。");
+						return;
+					}
+					this.arrs.sort(function(a,b){
+						if(a[1] < b[1]){
+							return 1;
+						}else{
+							return -1;
+						}
+					});
+					
+					const table = createTable.call(this, {
+						"unityID": "RankingPlayerGetEventPoints",
+						"caption_text": `<b>${this.Fields["summarys"]["B1"]["string"]}</b>`,
+						"isSortable": false,
+						"style": `
+						`,
+						"THS": [
+							{
+								"name": "順位👑",
+								"details": "獲得EPの多さ順です。",
+								"initShow": true,
+								"style": `
+									text-align: right;
+								`,
+								"makeTD": (td, key, data) => {
+									td.textContent = data["rank"];
+								},
+							},
+							{
+								"name": "プレイヤー",
+								"details": "プレイヤー名です。",
+								"initShow": true,
+								"style": `
+								`,
+								"makeTD": (td, key, data) => {
+									const a = document.createElement("a");
+									a.href = `?page=PlayerData&player_id=${key}`;
+									a.textContent = Players[key];
+									td.append(a);
+								},
+							},
+							{
+								"name": "EP🍬",
+								"details": "獲得したEPです。",
+								"initShow": true,
+								"style": `
+									text-align: right;
+								`,
+								"makeTD": (td, key, data) => {
+									td.textContent = data["eps"];
+								},
+							},
+						],
+						"createTbodyFunction": async(tbody, param) => {
+							let bcount = 0;
+							let rank = 0;
+							let add = 1;
+							let limitrank = 100;
+							const morereadId = "buttonMoreReadB1";
+							const func = appendMoreReadCaption.bind(this, morereadId, tbody.closest("table"));
+							for(let i = 0; i < this.arrs.length; i++){
+								const arr = this.arrs[i];
+								const key = arr[0];
+								const count = arr[1];
+								if(bcount !== count){
+									bcount = count;
+									rank += add;
+									add = 1;
+								}else{
+									add++;
+								}
+								if(rank > limitrank){
+									if(!this[morereadId]){
+										if(rank - limitrank > 100){
+											limitrank = rank;
+										}else{
+											limitrank += 100;
+										}
+										func();
+										await Wait.add(morereadId);
+									}
+								}
+								
+								const data = {
+									"rank": rank,
+									"eps": count,
+								}
+								const tr = document.createElement("tr");
+								tbody.append(tr);
+								param["THS"].forEach((TH) => {
+									const td = document.createElement("td");
+									TH["makeTD"](td, key, data);
+									tr.append(td);
+								});
+							}
+							document.getElementById(morereadId)?.remove();
+							delete this[morereadId];
+						},
+						
+					});
+					
+					const data_counts = new Array(6).fill(0);
+					this.arrs.forEach((arr) => {
+						const ep = arr[1];
+						let num = 0;
+						switch(true){
+							case ep >= 20000:
+								num = 5;
+								break;
+							case ep >= 2000:
+								num = 4;
+								break;
+							case ep >= 500:
+								num = 3;
+								break;
+							case ep >= 100:
+								num = 2;
+								break;
+							case ep >= 10:
+								num = 1;
+								break;
+						}
+						data_counts[num]++;
+					});
+					
+					
+					const canvas = createPie({
+						"data_labels": ["1～", "10～", "100～", "500～", "2000～", "20000～"],
+						"data_datasets_data": data_counts,
+						"data_datasets_backgroundColor": ["#9d9488", "#8bc48c", "#6cb1dd", "#a953c6", "#ff863a", "#c26664"],
+						"data_datasets_borderColor": ["#777", "#3c763d", "#236a97", "#a040c0", "#d05000", "#a94442"],
+						"options_plugins_title_text": "獲得EPごとのプレイヤー数",
+					});
+					const fragment = document.createDocumentFragment();
+					fragment.append(canvas);
+					fragment.append(table);
+					return fragment;
+				}
+			},
+			
 		},
 	},
 	createBody: function(){
@@ -2741,7 +3345,7 @@ new PageData({
 		{
 			setPlayerMissions();
 			this.maxMissions = Object.keys(Missions).length;
-			this.challengableMissions = this.maxMissions / document.querySelectorAll("#filterLevel input[type=checkbox]:checked").length;
+			this.challengableMissions = getChallengableMissions();
 			
 			const dl = document.createElement("dl");
 			dl.classList.add("tableDetail");
@@ -2756,7 +3360,22 @@ new PageData({
 				dt.textContent = ele[0];
 				dl.append(dt);
 				const dd = document.createElement("dd");
-				dd.textContent = ele[1];
+				if(isNaN(ele[1])){
+					const u = document.createElement("u");
+					u.textContent = ele[1];
+					u.addEventListener("click", () => {
+						const text = `
+							抽出しているクエストのレベルが次の場合に計算できます。
+							１．すべてのレベルを抽出している
+							２．通常のみ
+							３．エリート＋☠のみ
+						`;
+						alert(text.replace(/\t/g, ""));
+					})
+					dd.append(u);
+				}else{
+					dd.textContent = ele[1];
+				}
 				dl.append(dd);
 			});
 		}
@@ -2801,8 +3420,9 @@ async function startUp(){
 }
 startUp();
 
-})();
 
+
+})();
 
 
   </script>
