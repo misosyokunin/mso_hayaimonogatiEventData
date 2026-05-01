@@ -411,6 +411,12 @@ u{
 				<section>
 					<h2>🆙更新履歴</h2>
 					<aside>
+						<h3>2026/05/01</h3>
+						<p>🔵　S124に対応しました。
+						<p>🔵　<a href="./main.htm?page=AllData">プレイヤー挑戦データ</a>内のクエストデータに「挑戦者数」を追加しました（初期値は非表示）。</p>
+						<p>🔴データに順位を追加しました。<br/>S108～S120のデータには順位をつけていないので、表示上の順位と実際の順位とが異なっている可能性があります。</p>
+					</aside>
+					<aside>
 						<h3>2026/01/01</h3>
 						<p>🔵　S120に対応しました。
 					</aside>
@@ -482,6 +488,7 @@ const SEASONS = {
 	"S112": "https://minesweeper.online/img/candies/egg/408.svg?v5",
 	"S116": "https://minesweeper.online/img/candies/drink/468.svg?v5",
 	"S120": "https://minesweeper.online/img/candies/candy/528.svg?v5",
+	"S124": "https://minesweeper.online/img/candies/egg/408.svg?v5",
 };
 
 const SessionStorage = new class{
@@ -1056,7 +1063,9 @@ function setPlayerMissions(){
 		return;
 	}
 	Object.entries(Missions).forEach(([mid, obj]) => {
-		obj["Ws"].forEach((pid, index) => {
+		obj["Ws"].forEach((arr) => {
+			const rank = arr[0];
+			const pid = arr[1];
 			if(!PlayerMissions[pid]){
 				PlayerMissions[pid] = [];
 			}
@@ -1065,7 +1074,7 @@ function setPlayerMissions(){
 			o["level"] = getNumberLevel(o["L"]);
 			o["D"] = obj["D"];
 			o["I"] = obj["I"];
-			o["R"] = index + 1;
+			o["R"] = rank;
 			o["P"] = getEP(o["level"], o["R"]);
 			o["T"] = obj["T"];
 			o["MissionID"] = mid;
@@ -1648,6 +1657,15 @@ async function setUseData(){
 			delete SeasonKindImgs[kind];
 		}
 	});
+	//足りないデータ補填
+	//S124以前のデータには順位を取得していないので、仮の順位をつける
+	const tarSeason = ["108", "112", "116", "120"]
+	const tars = Object.values(Missions).filter((data) => tarSeason.includes(data["S"]));
+	tars.forEach((data) => {
+		let index = 0;
+		data["Ws"] = data["Ws"].map((pid) => [++index, pid]);
+	});
+	
 }
 
 //========================================
@@ -1800,7 +1818,7 @@ new PageData({
 				this.datas = [];
 				const pi = Number(player_id);
 				for(const [mission_id, mission_data] of Object.entries(Missions)){
-					const index = mission_data["Ws"].indexOf(pi);
+					const index = mission_data["Ws"].map((arr) => arr[1]).indexOf(pi);
 					if(index === -1){
 						continue;
 					}
@@ -1810,7 +1828,8 @@ new PageData({
 					o["level"] = getNumberLevel(o["L"]);
 					o["D"] = mission_data["D"];
 					o["I"] = mission_data["I"];
-					o["R"] = index + 1;
+					o["R"] = mission_data["Ws"][index][0];
+					o["RA"] = mission_data["Ws"].length;
 					o["P"] = getEP(o["level"], o["R"]);
 					o["T"] = mission_data["T"];
 					o["MissionID"] = mission_id;
@@ -1898,6 +1917,20 @@ new PageData({
 							const a = document.createElement("a");
 							a.href = `?page=MissionData&mission_id=${data["MissionID"]}`;
 							a.textContent = data["R"];
+							td.append(a);
+						},
+					},
+					{
+						"name": "挑戦者数",
+						"details": "クリアしたプレイヤー数です。",
+						"initShow": false,
+						"style": `
+							text-align: right;
+						`,
+						"makeTD": (td, data) => {
+							const a = document.createElement("a");
+							a.href = `?page=MissionData&mission_id=${data["MissionID"]}`;
+							a.textContent = data["RA"];
 							td.append(a);
 						},
 					},
@@ -2645,8 +2678,9 @@ new PageData({
 					const func = appendMoreReadCaption.bind(this, morereadId, tbody.closest("table"));
 					let rank = 0;
 					for(let i = 0; i < newMap.length; i++){
-						newMap[i].forEach((pid) => {
-							rank++;
+						newMap[i].forEach((arr) => {
+							const rank = arr[0];
+							const pid = arr[1];
 							const tr = document.createElement("tr");
 							tbody.append(tr);
 							param["THS"].forEach((TH) => {
